@@ -1,20 +1,100 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'deploygate'
+apply plugin: 'kotlin-kapt'
+
+// Manifest version
+def versionMajor = 0
+def versionMinor = 0
+def versionPatch = 1
+
+// CI
+def isCi = "true".equals(System.getenv("CI"))
+def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
+
+def packageName = "jp.gr.java_conf.miwax.troutoss"
+
+// for debug info
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
+    dataBinding {
+        enabled = true
+    }
+
+    dexOptions {
+        // Skip pre-dexing when running on CI or when disabled via -Dpre-dex=false.
+        preDexLibraries = preDexEnabled && !isCi
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
     defaultConfig {
-        applicationId "jp.gr.java_conf.miwax.troutoss"
+        applicationId packageName
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode versionMajor * 1000000 + versionMinor * 1000 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
+        buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
-    buildTypes {
+
+    signingConfigs {
+        debug {
+            storeFile file("../keystore/debug.keystore")
+        }
         release {
-            minifyEnabled false
+            storeFile file("../keystore/release.keystore")
+            storePassword System.getenv("RELEASE_STORE_PASSWORD")
+            keyAlias System.getenv("RELEASE_KEY_ALIAS")
+            keyPassword System.getenv("RELEASE_KEY_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        debug {
+            //signingConfig signingConfigs.debug
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            debuggable true
+            zipAlignEnabled true
+            testCoverageEnabled true
+        }
+        release {
+            // signingConfig signingConfigs.release
+            debuggable false
+            zipAlignEnabled true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+deploygate {
+    userName = System.getenv("DEPLOYGATE_USERNAME")
+    token = "ec4f8c7354198d1655e6c57e1aa148d8a64b41bf "
+
+    apks {
+        debug {
+            // set as build message
+            message = "debug build ${gitSha} at ${buildTime}"
+        }
+
+        release {
+            // set as build message
+            message = "release build ${gitSha} at ${buildTime}"
         }
     }
 }
