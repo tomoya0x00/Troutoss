@@ -20,4 +20,4 @@ deployment:
   master:
     branch: master
     commands:
-      - ./gradlew uploadDeployGateDebug && ./gradlew :app:firebaseUploadReleaseProguardMapping
+      - ./gradlew uploadDeployGateDebug
