@@ -84,7 +84,7 @@ android {
 
 deploygate {
     userName = System.getenv("DEPLOYGATE_USERNAME")
-    token = "ec4f8c7354198d1655e6c57e1aa148d8a64b41bf "
+    token = System.getenv("DEPLOYGATE_TOKEN")
 
     apks {
         debug {
