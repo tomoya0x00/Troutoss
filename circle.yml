@@ -1,0 +1,23 @@
+machine:
+  java:
+    version: openjdk8
+  environment:
+    JAVA_OPTS: "-Xms1024m -Xmx1560m"
+    GRADLE_OPTS: '-Dorg.gradle.parallel=false -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx1560m -XX:+HeapDumpOnOutOfMemoryError"'
+    TERM: dumb
+
+dependencies:
+  pre:
+    - mkdir "$ANDROID_HOME/licenses" || true
+    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+    - echo y | android update sdk --no-ui --all --filter "tools, platform-tools, android-25, build-tools-25.0.2, extra-google-m2repository, extra-android-m2repository"
+
+test:
+  override:
+    - ./gradlew assembleRelease && cp -r app/build/outputs $CIRCLE_ARTIFACTS
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - ./gradlew uploadDeployGateDebug && ./gradlew :app:firebaseUploadReleaseProguardMapping
