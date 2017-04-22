@@ -24,4 +24,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# Databinding
 -dontwarn android.databinding.**
+
+# Okio
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
