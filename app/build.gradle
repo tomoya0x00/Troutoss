@@ -110,6 +110,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
 
+    // Mastodon
+    compile 'com.github.sys1yagi.mastodon4j:mastodon4j:0.0.2'
+    compile 'com.github.sys1yagi.mastodon4j:mastodon4j-rx:0.0.2'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
