@@ -1,4 +1,4 @@
-package jp.gr.java_conf.miwax.troutoss
+package jp.gr.java_conf.miwax.troutoss.view
 
 import android.support.design.widget.TabLayout
 import android.support.design.widget.FloatingActionButton
@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import android.widget.TextView
+import jp.gr.java_conf.miwax.troutoss.R
 
 class MainActivity : AppCompatActivity() {
 
