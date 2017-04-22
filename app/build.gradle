@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'deploygate'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+apply plugin: 'deploygate'
 
 // Manifest version
 def versionMajor = 0
