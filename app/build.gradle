@@ -112,8 +112,8 @@ dependencies {
     compile "com.android.support:design:$supportLibraryVersion"
 
     // Mastodon
-    compile 'com.github.sys1yagi.mastodon4j:mastodon4j:0.0.2'
-    compile 'com.github.sys1yagi.mastodon4j:mastodon4j-rx:0.0.2'
+    compile 'com.github.sys1yagi.mastodon4j:mastodon4j:0.0.3'
+    compile 'com.github.sys1yagi.mastodon4j:mastodon4j-rx:0.0.3'
 
     // Rx
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
