@@ -83,6 +83,12 @@ android {
     }
 }
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 deploygate {
     userName = System.getenv("DEPLOYGATE_USERNAME")
     token = System.getenv("DEPLOYGATE_TOKEN")
@@ -104,12 +110,15 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.14'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:0.14'
     kapt 'com.android.databinding:compiler:2.3.1'
 
     // UI
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Mastodon
     compile 'com.github.sys1yagi.mastodon4j:mastodon4j:0.0.3'
@@ -118,6 +127,15 @@ dependencies {
     // Rx
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile "io.reactivex.rxjava2:rxjava:2.0.9"
+
+    // Network
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+
+    // Util
+    compile 'com.google.code.gson:gson:2.8.0'
+
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.deploygate:sdk:3.1.1'
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
