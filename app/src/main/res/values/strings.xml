@@ -4,4 +4,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="cb_scheme" translatable="false">troutoss</string>
     <string name="mastodon_cb_host" translatable="false">mastodon_cb</string>
+    <string name="hint_mastodon_instance">mastodon.social</string>
+    <string name="input_instance">Instance</string>
+    <string name="login">Login</string>
+    <string name="login_failed">Login failed.\nPlease check the instance.</string>
 </resources>

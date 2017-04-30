@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_mastodon_instance">mstdn.jp</string>
+    <string name="input_instance">接続先インスタンス</string>
+    <string name="login">ログイン</string>
+    <string name="login_failed">ログインに失敗しました。\nインスタンス名を確認して下さい。</string>
+</resources>

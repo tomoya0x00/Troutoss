@@ -37,6 +37,8 @@ class MastodonHelper(val context: Context) {
             loadAccountOf(instanceName, userName)?.let { MastodonClient(instanceName, OkHttpClient(), Gson(), it.accessToken) }
 
     fun registerAppIfNeededTo(instanceName: String): Single<MastodonAppRegistration?> {
+        require(instanceName.isNotEmpty()) { "instanceName is empty!" }
+
         if (hasAppRegistrationOf(instanceName)) {
             return Single.just(loadAppRegistrationOf(instanceName))
         }
