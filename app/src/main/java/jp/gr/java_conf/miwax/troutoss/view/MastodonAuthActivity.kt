@@ -15,10 +15,9 @@ import com.sys1yagi.mastodon4j.rx.RxApps
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
-import jp.gr.java_conf.miwax.troutoss.view.extension.JobHolder
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -27,13 +26,11 @@ import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class MastodonAuthActivity : AppCompatActivity(), JobHolder {
+class MastodonAuthActivity : AppCompatActivity() {
 
     companion object {
         val INTENT_ACCOUNT_UUID = "account_uuid"
     }
-
-    override val job = Job()
 
     lateinit private var binding: ActivityMastodonAuthBinding
     private val helper: MastodonHelper by lazy { MastodonHelper(this) }
@@ -46,7 +43,7 @@ class MastodonAuthActivity : AppCompatActivity(), JobHolder {
         binding.loginButton.setOnClickListener { requestAuthCode() }
     }
 
-    private fun requestAuthCode() = launch(job + UI) {
+    private fun requestAuthCode() = launch(UI) {
         val instance = binding.instanceEdit.text.toString()
         val client = MastodonClient(instance, createOkHttpClient(), Gson())
         val apps = RxApps(client)
@@ -75,7 +72,7 @@ class MastodonAuthActivity : AppCompatActivity(), JobHolder {
         intent.data?.let { onAuthCallBack(it) }
     }
 
-    private fun onAuthCallBack(uri: Uri) = launch(job + UI) {
+    private fun onAuthCallBack(uri: Uri) = launch(UI) {
         // TODO: 通信中のプログレス表示をおこなう
         // TODO: 失敗時のエラー処理
         if (uri.toString().startsWith(helper.authCbUrl)) {
@@ -101,6 +98,7 @@ class MastodonAuthActivity : AppCompatActivity(), JobHolder {
                                 userName = account.userName,
                                 accessToken = accessToken.accessToken
                         )
+                        SnsTabRepository(helper).addDefaultTabsFrom(mastodonAccount)
                         helper.storeAccount(mastodonAccount)
                         return@async mastodonAccount.uuid
                     }
@@ -127,7 +125,6 @@ class MastodonAuthActivity : AppCompatActivity(), JobHolder {
 
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
     }
 
     override fun onBackPressed() {

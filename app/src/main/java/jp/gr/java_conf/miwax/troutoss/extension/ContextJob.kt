@@ -1,4 +1,4 @@
-package jp.gr.java_conf.miwax.troutoss.view.extension
+package jp.gr.java_conf.miwax.troutoss.extension
 
 import android.view.View
 import kotlinx.coroutines.experimental.Job
