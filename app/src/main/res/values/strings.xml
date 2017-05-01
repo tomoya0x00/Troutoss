@@ -8,4 +8,8 @@
     <string name="input_instance">Instance</string>
     <string name="login">Login</string>
     <string name="login_failed">Login failed.\nPlease check the instance.</string>
+    <string name="mastodon_home_title">Home\n%1$s</string>
+    <string name="mastodon_notifications_title">Notifications\n%1$s</string>
+    <string name="mastodon_local_title">Local@%1$s</string>
+    <string name="mastodon_federated_title">Federated@%1$s</string>
 </resources>

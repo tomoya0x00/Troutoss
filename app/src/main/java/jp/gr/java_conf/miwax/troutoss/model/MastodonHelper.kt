@@ -126,6 +126,16 @@ class MastodonHelper(val context: Context) {
             }
 
     /**
+     * アカウント情報の取得。
+     */
+    fun loadAccountOf(uuid: String): MastodonAccount? =
+            Realm.getDefaultInstance().use { realm ->
+                realm.where(MastodonAccount::class.java)
+                        .equalTo(MastodonAccount::uuid.name, uuid)
+                        .findFirst()?.let { realm.copyFromRealm(it) }
+            }
+
+    /**
      *  アカウント情報の保存。
      */
     fun storeAccount(account: MastodonAccount) {

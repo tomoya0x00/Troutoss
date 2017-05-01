@@ -15,4 +15,8 @@ open class MastodonAccount(
         open var instanceName: String = "",
         open var userName: String = "",
         open var accessToken: String = ""
-) : RealmObject()
+) : RealmObject() {
+
+    val userNameWithinstance: String
+        get() = userName + "@" + instanceName
+}

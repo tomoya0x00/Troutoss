@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         setSupportActionBar(binding.toolbar)
-        binding.container.adapter = SnsTabAdapter(supportFragmentManager, realm)
+        binding.container.adapter = SnsTabAdapter(supportFragmentManager, realm, this)
         binding.tabs.setupWithViewPager(binding.container)
 
         binding.fab.setOnClickListener { view ->
