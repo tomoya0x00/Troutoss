@@ -9,7 +9,8 @@ import io.realm.Sort
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
-import jp.gr.java_conf.miwax.troutoss.view.DummyFragment
+import jp.gr.java_conf.miwax.troutoss.view.fragment.DummyFragment
+import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonHomeFragment
 
 /**
  * Created by Tomoya Miwa on 2017/05/01.
@@ -28,7 +29,15 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
     }
 
     override fun getItem(position: Int): Fragment {
-        return DummyFragment()
+        val tab = tabs[position]
+        return when (tab.type) {
+            SnsTab.TabType.MASTODON_HOME -> {
+                MastodonHomeFragment.newInstance(tab.accountUuid, tab.option)
+            }
+            else -> {
+                DummyFragment()
+            }
+        }
     }
 
     override fun getPageTitle(position: Int): CharSequence {

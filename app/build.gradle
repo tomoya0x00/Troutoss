@@ -118,8 +118,11 @@ dependencies {
 
     // UI
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:support-v13:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.marshalchen.ultimaterecyclerview:library:0.7.2'
 
     // Mastodon
     compile 'com.github.sys1yagi.mastodon4j:mastodon4j:0.0.6'
@@ -131,9 +134,11 @@ dependencies {
 
     // Network
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     // Util
     compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     compile 'com.jakewharton.timber:timber:4.5.1'
     compile 'com.deploygate:sdk:3.1.1'

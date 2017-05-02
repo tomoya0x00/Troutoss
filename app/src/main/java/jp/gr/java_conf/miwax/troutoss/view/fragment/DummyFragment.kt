@@ -1,4 +1,4 @@
-package jp.gr.java_conf.miwax.troutoss.view
+package jp.gr.java_conf.miwax.troutoss.view.fragment
 
 
 import android.os.Bundle

@@ -33,6 +33,14 @@ class MastodonHelper(val context: Context) {
     /**
      * アクセストークンセット済みのMastodonクライアント取得。
      */
+    fun createAuthedClientOf(uuid: String): MastodonClient? =
+            loadAccountOf(uuid)?.let { account ->
+                MastodonClient(account.instanceName, OkHttpClient(), Gson(), account.accessToken)
+            }
+
+    /**
+     * アクセストークンセット済みのMastodonクライアント取得。
+     */
     fun createAuthedClientOf(instanceName: String, userName: String): MastodonClient? =
             loadAccountOf(instanceName, userName)?.let { MastodonClient(instanceName, OkHttpClient(), Gson(), it.accessToken) }
 
