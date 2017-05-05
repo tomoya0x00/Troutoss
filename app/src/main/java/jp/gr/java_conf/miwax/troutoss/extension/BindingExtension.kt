@@ -20,9 +20,8 @@ fun ImageView.imageUrl(url: String?) {
 @BindingAdapter("app:html")
 fun TextView.setHtml(html: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        this.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+        this.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT).trimTrailingWhitespace()
     } else {
-        val sppaned = Html.fromHtml(html)
-        this.text = sppaned
+        this.text = Html.fromHtml(html).trimTrailingWhitespace()
     }
 }

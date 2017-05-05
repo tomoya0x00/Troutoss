@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
@@ -36,15 +37,13 @@ class MastodonHomeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
-        val linearLayoutManager = LinearLayoutManager(context)
-        binding.timeline.layoutManager = linearLayoutManager
+        binding.timeline.layoutManager = LinearLayoutManager(context)
+        binding.timeline.addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
         val helper = MastodonHelper(context)
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
         val adapter = client?.let { MastodonHomeAdapter(it) }
         binding.timeline.setAdapter(adapter)
-        binding.timeline.setDefaultOnRefreshListener {
-            adapter?.refresh()
-        }
+        binding.timeline.setDefaultOnRefreshListener { adapter?.refresh() }
 
         return binding.root
     }

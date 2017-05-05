@@ -13,7 +13,6 @@ class MastodonStatusViewModel(private val status: Status) : BaseObservable() {
 
     // TODO: Boostedの適切な表示
 
-    // TODO: 画像の角を丸くする
     @get:Bindable
     val avatarUrl: String?
         get() = status.account?.avatar
@@ -21,7 +20,7 @@ class MastodonStatusViewModel(private val status: Status) : BaseObservable() {
     // TODO: 長い名前の時に表示が隠れるのをどうにかする
     @get:Bindable
     val displayName: String
-        get() = status.account?.displayName ?: ""
+        get() = status.account?.displayName ?: status.account?.userName ?: ""
 
     // TODO: リモートフォローの場合はインスタンス名も含める？
     // TODO: アカウント名の先頭に@をつける
