@@ -41,9 +41,11 @@ class MastodonHomeFragment : Fragment() {
         binding.timeline.addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
         val helper = MastodonHelper(context)
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        val adapter = client?.let { MastodonHomeAdapter(it) }
-        binding.timeline.setAdapter(adapter)
+        val adapter = client?.let { MastodonHomeAdapter(it, context) }
         binding.timeline.setDefaultOnRefreshListener { adapter?.refresh() }
+        binding.timeline.setOnLoadMoreListener { _, _ -> adapter?.loadMoreOld() }
+        binding.timeline.setLoadMoreView(R.layout.center_progressbar)
+        binding.timeline.setAdapter(adapter)
 
         return binding.root
     }

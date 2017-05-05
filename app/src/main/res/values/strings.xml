@@ -12,4 +12,5 @@
     <string name="mastodon_notifications_title">Notifications\n%1$s</string>
     <string name="mastodon_local_title">Local@%1$s</string>
     <string name="mastodon_federated_title">Federated@%1$s</string>
+    <string name="mastodon_boost_by">%1$s boosted</string>
 </resources>

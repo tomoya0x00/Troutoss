@@ -9,6 +9,8 @@
             name="viewModel"
             type="jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel"/>
 
+        <import type="android.view.View"/>
+
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -16,13 +18,36 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
 
+        <TextView
+            android:id="@+id/boost_by_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:text="BT"
+            android:visibility="@{viewModel.isBoost ? View.VISIBLE : View.GONE}"
+            app:layout_constraintRight_toRightOf="@+id/avatar"
+            app:layout_constraintTop_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/boost_by_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingBottom="16dp"
+            android:text="@{viewModel.boostBy}"
+            android:visibility="@{viewModel.isBoost ? View.VISIBLE : View.GONE}"
+            app:layout_constraintLeft_toRightOf="@id/boost_by_icon"
+            app:layout_constraintTop_toBottomOf="parent"
+            tools:text="hoge boosted"/>
+
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/avatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:imageUrl="@{viewModel.avatarUrl}"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
             app:riv_corner_radius="4dip"
             tools:src="@mipmap/ic_launcher"/>
 
@@ -32,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@{viewModel.createdAt}"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
             tools:text="createdAt"/>
 
         <TextView
@@ -44,7 +69,7 @@
             android:text="@{viewModel.displayName}"
             android:textColor="@android:color/white"
             app:layout_constraintLeft_toRightOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
             tools:text="display"/>
 
         <TextView
@@ -55,7 +80,7 @@
             android:layout_marginStart="8dp"
             android:text="@{viewModel.userName}"
             app:layout_constraintLeft_toRightOf="@id/display_name"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
             tools:text="user"/>
 
         <TextView

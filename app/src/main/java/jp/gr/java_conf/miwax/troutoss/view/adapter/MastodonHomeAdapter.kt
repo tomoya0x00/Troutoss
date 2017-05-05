@@ -1,5 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.view.adapter
 
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -26,7 +27,7 @@ import kotlinx.coroutines.experimental.rx2.await
  * Mastodonのホーム用アダプタ
  */
 
-class MastodonHomeAdapter(private val client: MastodonClient) :
+class MastodonHomeAdapter(client: MastodonClient, private val context: Context) :
         UltimateViewAdapter<MastodonHomeAdapter.ViewHolder>() {
 
     val timelines = RxTimelines(client)
@@ -44,12 +45,24 @@ class MastodonHomeAdapter(private val client: MastodonClient) :
 
     fun refresh() = launch(CommonPool) {
         // TODO: ロード中のプログレス表示
-        val result = timelines.getHome(Range(limit = 20)).await()
-        statuses.clear()
-        statuses.addAll(result.part)
-        launch(UI) { notifyDataSetChanged() }
+        // TODO: ロード失敗時のプログレス表示停止
+        pageable = timelines.getHome(Range(limit = 20)).await()
+        pageable?.let {
+            statuses.clear()
+            statuses.addAll(it.part)
+            launch(UI) { notifyDataSetChanged() }
+        }
     }
 
+    fun loadMoreOld() = launch(CommonPool) {
+        // TODO: ロード失敗時のプログレス表示停止
+        pageable = pageable?.let { timelines.getHome(it.nextRange(limit = 20)).await() }
+        pageable?.let {
+            val pos = statuses.size
+            statuses.addAll(it.part)
+            launch(UI) { notifyItemRangeInserted(pos, it.part.size) }
+        }
+    }
 
     override fun getAdapterItemCount(): Int {
         return statuses.size
@@ -57,11 +70,15 @@ class MastodonHomeAdapter(private val client: MastodonClient) :
 
     override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder {
         val v = LayoutInflater.from(parent?.context).inflate(R.layout.content_status, parent, false)
-        return ViewHolder(v)
+        return ViewHolder(v, true)
     }
 
-    class ViewHolder(itemView: View?) : UltimateRecyclerviewViewHolder<View>(itemView) {
-        val binding: ContentStatusBinding = DataBindingUtil.bind(itemView)
+    class ViewHolder(itemView: View?, normal: Boolean) : UltimateRecyclerviewViewHolder<View>(itemView) {
+        var binding: ContentStatusBinding? = null
+
+        init {
+            if (normal) binding = DataBindingUtil.bind(itemView)
+        }
     }
 
     override fun generateHeaderId(position: Int): Long {
@@ -70,11 +87,11 @@ class MastodonHomeAdapter(private val client: MastodonClient) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.binding?.viewModel = MastodonStatusViewModel(statuses[position])
+        holder?.binding?.viewModel = MastodonStatusViewModel(statuses[position], context)
     }
 
     override fun newFooterHolder(view: View?): ViewHolder {
-        return ViewHolder(view)
+        return ViewHolder(view, false)
     }
 
     override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
@@ -86,6 +103,6 @@ class MastodonHomeAdapter(private val client: MastodonClient) :
     }
 
     override fun newHeaderHolder(view: View?): ViewHolder {
-        return ViewHolder(view)
+        return ViewHolder(view, false)
     }
 }
