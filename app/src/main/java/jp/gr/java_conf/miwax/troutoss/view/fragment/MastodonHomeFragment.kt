@@ -46,6 +46,7 @@ class MastodonHomeFragment : Fragment() {
         binding.timeline.setOnLoadMoreListener { _, _ -> adapter?.loadMoreOld() }
         binding.timeline.setLoadMoreView(R.layout.center_progressbar)
         binding.timeline.setAdapter(adapter)
+        binding.timeline.setRefreshing(true)
 
         return binding.root
     }

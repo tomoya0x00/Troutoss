@@ -34,17 +34,14 @@ class MastodonHomeAdapter(client: MastodonClient, private val context: Context) 
     var pageable: Pageable<Status>? = null
     val statuses: MutableList<Status> = mutableListOf()
 
-    // TODO: 過去に遡っていく方向の追加対応
     // TODO: 最新のが少なければ追加していく対応
     // TODO: 最新のが多ければ置き換える対応
-    // TODO: 仕切り線を書く
 
     init {
         refresh()
     }
 
     fun refresh() = launch(CommonPool) {
-        // TODO: ロード中のプログレス表示
         // TODO: ロード失敗時のプログレス表示停止
         pageable = timelines.getHome(Range(limit = 20)).await()
         pageable?.let {
