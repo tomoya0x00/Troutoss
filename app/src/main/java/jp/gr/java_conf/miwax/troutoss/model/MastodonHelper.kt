@@ -9,9 +9,9 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers.io
 import io.realm.Realm
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.extension.OkHttpClientBuilderWithTimeout
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAppRegistration
-import okhttp3.OkHttpClient
 
 /**
  * Created by Tomoya Miwa on 2017/04/23.
@@ -28,21 +28,25 @@ class MastodonHelper(val context: Context) {
      * アクセストークンセット済みのMastodonクライアント取得。
      */
     fun createAuthedClientOf(account: MastodonAccount): MastodonClient? =
-            MastodonClient(account.instanceName, OkHttpClient(), Gson(), account.accessToken)
+            MastodonClient.Builder(account.instanceName, OkHttpClientBuilderWithTimeout(), Gson())
+                    .accessToken(account.accessToken).build()
 
     /**
      * アクセストークンセット済みのMastodonクライアント取得。
      */
     fun createAuthedClientOf(uuid: String): MastodonClient? =
             loadAccountOf(uuid)?.let { account ->
-                MastodonClient(account.instanceName, OkHttpClient(), Gson(), account.accessToken)
+                createAuthedClientOf(account)
             }
 
     /**
      * アクセストークンセット済みのMastodonクライアント取得。
      */
     fun createAuthedClientOf(instanceName: String, userName: String): MastodonClient? =
-            loadAccountOf(instanceName, userName)?.let { MastodonClient(instanceName, OkHttpClient(), Gson(), it.accessToken) }
+            loadAccountOf(instanceName, userName)?.let {
+                MastodonClient.Builder(instanceName, OkHttpClientBuilderWithTimeout(), Gson())
+                        .accessToken(it.accessToken).build()
+            }
 
     fun registerAppIfNeededTo(instanceName: String): Single<MastodonAppRegistration?> {
         require(instanceName.isNotEmpty()) { "instanceName is empty!" }
@@ -51,7 +55,7 @@ class MastodonHelper(val context: Context) {
             return Single.just(loadAppRegistrationOf(instanceName))
         }
 
-        val client: MastodonClient = MastodonClient(instanceName, OkHttpClient(), Gson())
+        val client: MastodonClient = MastodonClient.Builder(instanceName, OkHttpClientBuilderWithTimeout(), Gson()).build()
         val apps = RxApps(client)
 
         return apps.createApp(

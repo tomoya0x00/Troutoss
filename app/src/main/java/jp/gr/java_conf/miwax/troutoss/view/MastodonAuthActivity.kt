@@ -14,6 +14,7 @@ import com.sys1yagi.mastodon4j.rx.RxAccounts
 import com.sys1yagi.mastodon4j.rx.RxApps
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
+import jp.gr.java_conf.miwax.troutoss.extension.OkHttpClientBuilderWithTimeout
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
@@ -22,9 +23,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.rx2.await
-import okhttp3.OkHttpClient
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class MastodonAuthActivity : AppCompatActivity() {
 
@@ -45,7 +44,7 @@ class MastodonAuthActivity : AppCompatActivity() {
 
     private fun requestAuthCode() = launch(UI) {
         val instance = binding.instanceEdit.text.toString()
-        val client = MastodonClient(instance, createOkHttpClient(), Gson())
+        val client = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson()).build()
         val apps = RxApps(client)
         try {
             val appRegistration = async(context + CommonPool) { helper.registerAppIfNeededTo(instance).await() }
@@ -55,14 +54,6 @@ class MastodonAuthActivity : AppCompatActivity() {
             Timber.e("Login failed: %s", e)
             Toast.makeText(this@MastodonAuthActivity, R.string.login_failed, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun createOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-                .connectTimeout(2000, TimeUnit.MILLISECONDS)
-                .readTimeout(2000, TimeUnit.MILLISECONDS)
-                .writeTimeout(2000, TimeUnit.MILLISECONDS)
-                .build()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -79,7 +70,7 @@ class MastodonAuthActivity : AppCompatActivity() {
             val code = uri.getQueryParameter("code")
             if (code != null) {
                 val instance = binding.instanceEdit.text.toString()
-                val client = MastodonClient(instance, OkHttpClient(), Gson())
+                val client = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson()).build()
                 val apps = RxApps(client)
                 val appRegistration = helper.loadAppRegistrationOf(instance)
                 if (appRegistration != null) {
@@ -90,7 +81,8 @@ class MastodonAuthActivity : AppCompatActivity() {
                                 helper.authCbUrl,
                                 code
                         ).await()
-                        val authClient = MastodonClient(instance, OkHttpClient(), Gson(), accessToken.accessToken)
+                        val authClient = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson())
+                                .accessToken(accessToken.accessToken).build()
                         val accounts = RxAccounts(authClient)
                         val account = accounts.getVerifyCredentials().await()
                         val mastodonAccount = MastodonAccount(
