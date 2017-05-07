@@ -35,15 +35,19 @@ class MastodonHomeAdapter(client: MastodonClient, private val context: Context) 
     private var pageable: Pageable<Status>? = null
     private val statuses: MutableList<Status> = mutableListOf()
 
-    // TODO: 最新のが少なければ追加していく対応
-    // TODO: 最新のが多ければ置き換える対応
-
     fun refresh() = async(CommonPool) {
         pageable = timelines.getHome(Range(limit = 20)).await()
         pageable?.let {
-            statuses.clear()
-            statuses.addAll(it.part)
-            launch(UI) { notifyDataSetChanged() }
+            val addable = (statuses.size > 0) && it.part.any { it.id == statuses[0].id }
+            if (addable) {
+                val addStatuses = it.part.takeWhile { it.id != statuses[0].id }
+                statuses.addAll(0, addStatuses)
+                launch(UI) { notifyItemRangeInserted(0, addStatuses.size) }
+            } else {
+                statuses.clear()
+                statuses.addAll(it.part)
+                launch(UI) { notifyDataSetChanged() }
+            }
         }
     }
 
