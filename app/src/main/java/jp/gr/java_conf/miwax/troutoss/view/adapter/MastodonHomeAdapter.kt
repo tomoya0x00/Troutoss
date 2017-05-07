@@ -3,6 +3,7 @@ package jp.gr.java_conf.miwax.troutoss.view.adapter
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,7 +80,10 @@ class MastodonHomeAdapter(client: MastodonClient, private val context: Context) 
         var binding: ContentStatusBinding? = null
 
         init {
-            if (normal) binding = DataBindingUtil.bind(itemView)
+            if (normal) {
+                binding = DataBindingUtil.bind(itemView)
+                binding?.content?.movementMethod = LinkMovementMethod.getInstance()
+            }
         }
     }
 
