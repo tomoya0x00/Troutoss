@@ -42,23 +42,28 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
 
     override fun getPageTitle(position: Int): CharSequence {
         val tab = tabs[position]
+        val account = helper.loadAccountOf(tab.accountUuid)
+        val countAccount = account?.let { helper.countAccountOf(it.instanceName) }
         return when (tab.type) {
             SnsTab.TabType.MASTODON_HOME -> {
-                context.getString(R.string.mastodon_home_title,
-                        helper.loadAccountOf(tab.accountUuid)?.userNameWithinstance ?: "")
-
+                if (countAccount?.toInt() == 1) {
+                    context.getString(R.string.mastodon_home_title_short, account.instanceName)
+                } else {
+                    context.getString(R.string.mastodon_home_title_long, account?.userNameWithinstance ?: "")
+                }
             }
             SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
-                context.getString(R.string.mastodon_notifications_title,
-                        helper.loadAccountOf(tab.accountUuid)?.userNameWithinstance ?: "")
+                if (countAccount?.toInt() == 1) {
+                    context.getString(R.string.mastodon_notifications_title_short, account.instanceName)
+                } else {
+                    context.getString(R.string.mastodon_notifications_title_long, account?.userNameWithinstance ?: "")
+                }
             }
             SnsTab.TabType.MASTODON_LOCAL -> {
-                context.getString(R.string.mastodon_local_title,
-                        helper.loadAccountOf(tab.accountUuid)?.instanceName ?: "")
+                context.getString(R.string.mastodon_local_title, account?.instanceName ?: "")
             }
             SnsTab.TabType.MASTODON_FEDERATED -> {
-                context.getString(R.string.mastodon_federated_title,
-                        helper.loadAccountOf(tab.accountUuid)?.instanceName ?: "")
+                context.getString(R.string.mastodon_federated_title, account?.instanceName ?: "")
             }
             else -> {
                 tabs[position].type.toString()

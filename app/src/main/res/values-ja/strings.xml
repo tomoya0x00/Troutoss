@@ -4,8 +4,10 @@
     <string name="input_instance">接続先インスタンス</string>
     <string name="login">ログイン</string>
     <string name="login_failed">ログインに失敗しました。\nインスタンス名を確認して下さい。</string>
-    <string name="mastodon_home_title">ホーム\n%1$s</string>
-    <string name="mastodon_notifications_title">通知\n%1$s</string>
+    <string name="mastodon_home_title_long">ホーム\n%1$s</string>
+    <string name="mastodon_home_title_short">ホーム@%1$s</string>
+    <string name="mastodon_notifications_title_long">通知\n%1$s</string>
+    <string name="mastodon_notifications_title_short">通知@%1$s</string>
     <string name="mastodon_local_title">ローカル@%1$s</string>
     <string name="mastodon_federated_title">連合@%1$s</string>
     <string name="mastodon_boost_by">%1$s さんがブースト</string>
