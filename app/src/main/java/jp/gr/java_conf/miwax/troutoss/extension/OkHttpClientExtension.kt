@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
  */
 
 fun OkHttpClientBuilderWithTimeout(): OkHttpClient.Builder {
-    val timeout: Long = 5000
+    val timeout: Long = 10000
     return OkHttpClient.Builder()
             .connectTimeout(timeout, TimeUnit.MILLISECONDS)
             .readTimeout(timeout, TimeUnit.MILLISECONDS)
