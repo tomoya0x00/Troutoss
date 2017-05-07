@@ -18,6 +18,7 @@ import jp.gr.java_conf.miwax.troutoss.databinding.ContentStatusBinding
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.rx2.await
 
@@ -30,19 +31,14 @@ import kotlinx.coroutines.experimental.rx2.await
 class MastodonHomeAdapter(client: MastodonClient, private val context: Context) :
         UltimateViewAdapter<MastodonHomeAdapter.ViewHolder>() {
 
-    val timelines = RxTimelines(client)
-    var pageable: Pageable<Status>? = null
-    val statuses: MutableList<Status> = mutableListOf()
+    private val timelines = RxTimelines(client)
+    private var pageable: Pageable<Status>? = null
+    private val statuses: MutableList<Status> = mutableListOf()
 
     // TODO: 最新のが少なければ追加していく対応
     // TODO: 最新のが多ければ置き換える対応
 
-    init {
-        refresh()
-    }
-
-    fun refresh() = launch(CommonPool) {
-        // TODO: ロード失敗時のプログレス表示停止
+    fun refresh() = async(CommonPool) {
         pageable = timelines.getHome(Range(limit = 20)).await()
         pageable?.let {
             statuses.clear()
@@ -51,9 +47,14 @@ class MastodonHomeAdapter(client: MastodonClient, private val context: Context) 
         }
     }
 
-    fun loadMoreOld() = launch(CommonPool) {
-        // TODO: ロード失敗時のプログレス表示停止
-        pageable = pageable?.let { timelines.getHome(it.nextRange(limit = 20)).await() }
+    fun loadMoreOld() = async(CommonPool) {
+        try {
+            pageable = pageable?.let { timelines.getHome(it.nextRange(limit = 20)).await() }
+        } catch (e: Exception) {
+            // プログレス表示を消去
+            launch(UI) { notifyDataSetChanged() }
+            throw e
+        }
         pageable?.let {
             val pos = statuses.size
             statuses.addAll(it.part)

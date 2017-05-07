@@ -3,16 +3,21 @@ package jp.gr.java_conf.miwax.troutoss.view.fragment
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonHomeAdapter
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -25,6 +30,7 @@ class MastodonHomeFragment : Fragment() {
     private var option: String? = null
 
     lateinit private var binding: FragmentMastodonHomeBinding
+    private var adapter: MastodonHomeAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +43,44 @@ class MastodonHomeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
-        binding.timeline.layoutManager = LinearLayoutManager(context)
-        binding.timeline.addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
         val helper = MastodonHelper(context)
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        val adapter = client?.let { MastodonHomeAdapter(it, context) }
-        binding.timeline.setDefaultOnRefreshListener { adapter?.refresh() }
-        binding.timeline.setOnLoadMoreListener { _, _ -> adapter?.loadMoreOld() }
-        binding.timeline.setLoadMoreView(R.layout.center_progressbar)
-        binding.timeline.setAdapter(adapter)
-        binding.timeline.setRefreshing(true)
+        adapter = client?.let { MastodonHomeAdapter(it, context) }
+
+        binding.timeline.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
+            setDefaultOnRefreshListener { onRefresh() }
+            setOnLoadMoreListener { _, _ -> onLoadMoreOld() }
+            setLoadMoreView(R.layout.center_progressbar)
+            setAdapter(this@MastodonHomeFragment.adapter)
+        }
+
+        onRefresh()
 
         return binding.root
+    }
+
+    private fun onRefresh() = launch(UI) {
+        binding.timeline.setRefreshing(true)
+        try {
+            adapter?.refresh()?.await()
+        } catch (e: Exception) {
+            Timber.e("refresh failed: %s", e)
+            Toast.makeText(getContext(), R.string.error_comm, Snackbar.LENGTH_SHORT).show()
+        } finally {
+            binding.timeline.setRefreshing(false)
+        }
+    }
+
+    private fun onLoadMoreOld() = launch(UI) {
+        // TODO: 通信途絶時に何度も実行されてしまうのを修正
+        try {
+            adapter?.loadMoreOld()?.await()
+        } catch (e: Exception) {
+            Timber.e("loadMoreOld failed: %s", e)
+            Toast.makeText(getContext(), R.string.error_comm, Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     companion object {

@@ -9,4 +9,5 @@
     <string name="mastodon_local_title">ローカル@%1$s</string>
     <string name="mastodon_federated_title">連合@%1$s</string>
     <string name="mastodon_boost_by">%1$s さんがブースト</string>
+    <string name="error_comm">通信に失敗しました。\nしばらくしてからやり直してみて下さい。</string>
 </resources>
