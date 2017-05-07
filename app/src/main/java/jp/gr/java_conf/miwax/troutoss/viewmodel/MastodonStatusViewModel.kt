@@ -33,11 +33,9 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
     val displayName: String
         get() = showableAccount?.let { getNonEmptyName(it) } ?: ""
 
-    // TODO: リモートフォローの場合はインスタンス名も含める？
-    // TODO: アカウント名の先頭に@をつける
     @get:Bindable
     val userName: String
-        get() = showableAccount?.userName ?: ""
+        get() = "@" + (showableAccount?.acct ?: "")
 
     // TODO: 現在時刻からどれだけ前なのか？という表示に変更する
     @get:Bindable
