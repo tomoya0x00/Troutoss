@@ -90,8 +90,8 @@ class MastodonAuthActivity : AppCompatActivity() {
                                 userName = account.userName,
                                 accessToken = accessToken.accessToken
                         )
-                        SnsTabRepository(helper).addDefaultTabsFrom(mastodonAccount)
                         helper.storeAccount(mastodonAccount)
+                        SnsTabRepository(helper).addDefaultTabsFrom(mastodonAccount)
                         return@async mastodonAccount.uuid
                     }
                     val intent = Intent()

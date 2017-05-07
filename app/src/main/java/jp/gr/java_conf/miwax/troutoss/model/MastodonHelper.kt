@@ -108,14 +108,20 @@ class MastodonHelper(val context: Context) {
             }
 
     /**
-     * 指定したインスタンスのアカウントを保持しているか確認。
+     * 指定したインスタンスのアカウント数を取得。
      */
-    fun hasAccountOf(instanceName: String): Boolean =
+    fun countAccountOf(instanceName: String): Long =
             Realm.getDefaultInstance().use { realm ->
                 realm.where(MastodonAccount::class.java)
                         .equalTo(MastodonAccount::instanceName.name, instanceName)
-                        .count() > 0
+                        .count()
             }
+
+    /**
+     * 指定したインスタンスのアカウントを保持しているか確認。
+     */
+    fun hasAccountOf(instanceName: String): Boolean =
+            countAccountOf(instanceName) > 0
 
     /**
      * 全アカウント情報の取得。
