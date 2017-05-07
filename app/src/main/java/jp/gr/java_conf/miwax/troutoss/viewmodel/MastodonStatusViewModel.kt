@@ -8,6 +8,7 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import jp.gr.java_conf.miwax.troutoss.R
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
+import java.net.URI
 
 /**
  * Created by Tomoya Miwa on 2017/05/02.
@@ -30,7 +31,18 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
 
     @get:Bindable
     val avatarUrl: String?
-        get() = showableAccount?.avatar
+        get() {
+            val uri = URI(showableAccount?.avatar)
+
+            if (uri.isAbsolute) {
+                return showableAccount?.avatar
+            } else {
+                // ユーザーURLから絶対パス生成
+                val userUrl = URI(showableAccount?.url)
+                val avatarUri = URI(userUrl.scheme, userUrl.host, showableAccount?.avatar, null)
+                return avatarUri.toString()
+            }
+        }
 
     @get:Bindable
     val displayName: String
