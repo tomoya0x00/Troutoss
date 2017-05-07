@@ -2,6 +2,7 @@ package jp.gr.java_conf.miwax.troutoss
 
 import android.app.Application
 import com.deploygate.sdk.DeployGate
+import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import timber.log.Timber
@@ -15,6 +16,8 @@ class App: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

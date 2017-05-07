@@ -14,4 +14,21 @@
     <string name="mastodon_federated_title">Federated@%1$s</string>
     <string name="mastodon_boost_by">%1$s boosted</string>
     <string name="error_comm">Communication failed.^nPlease try again after a while.</string>
+    <string name="status_now">now</string>
+    <plurals name="status_second">
+        <item quantity="one">%1$d second ago</item>
+        <item quantity="other">%1$d seconds ago</item>
+    </plurals>
+    <plurals name="status_minute">
+        <item quantity="one">%1$d minute ago</item>
+        <item quantity="other">%1$d minutes ago</item>
+    </plurals>
+    <plurals name="status_hour">
+        <item quantity="one">%1$d hour ago</item>
+        <item quantity="other">%1$d hours ago</item>
+    </plurals>
+    <plurals name="status_day">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
 </resources>

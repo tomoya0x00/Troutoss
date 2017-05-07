@@ -6,6 +6,8 @@ import android.databinding.Bindable
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
 import jp.gr.java_conf.miwax.troutoss.R
+import org.threeten.bp.Duration
+import org.threeten.bp.ZonedDateTime
 
 /**
  * Created by Tomoya Miwa on 2017/05/02.
@@ -13,6 +15,8 @@ import jp.gr.java_conf.miwax.troutoss.R
  */
 
 class MastodonStatusViewModel(private val status: Status, val context: Context) : BaseObservable() {
+
+    private val resources = context.resources
 
     // TODO: Boostなどのアイコン画像表示
     @get:Bindable
@@ -28,7 +32,6 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
     val avatarUrl: String?
         get() = showableAccount?.avatar
 
-    // TODO: 長い名前の時に表示が隠れるのをどうにかする
     @get:Bindable
     val displayName: String
         get() = showableAccount?.let { getNonEmptyName(it) } ?: ""
@@ -37,14 +40,23 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
     val userName: String
         get() = "@" + (showableAccount?.acct ?: "")
 
-    // TODO: 現在時刻からどれだけ前なのか？という表示に変更する
     @get:Bindable
-    val createdAt: String
-        get() = showableStatus?.createdAt ?: ""
+    val elapsed: String
+        get() {
+            val now = ZonedDateTime.now()
+            val createdAt = ZonedDateTime.parse(showableStatus?.createdAt)
+            val elapsed = Duration.between(createdAt, now)
+            val elapsedSec = elapsed.toMillis() / 1000
+            return when {
+                elapsedSec < 1 -> context.getString(R.string.status_now)
+                elapsedSec < 60 -> resources.getQuantityString(R.plurals.status_second, elapsedSec.toInt(), elapsedSec)
+                elapsedSec < 3600 -> resources.getQuantityString(R.plurals.status_minute, elapsed.toMinutes().toInt(), elapsed.toMinutes())
+                elapsedSec < 3600 * 24 -> resources.getQuantityString(R.plurals.status_hour, elapsed.toHours().toInt(), elapsed.toHours())
+                else -> resources.getQuantityString(R.plurals.status_day, elapsed.toDays().toInt(), elapsed.toDays())
+            }
+        }
 
     // TODO: CWなどを処理する
-    // TODO: レイアウト調整（不要な行末の改行削除など？）
-    // TODO: リンクの処理（とりあえずは外部ブラウザかな？）
     @get:Bindable
     val content: String
         get() = showableStatus?.content ?: ""

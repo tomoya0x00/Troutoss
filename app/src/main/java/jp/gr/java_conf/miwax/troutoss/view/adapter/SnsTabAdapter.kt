@@ -44,19 +44,20 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
         val tab = tabs[position]
         return when (tab.type) {
             SnsTab.TabType.MASTODON_HOME -> {
-                String.format(context.getString(R.string.mastodon_home_title),
+                context.getString(R.string.mastodon_home_title,
                         helper.loadAccountOf(tab.accountUuid)?.userNameWithinstance ?: "")
+
             }
             SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
-                String.format(context.getString(R.string.mastodon_notifications_title),
+                context.getString(R.string.mastodon_notifications_title,
                         helper.loadAccountOf(tab.accountUuid)?.userNameWithinstance ?: "")
             }
             SnsTab.TabType.MASTODON_LOCAL -> {
-                String.format(context.getString(R.string.mastodon_local_title),
+                context.getString(R.string.mastodon_local_title,
                         helper.loadAccountOf(tab.accountUuid)?.instanceName ?: "")
             }
             SnsTab.TabType.MASTODON_FEDERATED -> {
-                String.format(context.getString(R.string.mastodon_federated_title),
+                context.getString(R.string.mastodon_federated_title,
                         helper.loadAccountOf(tab.accountUuid)?.instanceName ?: "")
             }
             else -> {
