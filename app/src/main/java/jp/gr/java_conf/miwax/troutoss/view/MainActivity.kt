@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        binding.container.adapter = null
         realm.close()
         super.onDestroy()
     }
