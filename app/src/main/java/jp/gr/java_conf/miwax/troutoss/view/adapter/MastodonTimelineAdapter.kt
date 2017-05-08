@@ -13,7 +13,9 @@ import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.Pageable
 import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Status
+import com.sys1yagi.mastodon4j.rx.RxPublic
 import com.sys1yagi.mastodon4j.rx.RxTimelines
+import io.reactivex.Single
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentStatusBinding
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
@@ -29,15 +31,25 @@ import kotlinx.coroutines.experimental.rx2.await
  * Mastodonのホーム用アダプタ
  */
 
-class MastodonHomeAdapter(client: MastodonClient, private val context: Context) :
-        UltimateViewAdapter<MastodonHomeAdapter.ViewHolder>() {
+class MastodonTimelineAdapter(private val context: Context, client: MastodonClient, type: Timeline) :
+        UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
-    private val timelines = RxTimelines(client)
     private var pageable: Pageable<Status>? = null
     private val statuses: MutableList<Status> = mutableListOf()
+    private val getTimeline: (Range) -> Single<Pageable<Status>> =
+            when(type) {
+                Timeline.HOME -> RxTimelines(client)::getHome
+                Timeline.LOCAL -> RxPublic(client)::getLocalPublic
+                Timeline.FEDERATED -> RxPublic(client)::getFederatedPublic
+                else -> RxTimelines(client)::getHome
+            }
+
+    enum class Timeline {
+        HOME, LOCAL, FEDERATED
+    }
 
     fun refresh() = async(CommonPool) {
-        pageable = timelines.getHome(Range(limit = 20)).await()
+        pageable = getTimeline(Range(limit = 20)).await()
         pageable?.let {
             val addable = (statuses.size > 0) && it.part.any { it.id == statuses[0].id }
             if (addable) {
@@ -54,7 +66,7 @@ class MastodonHomeAdapter(client: MastodonClient, private val context: Context) 
 
     fun loadMoreOld() = async(CommonPool) {
         try {
-            pageable = pageable?.let { timelines.getHome(it.nextRange(limit = 20)).await() }
+            pageable = pageable?.let { getTimeline(it.nextRange(limit = 20)).await() }
         } catch (e: Exception) {
             // プログレス表示を消去
             launch(UI) { notifyDataSetChanged() }

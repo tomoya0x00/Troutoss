@@ -10,7 +10,7 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 import jp.gr.java_conf.miwax.troutoss.view.fragment.DummyFragment
-import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonHomeFragment
+import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonTimelineFragment
 
 /**
  * Created by Tomoya Miwa on 2017/05/01.
@@ -32,7 +32,13 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
         val tab = tabs[position]
         return when (tab.type) {
             SnsTab.TabType.MASTODON_HOME -> {
-                MastodonHomeFragment.newInstance(tab.accountUuid, tab.option)
+                MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.HOME, tab.accountUuid, tab.option)
+            }
+            SnsTab.TabType.MASTODON_LOCAL -> {
+                MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.LOCAL, tab.accountUuid, tab.option)
+            }
+            SnsTab.TabType.MASTODON_FEDERATED -> {
+                MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.FEDERATED, tab.accountUuid, tab.option)
             }
             else -> {
                 DummyFragment()

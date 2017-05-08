@@ -14,26 +14,28 @@ import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalD
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
-import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonHomeAdapter
+import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
- * Use the [MastodonHomeFragment.newInstance] factory method to
+ * Use the [MastodonTimelineFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MastodonHomeFragment : Fragment() {
+class MastodonTimelineFragment : Fragment() {
 
+    private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
     private var option: String? = null
 
     lateinit private var binding: FragmentMastodonHomeBinding
-    private var adapter: MastodonHomeAdapter? = null
+    private var adapter: MastodonTimelineAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        timeline = arguments?.getString(ARG_TIMELINE)?.let { MastodonTimelineAdapter.Timeline.valueOf(it) }
         accountUuid = arguments?.getString(ARG_ACCOUNT_UUID)
         option = arguments?.getString(ARG_OPTION)
     }
@@ -45,7 +47,7 @@ class MastodonHomeFragment : Fragment() {
 
         val helper = MastodonHelper(context)
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        adapter = client?.let { MastodonHomeAdapter(it, context) }
+        adapter = client?.let { MastodonTimelineAdapter(context, it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
 
         binding.timeline.apply {
             layoutManager = LinearLayoutManager(context)
@@ -53,7 +55,7 @@ class MastodonHomeFragment : Fragment() {
             setDefaultOnRefreshListener { onRefresh() }
             setOnLoadMoreListener { _, _ -> onLoadMoreOld() }
             setLoadMoreView(R.layout.center_progressbar)
-            setAdapter(this@MastodonHomeFragment.adapter)
+            setAdapter(this@MastodonTimelineFragment.adapter)
         }
 
         onRefresh()
@@ -84,6 +86,7 @@ class MastodonHomeFragment : Fragment() {
     }
 
     companion object {
+        private val ARG_TIMELINE = "timeline"
         private val ARG_ACCOUNT_UUID = "account_uuid"
         private val ARG_OPTION = "option"
 
@@ -97,9 +100,10 @@ class MastodonHomeFragment : Fragment() {
          * *
          * @return A new instance of fragment MastodonHomeFragment.
          */
-        fun newInstance(accountUuid: String, option: String): MastodonHomeFragment {
-            val fragment = MastodonHomeFragment()
+        fun newInstance(timeline: MastodonTimelineAdapter.Timeline, accountUuid: String, option: String): MastodonTimelineFragment {
+            val fragment = MastodonTimelineFragment()
             val args = Bundle()
+            args.putString(ARG_TIMELINE, timeline.toString())
             args.putString(ARG_ACCOUNT_UUID, accountUuid)
             args.putString(ARG_OPTION, option)
             fragment.arguments = args
