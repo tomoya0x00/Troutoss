@@ -1,7 +1,9 @@
 package jp.gr.java_conf.miwax.troutoss
 
 import android.app.Application
+import android.util.Log
 import com.deploygate.sdk.DeployGate
+import com.google.firebase.crash.FirebaseCrash
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -12,7 +14,7 @@ import timber.log.Timber
  * App class
  */
 
-class App: Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -24,8 +26,7 @@ class App: Application() {
             DeployGate.install(this)
 
         } else {
-            // TODO: Firebaseにログを送信
-            Timber.plant(Timber.DebugTree())
+            Timber.plant(FirebaseTree())
         }
 
         // Realmデフォルト設定
@@ -35,5 +36,20 @@ class App: Application() {
                 .schemaVersion(1)
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
+    }
+
+    private class FirebaseTree : Timber.Tree() {
+
+        override fun log(priority: Int, tag: String?, message: String?, e: Throwable?) {
+            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
+                return
+            }
+
+            if (e == null) {
+                FirebaseCrash.logcat(priority, tag, message)
+            } else {
+                FirebaseCrash.report(e)
+            }
+        }
     }
 }

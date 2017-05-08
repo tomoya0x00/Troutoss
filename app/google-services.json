@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "40209132387",
+    "firebase_url": "https://troutoss-2fa08.firebaseio.com",
+    "project_id": "troutoss-2fa08",
+    "storage_bucket": "troutoss-2fa08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40209132387:android:b0c3af84349b33b5",
+        "android_client_info": {
+          "package_name": "jp.gr.java_conf.miwax.troutoss"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40209132387-3bg24uoc9or64nv2jbg62sh4kah34j3r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANGTdAkN_3SPEB3hZb0UTxkcET1RCP3wE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40209132387:android:d0148f2e8467f30d",
+        "android_client_info": {
+          "package_name": "jp.gr.java_conf.miwax.troutoss.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "40209132387-3bg24uoc9or64nv2jbg62sh4kah34j3r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANGTdAkN_3SPEB3hZb0UTxkcET1RCP3wE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
