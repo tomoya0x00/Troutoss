@@ -105,6 +105,19 @@
             app:layout_constraintTop_toBottomOf="@id/display_name"
             tools:text="content"/>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/attachments"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
+            app:adapter="@{viewModel.attachmentAdapter}"
+            app:layoutManager="GridLayoutManager"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content"
+            app:spanCount="2"/>
+
     </android.support.constraint.ConstraintLayout>
 
 </layout>

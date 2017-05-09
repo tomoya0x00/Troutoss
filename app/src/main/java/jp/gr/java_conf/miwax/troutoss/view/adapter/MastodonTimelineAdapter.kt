@@ -83,12 +83,12 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
         return statuses.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder {
-        val v = LayoutInflater.from(parent?.context).inflate(R.layout.content_status, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.content_status, parent, false)
         return ViewHolder(v, true)
     }
 
-    class ViewHolder(itemView: View?, normal: Boolean) : UltimateRecyclerviewViewHolder<View>(itemView) {
+    class ViewHolder(itemView: View, normal: Boolean) : UltimateRecyclerviewViewHolder<View>(itemView) {
         var binding: ContentStatusBinding? = null
 
         init {
@@ -104,23 +104,23 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
         return position.toLong()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.binding?.viewModel = MastodonStatusViewModel(statuses[position], context)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.binding?.viewModel = MastodonStatusViewModel(statuses[position], context)
     }
 
-    override fun newFooterHolder(view: View?): ViewHolder {
+    override fun newFooterHolder(view: View): ViewHolder {
         return ViewHolder(view, false)
     }
 
-    override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // do nothing
     }
 
-    override fun onCreateHeaderViewHolder(parent: ViewGroup?): RecyclerView.ViewHolder {
+    override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return UltimateRecyclerviewViewHolder<View>(parent)
     }
 
-    override fun newHeaderHolder(view: View?): ViewHolder {
+    override fun newHeaderHolder(view: View): ViewHolder {
         return ViewHolder(view, false)
     }
 }

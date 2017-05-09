@@ -6,6 +6,7 @@ import android.databinding.Bindable
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import java.net.URI
@@ -72,6 +73,14 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
     @get:Bindable
     val content: String
         get() = showableStatus?.content ?: ""
+
+    @get:Bindable
+    val hasAttachments: Boolean
+        get() = showableStatus?.mediaAttachments?.size ?: 0 > 0
+
+    @get:Bindable
+    val attachmentAdapter: MastodonAttachmentAdapter?
+            = showableStatus?.let { MastodonAttachmentAdapter(it.mediaAttachments) }
 
     private val showableAccount: Account?
         get() = showableStatus?.account

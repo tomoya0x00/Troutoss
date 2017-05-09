@@ -1,7 +1,10 @@
 package jp.gr.java_conf.miwax.troutoss.extension
 
 import android.databinding.BindingAdapter
+import android.databinding.BindingMethod
+import android.databinding.BindingMethods
 import android.os.Build
+import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,7 +21,7 @@ fun ImageView.imageUrl(url: String?) {
 }
 
 @BindingAdapter("app:html")
-@SuppressWarnings( "deprecation" )
+@SuppressWarnings("deprecation")
 fun TextView.setHtml(html: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         this.text = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT).trimTrailingWhitespace()
@@ -26,3 +29,6 @@ fun TextView.setHtml(html: String) {
         this.text = Html.fromHtml(html).trimTrailingWhitespace()
     }
 }
+
+@BindingMethods(BindingMethod(type = RecyclerView::class, attribute = "app:adapter", method = "setAdapter"))
+class ViewBindingUtil
