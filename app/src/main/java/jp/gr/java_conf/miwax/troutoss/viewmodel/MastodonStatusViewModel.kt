@@ -3,8 +3,10 @@ package jp.gr.java_conf.miwax.troutoss.viewmodel
 import android.content.Context
 import android.databinding.BaseObservable
 import android.databinding.Bindable
+import android.view.View
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
+import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
 import org.threeten.bp.Duration
@@ -19,6 +21,8 @@ import java.net.URI
 class MastodonStatusViewModel(private val status: Status, val context: Context) : BaseObservable() {
 
     private val resources = context.resources
+
+    private var showedSensitiveMedia = false
 
     // TODO: Boostなどのアイコン画像表示
     @get:Bindable
@@ -81,6 +85,15 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
     @get:Bindable
     val attachmentAdapter: MastodonAttachmentAdapter?
             = showableStatus?.let { MastodonAttachmentAdapter(it.mediaAttachments) }
+
+    @get:Bindable
+    val hideMedia: Boolean
+        get() = !showedSensitiveMedia && showableStatus?.isSensitive ?: false
+
+    fun onClickShowMedia(view: View) {
+        showedSensitiveMedia = true
+        notifyPropertyChanged(BR.hideMedia)
+    }
 
     private val showableAccount: Account?
         get() = showableStatus?.account

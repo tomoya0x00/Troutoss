@@ -17,6 +17,7 @@
     <string name="mastodon_boost_by">%1$s boosted</string>
     <string name="error_comm">Communication failed.^nPlease try again after a while.</string>
     <string name="status_now">now</string>
+    <string name="sensitive_content">Sensitive content\nClick to view</string>
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
         <item quantity="other">%1$d seconds ago</item>

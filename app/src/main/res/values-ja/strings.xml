@@ -13,6 +13,7 @@
     <string name="mastodon_boost_by">%1$s さんがブースト</string>
     <string name="error_comm">通信に失敗しました。\nしばらくしてからやり直してみて下さい。</string>
     <string name="status_now">今</string>
+    <string name="sensitive_content">閲覧注意\nクリックして表示</string>
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
     </plurals>
