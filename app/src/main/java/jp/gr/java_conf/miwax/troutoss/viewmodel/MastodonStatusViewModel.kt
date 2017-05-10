@@ -8,11 +8,15 @@ import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
+import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import timber.log.Timber
 import java.net.URI
+
 
 /**
  * Created by Tomoya Miwa on 2017/05/02.
@@ -20,6 +24,8 @@ import java.net.URI
  */
 
 class MastodonStatusViewModel(private val status: Status, private val context: Context) : BaseObservable() {
+
+    val messenger = Messenger()
 
     private val resources = context.resources
 
@@ -62,7 +68,7 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
     val elapsed: String
         get() {
             val now = ZonedDateTime.now()
-            val createdAt = ZonedDateTime.parse(showableStatus?.createdAt)
+            val createdAt = ZonedDateTime.parse(showableStatus.createdAt)
             val elapsed = Duration.between(createdAt, now)
             val elapsedSec = elapsed.toMillis() / 1000
             return when {
@@ -77,34 +83,34 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
     // TODO: CWなどを処理する
     @get:Bindable
     val content: String
-        get() = showableStatus?.content ?: ""
+        get() = showableStatus.content
 
     @get:Bindable
     val hasAttachments: Boolean
-        get() = showableStatus?.mediaAttachments?.size ?: 0 > 0
+        get() = showableStatus.mediaAttachments.isNotEmpty()
 
     @get:Bindable
-    val attachmentAdapter: MastodonAttachmentAdapter?
-        get() = showableStatus?.let {
-            object : MastodonAttachmentAdapter(it.mediaAttachments) {
+    val attachmentAdapter: MastodonAttachmentAdapter =
+            object : MastodonAttachmentAdapter(showableStatus.mediaAttachments) {
                 override fun onClickImage(urls: List<String>, index: Int) {
                     Timber.d("image clicked! urls:%s, index:%d", urls, index)
+                    messenger.send(ShowImagesMessage(urls, index))
                 }
 
                 override fun onClickVideo(url: String) {
                     Timber.d("video clicked! url:%s", url)
+                    messenger.send(OpenUrlMessage(url))
                 }
 
                 override fun onClickUnknown(url: String) {
                     Timber.d("unknown clicked! url:%s", url)
-
+                    messenger.send(OpenUrlMessage(url))
                 }
             }
-        }
 
     @get:Bindable
     val hideMedia: Boolean
-        get() = !showedSensitiveMedia && showableStatus?.isSensitive ?: false
+        get() = !showedSensitiveMedia && showableStatus.isSensitive
 
     fun onClickShowMedia(view: View) {
         showedSensitiveMedia = true
@@ -112,10 +118,10 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
     }
 
     private val showableAccount: Account?
-        get() = showableStatus?.account
+        get() = showableStatus.account
 
-    private val showableStatus: Status?
-        get() = if (!isBoost) status else status.reblog
+    private val showableStatus: Status
+        get() = if (!isBoost) status else status.reblog!!
 
     private fun getNonEmptyName(account: Account): String =
             if (!account.displayName.isEmpty()) account.displayName else account.userName

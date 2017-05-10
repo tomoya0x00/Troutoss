@@ -1,6 +1,7 @@
 package jp.gr.java_conf.miwax.troutoss.messenger
 
 import io.reactivex.Flowable
+import io.reactivex.processors.FlowableProcessor
 import io.reactivex.processors.PublishProcessor
 
 /**
@@ -9,7 +10,7 @@ import io.reactivex.processors.PublishProcessor
  */
 class Messenger {
 
-    private val bus = PublishProcessor.create<Message>().toSerialized()
+    val bus: FlowableProcessor<Message> = PublishProcessor.create<Message>().toSerialized()
 
     fun send(message: Message) = bus.onNext(message)
 

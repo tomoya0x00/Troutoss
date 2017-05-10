@@ -121,6 +121,7 @@ dependencies {
     compile "com.android.support:support-v13:$supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:customtabs:$supportLibraryVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.marshalchen.ultimaterecyclerview:library:0.7.2'
     compile 'com.makeramen:roundedimageview:2.3.0'

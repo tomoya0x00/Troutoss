@@ -50,13 +50,13 @@ open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) 
                 holder.binding.preview.setOnClickListener { onClickImage(urls, index) }
             }
             "video", "gifv" -> {
-                holder.binding.previewText.text = holder.binding.previewText.context.getString(R.string.video_content)
+                holder.binding.previewText.text = holder.binding.root.context.getString(R.string.video_content)
                 holder.binding.previewText.visibility = View.VISIBLE
 
                 holder.binding.preview.setOnClickListener { onClickVideo(attachment.actualUrl()) }
             }
             else -> {
-                holder.binding.previewText.text = holder.binding.previewText.context.getString(R.string.unknown_content)
+                holder.binding.previewText.text = holder.binding.root.context.getString(R.string.unknown_content)
                 holder.binding.previewText.visibility = View.VISIBLE
 
                 holder.binding.preview.setOnClickListener { onClickUnknown(attachment.actualUrl()) }

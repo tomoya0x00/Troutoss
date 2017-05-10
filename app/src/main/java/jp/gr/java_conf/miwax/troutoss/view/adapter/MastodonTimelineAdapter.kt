@@ -17,8 +17,10 @@ import com.sys1yagi.mastodon4j.rx.RxFavourites
 import com.sys1yagi.mastodon4j.rx.RxPublic
 import com.sys1yagi.mastodon4j.rx.RxTimelines
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentStatusBinding
+import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -35,10 +37,12 @@ import kotlinx.coroutines.experimental.rx2.await
 class MastodonTimelineAdapter(private val context: Context, client: MastodonClient, type: Timeline) :
         UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
+    val messenger = Messenger()
+
     private var pageable: Pageable<Status>? = null
     private val statuses: MutableList<Status> = mutableListOf()
     private val getTimeline: (Range) -> Single<Pageable<Status>> =
-            when(type) {
+            when (type) {
                 Timeline.HOME -> RxTimelines(client)::getHome
                 Timeline.LOCAL -> RxPublic(client)::getLocalPublic
                 Timeline.FEDERATED -> RxPublic(client)::getFederatedPublic
@@ -92,6 +96,7 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
 
     class ViewHolder(itemView: View, normal: Boolean) : UltimateRecyclerviewViewHolder<View>(itemView) {
         var binding: ContentStatusBinding? = null
+        val disposables = CompositeDisposable()
 
         init {
             if (normal) {
@@ -107,7 +112,13 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding?.viewModel = MastodonStatusViewModel(statuses[position], context)
+        holder.disposables.clear()
+        holder.binding?.let { binding ->
+            binding.viewModel = MastodonStatusViewModel(statuses[position], context)
+            holder.disposables.add(
+                    binding.viewModel.messenger.bus.doOnNext { messenger.send(it) }.subscribe()
+            )
+        }
     }
 
     override fun newFooterHolder(view: View): ViewHolder {

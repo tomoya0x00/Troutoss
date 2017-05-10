@@ -2,17 +2,23 @@ package jp.gr.java_conf.miwax.troutoss.view.fragment
 
 
 import android.databinding.DataBindingUtil
+import android.net.Uri
 import android.os.Bundle
+import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
+import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
+import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
 import kotlinx.coroutines.experimental.android.UI
@@ -32,6 +38,16 @@ class MastodonTimelineFragment : Fragment() {
 
     lateinit private var binding: FragmentMastodonHomeBinding
     private var adapter: MastodonTimelineAdapter? = null
+    private val disposables = CompositeDisposable()
+
+    private val tabsIntent: CustomTabsIntent by lazy {
+        CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setToolbarColor(ContextCompat.getColor(activity, R.color.colorPrimary))
+                .setStartAnimations(activity, R.anim.slide_in_right, R.anim.slide_out_left)
+                .setExitAnimations(activity, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +65,18 @@ class MastodonTimelineFragment : Fragment() {
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
         adapter = client?.let { MastodonTimelineAdapter(context, it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
 
+        adapter?.let { adapter ->
+            disposables.addAll(
+                    adapter.messenger.register(ShowImagesMessage::class.java).doOnNext {
+                        Timber.d("received ShowImagesMessage")
+                    }.subscribe(),
+                    adapter.messenger.register(OpenUrlMessage::class.java).doOnNext {
+                        Timber.d("received OpenUrlMessage")
+                        tabsIntent.launchUrl(activity, Uri.parse(it.url))
+                    }.subscribe()
+            )
+        }
+
         binding.timeline.apply {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
@@ -61,6 +89,11 @@ class MastodonTimelineFragment : Fragment() {
         onRefresh()
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        disposables.clear()
+        super.onDestroyView()
     }
 
     private fun onRefresh() = launch(UI) {
