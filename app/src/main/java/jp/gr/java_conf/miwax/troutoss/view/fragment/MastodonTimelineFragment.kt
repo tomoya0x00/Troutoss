@@ -76,12 +76,14 @@ class MastodonTimelineFragment : Fragment() {
     }
 
     private fun onLoadMoreOld() = launch(UI) {
-        // TODO: 通信途絶時に何度も実行されてしまうのを修正
+        binding.timeline.disableLoadmore()
         try {
             adapter?.loadMoreOld()?.await()
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             Toast.makeText(getContext(), R.string.error_comm, Snackbar.LENGTH_SHORT).show()
+        } finally {
+            binding.timeline.reenableLoadmore()
         }
     }
 
