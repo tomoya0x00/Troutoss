@@ -3,11 +3,29 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_margin="2dp">
 
-    <ImageView
-        android:id="@+id/preview_image"
+    <FrameLayout
+        android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:scaleType="centerCrop"
-        tools:src="@mipmap/ic_launcher"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/preview_image"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@android:color/black"
+            android:scaleType="centerCrop"
+            tools:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/preview_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="1"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:visibility="gone"
+            tools:text="クリックして再生"/>
+
+    </FrameLayout>
 
 </layout>

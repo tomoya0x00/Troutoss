@@ -11,6 +11,7 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
+import timber.log.Timber
 import java.net.URI
 
 /**
@@ -18,7 +19,7 @@ import java.net.URI
  * Mastodonのステータス用ViewModel
  */
 
-class MastodonStatusViewModel(private val status: Status, val context: Context) : BaseObservable() {
+class MastodonStatusViewModel(private val status: Status, private val context: Context) : BaseObservable() {
 
     private val resources = context.resources
 
@@ -84,7 +85,22 @@ class MastodonStatusViewModel(private val status: Status, val context: Context) 
 
     @get:Bindable
     val attachmentAdapter: MastodonAttachmentAdapter?
-            = showableStatus?.let { MastodonAttachmentAdapter(it.mediaAttachments) }
+        get() = showableStatus?.let {
+            object : MastodonAttachmentAdapter(it.mediaAttachments) {
+                override fun onClickImage(urls: List<String>, index: Int) {
+                    Timber.d("image clicked! urls:%s, index:%d", urls, index)
+                }
+
+                override fun onClickVideo(url: String) {
+                    Timber.d("video clicked! url:%s", url)
+                }
+
+                override fun onClickUnknown(url: String) {
+                    Timber.d("unknown clicked! url:%s", url)
+
+                }
+            }
+        }
 
     @get:Bindable
     val hideMedia: Boolean

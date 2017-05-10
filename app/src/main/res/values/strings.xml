@@ -12,12 +12,17 @@
     <string name="mastodon_home_title_short">Home@%1$s</string>
     <string name="mastodon_notifications_title_long">Notifications\n%1$s</string>
     <string name="mastodon_notifications_title_short">Notifications@%1$s</string>
+    <string name="mastodon_favourites_title_long">Favourites\n%1$s</string>
+    <string name="mastodon_favourites_title_short">Favourites@%1$s</string>
     <string name="mastodon_local_title">Local@%1$s</string>
     <string name="mastodon_federated_title">Federated@%1$s</string>
     <string name="mastodon_boost_by">%1$s boosted</string>
     <string name="error_comm">Communication failed.^nPlease try again after a while.</string>
     <string name="status_now">now</string>
     <string name="sensitive_content">Sensitive content\nClick to view</string>
+    <string name="video_content">Click to play</string>
+    <string name="unknown_content">Unknown content\nClick to open</string>
+
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
         <item quantity="other">%1$d seconds ago</item>

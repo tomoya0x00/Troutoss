@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.RowAttachmentBinding
+import jp.gr.java_conf.miwax.troutoss.extension.actualType
+import jp.gr.java_conf.miwax.troutoss.extension.actualUrl
 import jp.gr.java_conf.miwax.troutoss.extension.imageUrl
+import jp.gr.java_conf.miwax.troutoss.extension.previewableUrl
 import timber.log.Timber
 import java.net.URI
 
@@ -17,12 +20,16 @@ import java.net.URI
  * MastodonのAttachment用アダプター
  */
 
-class MastodonAttachmentAdapter(private val attachments: List<Attachment>) : RecyclerView.Adapter<MastodonAttachmentAdapter.ViewHolder>() {
+open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) : RecyclerView.Adapter<MastodonAttachmentAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.row_attachment, parent, false)
         return ViewHolder(v)
     }
+
+    open protected fun onClickImage(urls: List<String>, index: Int) {}
+    open protected fun onClickVideo(url: String) {}
+    open protected fun onClickUnknown(url: String) {}
 
     override fun getItemCount(): Int = attachments.size
 
@@ -31,19 +38,41 @@ class MastodonAttachmentAdapter(private val attachments: List<Attachment>) : Rec
         Timber.d("%d: type:%s, previewUrl:%s, url:%s, remote_url:%s",
                 position, attachment.type, attachment.previewUrl, attachment.url, attachment.remoteUrl)
 
-        // TODO: urlが画像以外だった場合の対処（固定の動画画像にするとか）
-        // TODO: 動画だった場合に再生マークを付ける
         // TODO: 画像ロード中のプログレス表示検討
-        val url = when {
-            URI(attachment.previewUrl).isAbsolute -> attachment.previewUrl
-            URI(attachment.url).isAbsolute -> attachment.url
-            else -> attachment.remoteUrl
-        }
+        holder.binding.previewImage?.imageUrl(attachment.previewableUrl())
+        when (attachment.actualType()) {
+            "image" -> {
+                holder.binding.previewText.text = ""
+                holder.binding.previewText.visibility = View.GONE
 
-        holder.binding.previewImage?.imageUrl(url)
+                val urls = attachments.filter { it.actualType() == "image" }.map { it.actualUrl() }
+                val index = urls.indexOf(attachment.actualUrl())
+                holder.binding.preview.setOnClickListener { onClickImage(urls, index) }
+            }
+            "video", "gifv" -> {
+                holder.binding.previewText.text = holder.binding.previewText.context.getString(R.string.video_content)
+                holder.binding.previewText.visibility = View.VISIBLE
+
+                holder.binding.preview.setOnClickListener { onClickVideo(attachment.actualUrl()) }
+            }
+            else -> {
+                holder.binding.previewText.text = holder.binding.previewText.context.getString(R.string.unknown_content)
+                holder.binding.previewText.visibility = View.VISIBLE
+
+                holder.binding.preview.setOnClickListener { onClickUnknown(attachment.actualUrl()) }
+            }
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var binding: RowAttachmentBinding = DataBindingUtil.bind(itemView)
+    }
+
+    private fun toAbsoluteUrl(attachment: Attachment): String {
+        return when {
+            URI(attachment.previewUrl).isAbsolute -> attachment.previewUrl
+            URI(attachment.url).isAbsolute -> attachment.url
+            else -> attachment.remoteUrl
+        }
     }
 }

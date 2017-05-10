@@ -8,12 +8,16 @@
     <string name="mastodon_home_title_short">ホーム@%1$s</string>
     <string name="mastodon_notifications_title_long">通知\n%1$s</string>
     <string name="mastodon_notifications_title_short">通知@%1$s</string>
+    <string name="mastodon_favourites_title_long">お気に入り\n%1$s</string>
+    <string name="mastodon_favourites_title_short">お気に入り@%1$s</string>
     <string name="mastodon_local_title">ローカル@%1$s</string>
     <string name="mastodon_federated_title">連合@%1$s</string>
     <string name="mastodon_boost_by">%1$s さんがブースト</string>
     <string name="error_comm">通信に失敗しました。\nしばらくしてからやり直してみて下さい。</string>
     <string name="status_now">今</string>
     <string name="sensitive_content">閲覧注意\nクリックして表示</string>
+    <string name="video_content">クリックして再生</string>
+    <string name="unknown_content">不明なコンテンツ\nクリックして開く</string>
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
     </plurals>
