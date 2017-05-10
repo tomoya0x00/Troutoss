@@ -117,6 +117,10 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
         notifyPropertyChanged(BR.hideMedia)
     }
 
+    fun onClickUser(view: View) {
+        showableAccount?.let { messenger.send(OpenUrlMessage(it.url))}
+    }
+
     private val showableAccount: Account?
         get() = showableStatus.account
 
