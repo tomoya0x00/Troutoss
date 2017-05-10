@@ -18,10 +18,11 @@ class SnsTabRepository(val helper: MastodonHelper) {
             realm.executeTransaction {
                 it.copyToRealm(SnsTab(position = basePos + 0, type = SnsTab.TabType.MASTODON_HOME, accountUuid = account.uuid))
                 it.copyToRealm(SnsTab(position = basePos + 1, type = SnsTab.TabType.MASTODON_NOTIFICATIONS, accountUuid = account.uuid))
+                it.copyToRealm(SnsTab(position = basePos + 2, type = SnsTab.TabType.MASTODON_FAVOURITES, accountUuid = account.uuid))
                 if (helper.countAccountOf(account.instanceName) > 1) return@executeTransaction
                 // 初登録のインスタンスだったならローカルと連合タブも追加
-                it.copyToRealm(SnsTab(position = basePos + 2, type = SnsTab.TabType.MASTODON_LOCAL, accountUuid = account.uuid))
-                it.copyToRealm(SnsTab(position = basePos + 3, type = SnsTab.TabType.MASTODON_FEDERATED, accountUuid = account.uuid))
+                it.copyToRealm(SnsTab(position = basePos + 3, type = SnsTab.TabType.MASTODON_LOCAL, accountUuid = account.uuid))
+                it.copyToRealm(SnsTab(position = basePos + 4, type = SnsTab.TabType.MASTODON_FEDERATED, accountUuid = account.uuid))
             }
         }
     }

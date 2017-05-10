@@ -25,6 +25,7 @@ open class SnsTab(
 
         MASTODON_HOME,
         MASTODON_NOTIFICATIONS,
+        MASTODON_FAVOURITES,
         MASTODON_LOCAL,
         MASTODON_FEDERATED
     }

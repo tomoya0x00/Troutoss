@@ -34,6 +34,9 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
             SnsTab.TabType.MASTODON_HOME -> {
                 MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.HOME, tab.accountUuid, tab.option)
             }
+            SnsTab.TabType.MASTODON_FAVOURITES -> {
+                MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.FAVOURITES, tab.accountUuid, tab.option)
+            }
             SnsTab.TabType.MASTODON_LOCAL -> {
                 MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.LOCAL, tab.accountUuid, tab.option)
             }
@@ -57,6 +60,14 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
                 } else {
                     context.getString(R.string.mastodon_home_title_long, account?.userNameWithinstance ?: "")
                 }
+            }
+            SnsTab.TabType.MASTODON_FAVOURITES -> {
+                if (countAccount?.toInt() == 1) {
+                    context.getString(R.string.mastodon_favourites_title_short, account.instanceName)
+                } else {
+                    context.getString(R.string.mastodon_favourites_title_long, account?.userNameWithinstance ?: "")
+                }
+
             }
             SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
                 if (countAccount?.toInt() == 1) {

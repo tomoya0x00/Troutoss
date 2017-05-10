@@ -13,6 +13,7 @@ import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.Pageable
 import com.sys1yagi.mastodon4j.api.Range
 import com.sys1yagi.mastodon4j.api.entity.Status
+import com.sys1yagi.mastodon4j.rx.RxFavourites
 import com.sys1yagi.mastodon4j.rx.RxPublic
 import com.sys1yagi.mastodon4j.rx.RxTimelines
 import io.reactivex.Single
@@ -41,11 +42,12 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
                 Timeline.HOME -> RxTimelines(client)::getHome
                 Timeline.LOCAL -> RxPublic(client)::getLocalPublic
                 Timeline.FEDERATED -> RxPublic(client)::getFederatedPublic
+                Timeline.FAVOURITES -> RxFavourites(client)::getFavourites
                 else -> RxTimelines(client)::getHome
             }
 
     enum class Timeline {
-        HOME, LOCAL, FEDERATED
+        HOME, LOCAL, FEDERATED, FAVOURITES
     }
 
     fun refresh() = async(CommonPool) {
