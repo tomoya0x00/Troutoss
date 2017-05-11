@@ -16,17 +16,23 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/boost_by_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:paddingBottom="8dp"
             android:text="BT"
             android:visibility="@{viewModel.isBoost ? View.VISIBLE : View.GONE}"
             app:layout_constraintRight_toRightOf="@+id/avatar"
-            app:layout_constraintTop_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/boost_by_text"
@@ -34,13 +40,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="0dp"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingBottom="16dp"
+            android:paddingBottom="8dp"
             android:text="@{viewModel.boostBy}"
             android:visibility="@{viewModel.isBoost ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toRightOf="@id/boost_by_icon"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="hoge boosted"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -100,7 +106,9 @@
             android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:textColor="@android:color/white"
             app:html="@{viewModel.content}"
             app:layout_constraintLeft_toRightOf="@id/avatar"
@@ -112,7 +120,9 @@
             android:id="@+id/attachments"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
             app:adapter="@{viewModel.attachmentAdapter}"
             app:layoutManager="GridLayoutManager"
