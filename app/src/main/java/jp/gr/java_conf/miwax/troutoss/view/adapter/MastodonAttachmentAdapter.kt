@@ -13,7 +13,6 @@ import jp.gr.java_conf.miwax.troutoss.extension.actualUrl
 import jp.gr.java_conf.miwax.troutoss.extension.imageUrl
 import jp.gr.java_conf.miwax.troutoss.extension.previewableUrl
 import timber.log.Timber
-import java.net.URI
 
 /**
  * Created by Tomoya Miwa on 2017/05/09.
@@ -66,13 +65,5 @@ open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var binding: RowAttachmentBinding = DataBindingUtil.bind(itemView)
-    }
-
-    private fun toAbsoluteUrl(attachment: Attachment): String {
-        return when {
-            URI(attachment.previewUrl).isAbsolute -> attachment.previewUrl
-            URI(attachment.url).isAbsolute -> attachment.url
-            else -> attachment.remoteUrl
-        }
     }
 }
