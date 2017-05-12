@@ -92,7 +92,7 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
     @get:Bindable
     val attachmentAdapter: MastodonAttachmentAdapter =
             object : MastodonAttachmentAdapter(showableStatus.mediaAttachments) {
-                override fun onClickImage(urls: List<String>, index: Int) {
+                override fun onClickImage(urls: Array<String>, index: Int) {
                     Timber.d("image clicked! urls:%s, index:%d", urls, index)
                     messenger.send(ShowImagesMessage(urls, index))
                 }

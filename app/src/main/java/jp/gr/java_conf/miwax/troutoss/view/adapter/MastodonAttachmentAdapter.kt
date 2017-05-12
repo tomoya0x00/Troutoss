@@ -26,7 +26,7 @@ open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) 
         return ViewHolder(v)
     }
 
-    open protected fun onClickImage(urls: List<String>, index: Int) {}
+    open protected fun onClickImage(urls: Array<String>, index: Int) {}
     open protected fun onClickVideo(url: String) {}
     open protected fun onClickUnknown(url: String) {}
 
@@ -46,7 +46,7 @@ open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) 
 
                 val urls = attachments.filter { it.actualType() == "image" }.map { it.actualUrl() }
                 val index = urls.indexOf(attachment.actualUrl())
-                holder.binding.preview.setOnClickListener { onClickImage(urls, index) }
+                holder.binding.preview.setOnClickListener { onClickImage(urls.toTypedArray(), index) }
             }
             "video", "gifv" -> {
                 holder.binding.previewText.text = holder.binding.root.context.getString(R.string.video_content)

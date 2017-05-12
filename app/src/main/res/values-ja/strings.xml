@@ -14,6 +14,7 @@
     <string name="mastodon_federated_title">連合@%1$s</string>
     <string name="mastodon_boost_by">%1$s さんがブースト</string>
     <string name="error_comm">通信に失敗しました。\nしばらくしてからやり直してみて下さい。</string>
+    <string name="error_load_image">画像のロードに失敗しました。\nしばらくしてからやり直してみて下さい。</string>
     <string name="status_now">今</string>
     <string name="sensitive_content">閲覧注意\nクリックして表示</string>
     <string name="video_content">クリックして再生</string>

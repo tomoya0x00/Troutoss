@@ -17,10 +17,10 @@ interface Message
 class ShowToastMessage(val text: CharSequence) : Message
 
 /**
- * 画像表示用のメッセージ
+ * 複数画像表示用のメッセージ
  */
 
-class ShowImagesMessage(val urls: List<String>, val index: Int) : Message
+class ShowImagesMessage(val urls: Array<String>, val index: Int) : Message
 
 /**
  * URLオープン用のメッセージ

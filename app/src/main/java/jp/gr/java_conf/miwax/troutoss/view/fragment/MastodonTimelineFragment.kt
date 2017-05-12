@@ -20,6 +20,7 @@ import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -69,6 +70,7 @@ class MastodonTimelineFragment : Fragment() {
             disposables.addAll(
                     adapter.messenger.register(ShowImagesMessage::class.java).doOnNext {
                         Timber.d("received ShowImagesMessage")
+                        ImagesViewActivity.startActivity(context, it.urls, it.index)
                     }.subscribe(),
                     adapter.messenger.register(OpenUrlMessage::class.java).doOnNext {
                         Timber.d("received OpenUrlMessage")
