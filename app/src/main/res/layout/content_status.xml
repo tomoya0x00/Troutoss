@@ -16,23 +16,21 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/boost_by_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
-            android:layout_marginTop="0dp"
-            android:paddingBottom="8dp"
-            android:text="BT"
+            android:layout_marginTop="8dp"
             android:visibility="@{viewModel.isBoost ? View.VISIBLE : View.GONE}"
             app:layout_constraintRight_toRightOf="@+id/avatar"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/reblog_no_padding"/>
 
         <TextView
             android:id="@+id/boost_by_text"
@@ -40,9 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:paddingBottom="8dp"
             android:text="@{viewModel.boostBy}"
             android:visibility="@{viewModel.isBoost ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toRightOf="@id/boost_by_icon"
@@ -53,6 +50,7 @@
             android:id="@+id/avatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginTop="8dp"
             android:onClick="@{viewModel::onClickUser}"
             app:imageUrl="@{viewModel.avatarUrl}"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -68,7 +66,7 @@
             android:maxLines="1"
             android:text="@{viewModel.elapsed}"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
+            app:layout_constraintTop_toTopOf="@id/avatar"
             tools:text="createdAt"/>
 
         <TextView
@@ -84,7 +82,7 @@
             android:textColor="@android:color/white"
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintRight_toLeftOf="@+id/user_name"
-            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
+            app:layout_constraintTop_toTopOf="@id/avatar"
             tools:text="display"/>
 
         <TextView
@@ -99,8 +97,9 @@
             android:text="@{viewModel.userName}"
             app:layout_constraintLeft_toRightOf="@id/display_name"
             app:layout_constraintRight_toLeftOf="@id/elapsed"
-            app:layout_constraintTop_toBottomOf="@id/boost_by_text"
+            app:layout_constraintTop_toTopOf="@id/avatar"
             tools:text="user"/>
+
 
         <TextView
             android:id="@+id/content"
@@ -146,6 +145,46 @@
             app:layout_constraintLeft_toLeftOf="@id/attachments"
             app:layout_constraintRight_toRightOf="@id/attachments"
             app:layout_constraintTop_toTopOf="@id/attachments"/>
+
+        <ToggleButton
+            android:id="@+id/reply"
+            android:layout_width="@dimen/status_button"
+            android:layout_height="@dimen/status_button"
+            android:background="@drawable/reply_toggle"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/attachments"/>
+
+        <ToggleButton
+            android:id="@+id/reblog"
+            android:layout_width="@dimen/status_button"
+            android:layout_height="@dimen/status_button"
+            android:background="@drawable/reblog_toggle"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintLeft_toRightOf="@id/reply"
+            app:layout_constraintRight_toLeftOf="@+id/favourite"
+            app:layout_constraintTop_toBottomOf="@id/attachments"/>
+
+        <ToggleButton
+            android:id="@+id/favourite"
+            android:layout_width="@dimen/status_button"
+            android:layout_height="@dimen/status_button"
+            android:background="@drawable/favourite_toggle"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintLeft_toRightOf="@id/reblog"
+            app:layout_constraintRight_toLeftOf="@+id/more_action"
+            app:layout_constraintTop_toBottomOf="@id/attachments"/>
+
+        <ImageButton
+            android:id="@+id/more_action"
+            android:layout_width="@dimen/status_button"
+            android:layout_height="@dimen/status_button"
+            android:background="@drawable/more_actions"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/attachments"/>
 
     </android.support.constraint.ConstraintLayout>
 
