@@ -15,7 +15,8 @@ open class SnsTab(
         open var position: Int = 0,
         type: SnsTab.TabType = SnsTab.TabType.NONE,
         open var accountUuid: String = "",
-        open var option: String = ""
+        open var option: String = "",
+        open var title: String = ""
 ) : RealmObject() {
 
     protected open var typeStr: String = type.toString()
