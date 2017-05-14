@@ -102,6 +102,9 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
             if (normal) {
                 binding = DataBindingUtil.bind(itemView)
                 binding?.content?.movementMethod = LinkMovementMethod.getInstance()
+                // ちらつき防止のため、通常不要なViewを非表示
+                binding?.boostByText?.visibility = View.GONE
+                binding?.boostByIcon?.visibility = View.GONE
             }
         }
     }
