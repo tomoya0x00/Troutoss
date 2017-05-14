@@ -4,6 +4,7 @@ package jp.gr.java_conf.miwax.troutoss.view.fragment
 import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -19,6 +20,7 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
@@ -36,6 +38,7 @@ class MastodonTimelineFragment : Fragment() {
     private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
     private var option: String? = null
+    private var toast: Toast? = null
 
     lateinit private var binding: FragmentMastodonHomeBinding
     private var adapter: MastodonTimelineAdapter? = null
@@ -68,6 +71,10 @@ class MastodonTimelineFragment : Fragment() {
 
         adapter?.let { adapter ->
             disposables.addAll(
+                    adapter.messenger.register(ShowToastMessage::class.java).doOnNext {
+                        Timber.d("received ShowToastMessage")
+                        showToast(it.resId, Toast.LENGTH_SHORT)
+                    }.subscribe(),
                     adapter.messenger.register(ShowImagesMessage::class.java).doOnNext {
                         Timber.d("received ShowImagesMessage")
                         ImagesViewActivity.startActivity(context, it.urls, it.index)
@@ -122,6 +129,12 @@ class MastodonTimelineFragment : Fragment() {
         }
     }
 
+    private fun showToast(@StringRes resId: Int, duration: Int) {
+        toast?.cancel()
+        toast = Toast.makeText(context, resId, duration)
+        toast?.show()
+    }
+
     companion object {
         private val ARG_TIMELINE = "timeline"
         private val ARG_ACCOUNT_UUID = "account_uuid"
@@ -147,5 +160,4 @@ class MastodonTimelineFragment : Fragment() {
             return fragment
         }
     }
-
 }

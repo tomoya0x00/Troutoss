@@ -151,38 +151,44 @@
             android:layout_width="@dimen/status_button"
             android:layout_height="@dimen/status_button"
             android:background="@drawable/reply_toggle"
+            android:onClick="@{viewModel::onClickReply}"
             android:textOff=""
             android:textOn=""
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/attachments"/>
 
         <ToggleButton
-            android:id="@+id/reblog"
+            android:id="@+id/boost"
             android:layout_width="@dimen/status_button"
             android:layout_height="@dimen/status_button"
-            android:background="@drawable/reblog_toggle"
+            android:background="@drawable/boost_toggle"
+            android:checked="@{viewModel.boosted}"
             android:textOff=""
             android:textOn=""
             app:layout_constraintLeft_toRightOf="@id/reply"
             app:layout_constraintRight_toLeftOf="@+id/favourite"
-            app:layout_constraintTop_toBottomOf="@id/attachments"/>
+            app:layout_constraintTop_toBottomOf="@id/attachments"
+            app:onCheckedChangeListener="@{viewModel.boostChangeListener}"/>
 
         <ToggleButton
             android:id="@+id/favourite"
             android:layout_width="@dimen/status_button"
             android:layout_height="@dimen/status_button"
             android:background="@drawable/favourite_toggle"
+            android:checked="@{viewModel.favourited}"
             android:textOff=""
             android:textOn=""
-            app:layout_constraintLeft_toRightOf="@id/reblog"
+            app:layout_constraintLeft_toRightOf="@id/boost"
             app:layout_constraintRight_toLeftOf="@+id/more_action"
-            app:layout_constraintTop_toBottomOf="@id/attachments"/>
+            app:layout_constraintTop_toBottomOf="@id/attachments"
+            app:onCheckedChangeListener="@{viewModel.favouriteChangeListener}"/>
 
         <ImageButton
             android:id="@+id/more_action"
             android:layout_width="@dimen/status_button"
             android:layout_height="@dimen/status_button"
             android:background="@drawable/more_actions"
+            android:onClick="@{viewModel::onClickMoreActions}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/attachments"/>
 

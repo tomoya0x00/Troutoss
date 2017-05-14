@@ -1,5 +1,7 @@
 package jp.gr.java_conf.miwax.troutoss.messenger
 
+import android.support.annotation.StringRes
+
 /**
  * Created by Tomoya Miwa on 2017/05/07.
  * メッセンジャー用のメッセージ
@@ -14,7 +16,7 @@ interface Message
 /**
  * トースト表示用のメッセージ
  */
-class ShowToastMessage(val text: CharSequence) : Message
+class ShowToastMessage(@StringRes val resId: Int) : Message
 
 /**
  * 複数画像表示用のメッセージ

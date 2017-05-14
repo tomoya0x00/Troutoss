@@ -4,14 +4,25 @@ import android.content.Context
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.view.View
+import android.widget.CompoundButton
+import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
+import com.sys1yagi.mastodon4j.api.exception.Mastodon4jRequestException
+import com.sys1yagi.mastodon4j.rx.RxStatuses
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.rx2.await
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import timber.log.Timber
@@ -23,15 +34,16 @@ import java.net.URI
  * Mastodonのステータス用ViewModel
  */
 
-class MastodonStatusViewModel(private val status: Status, private val context: Context) : BaseObservable() {
+class MastodonStatusViewModel(private val context: Context, private val holder: MastodonStatusHolder, client: MastodonClient) :
+        BaseObservable() {
 
     val messenger = Messenger()
 
     private val resources = context.resources
+    private val rxStatuses = RxStatuses(client)
+    private val status: Status
+        get() = holder.status
 
-    private var showedSensitiveMedia = false
-
-    // TODO: Boostなどのアイコン画像表示
     @get:Bindable
     val isBoost: Boolean
         get() = status.reblog != null
@@ -40,6 +52,14 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
     val boostBy: String
         get() = String.format(context.getString(R.string.mastodon_boost_by),
                 status.account?.let { getNonEmptyName(it) } ?: "")
+
+    @get:Bindable
+    val isBoosted: Boolean
+        get() = holder.isReblogged
+
+    @get:Bindable
+    val isFavourited: Boolean
+        get() = holder.isFavourited
 
     @get:Bindable
     val avatarUrl: String?
@@ -110,15 +130,77 @@ class MastodonStatusViewModel(private val status: Status, private val context: C
 
     @get:Bindable
     val hideMedia: Boolean
-        get() = !showedSensitiveMedia && showableStatus.isSensitive
+        get() = !holder.isShowSensitive && showableStatus.isSensitive
 
     fun onClickShowMedia(view: View) {
-        showedSensitiveMedia = true
+        holder.isShowSensitive = true
         notifyPropertyChanged(BR.hideMedia)
     }
 
     fun onClickUser(view: View) {
-        showableAccount?.let { messenger.send(OpenUrlMessage(it.url))}
+        showableAccount?.let { messenger.send(OpenUrlMessage(it.url)) }
+    }
+
+    fun onClickReply(view: View) {
+
+    }
+
+    val boostChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
+        launch(UI) {
+            val post = when {
+                !holder.isReblogged && checked -> rxStatuses::postReblog
+                holder.isReblogged && !checked -> rxStatuses::postUnreblog
+                else -> null
+            }
+
+            post?.let {
+                try {
+                    async(CommonPool) { it(status.id).await() }.await()
+                    holder.isReblogged = !holder.isReblogged
+                } catch (e: Mastodon4jRequestException) {
+                    // レスポンスが422の場合は他のクライアントで操作されたと判断して無視
+                    if (e.response?.code() != 422) {
+                        Timber.e("post(Un)Reblog failed: %s", e)
+                        messenger.send(ShowToastMessage(R.string.error_comm))
+                    } else {
+                        holder.isReblogged = !holder.isReblogged
+                    }
+                } finally {
+                    notifyPropertyChanged(BR.boosted)
+                }
+            }
+        }
+    }
+
+    val favouriteChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
+        launch(UI) {
+            val post = when {
+                !holder.isFavourited && checked -> rxStatuses::postFavourite
+                holder.isFavourited && !checked -> rxStatuses::postUnfavourite
+                else -> null
+            }
+
+            post?.let {
+                try {
+                    holder.status = async(CommonPool) { it(status.id).await() }.await()
+                    holder.isFavourited = !holder.isFavourited
+                } catch (e: Mastodon4jRequestException) {
+                    // レスポンスが422の場合は他のクライアントで操作されたと判断して無視
+                    if (e.response?.code() != 422) {
+                        Timber.e("post(Un)Favourite failed: %s", e)
+                        messenger.send(ShowToastMessage(R.string.error_comm))
+                    } else {
+                        holder.isFavourited = !holder.isFavourited
+                    }
+                } finally {
+                    notifyPropertyChanged(BR.favourited)
+                }
+            }
+        }
+    }
+
+    fun onClickMoreActions(view: View) {
+
     }
 
     private val showableAccount: Account?

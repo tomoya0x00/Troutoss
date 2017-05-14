@@ -21,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentStatusBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
+import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -34,13 +35,13 @@ import kotlinx.coroutines.experimental.rx2.await
  * Mastodonのホーム用アダプタ
  */
 
-class MastodonTimelineAdapter(private val context: Context, client: MastodonClient, type: Timeline) :
+class MastodonTimelineAdapter(private val context: Context, private val client: MastodonClient, type: Timeline) :
         UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
     val messenger = Messenger()
 
     private var pageable: Pageable<Status>? = null
-    private val statuses: MutableList<Status> = mutableListOf()
+    private val holders: MutableList<MastodonStatusHolder> = mutableListOf()
     private val getTimeline: (Range) -> Single<Pageable<Status>> =
             when (type) {
                 Timeline.HOME -> RxTimelines(client)::getHome
@@ -57,14 +58,14 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
     fun refresh() = async(CommonPool) {
         pageable = getTimeline(Range(limit = 20)).await()
         pageable?.let {
-            val addable = (statuses.size > 0) && it.part.any { it.id == statuses[0].id }
+            val addable = (holders.size > 0) && it.part.any { it.id == holders[0].status.id }
             if (addable) {
-                val addStatuses = it.part.takeWhile { it.id != statuses[0].id }
-                statuses.addAll(0, addStatuses)
+                val addStatuses = it.part.takeWhile { it.id != holders[0].status.id }
+                holders.addAll(0, addStatuses.map { MastodonStatusHolder(it) })
                 launch(UI) { notifyItemRangeInserted(0, addStatuses.size) }
             } else {
-                statuses.clear()
-                statuses.addAll(it.part)
+                holders.clear()
+                holders.addAll(it.part.map { MastodonStatusHolder(it) })
                 launch(UI) { notifyDataSetChanged() }
             }
         }
@@ -79,14 +80,14 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
             throw e
         }
         pageable?.let {
-            val pos = statuses.size
-            statuses.addAll(it.part)
+            val pos = holders.size
+            holders.addAll(it.part.map { MastodonStatusHolder(it) })
             launch(UI) { notifyItemRangeInserted(pos, it.part.size) }
         }
     }
 
     override fun getAdapterItemCount(): Int {
-        return statuses.size
+        return holders.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
@@ -117,7 +118,8 @@ class MastodonTimelineAdapter(private val context: Context, client: MastodonClie
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.disposables.clear()
         holder.binding?.let { binding ->
-            binding.viewModel = MastodonStatusViewModel(statuses[position], context)
+            binding.viewModel = MastodonStatusViewModel(context, holders[position], client)
+            // ViewModelのメッセージを購読
             holder.disposables.add(
                     binding.viewModel.messenger.bus.doOnNext { messenger.send(it) }.subscribe()
             )
