@@ -19,6 +19,7 @@
     <string name="sensitive_content">閲覧注意\nクリックして表示</string>
     <string name="video_content">クリックして再生</string>
     <string name="unknown_content">不明なコンテンツ\nクリックして開く</string>
+    <string name="post">投稿</string>
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
     </plurals>

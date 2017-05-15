@@ -42,6 +42,11 @@
             android:name=".view.activity.ImagesViewActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".view.activity.PostStatusActivity"
+            android:label="@string/post"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>

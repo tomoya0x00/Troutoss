@@ -3,7 +3,6 @@ package jp.gr.java_conf.miwax.troutoss.view.activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -24,12 +23,13 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
         setSupportActionBar(binding.toolbar)
-        binding.container.adapter = SnsTabAdapter(supportFragmentManager, realm, this)
+        val adapter = SnsTabAdapter(supportFragmentManager, realm, this)
+        binding.container.adapter = adapter
         binding.tabs.setupWithViewPager(binding.container)
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        binding.fab.setOnClickListener { _ ->
+            val (accountType, accountUuid) = (adapter.getAccount(binding.container.currentItem))
+            PostStatusActivity.startActivity(this, accountType, accountUuid)
         }
 
         // アカウントを持っていない場合、Mastodon認証画面を出す

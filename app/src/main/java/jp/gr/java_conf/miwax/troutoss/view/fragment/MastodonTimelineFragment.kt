@@ -129,6 +129,10 @@ class MastodonTimelineFragment : Fragment() {
         }
     }
 
+    fun onClickEdit() {
+
+    }
+
     private fun showToast(@StringRes resId: Int, duration: Int) {
         toast?.cancel()
         toast = Toast.makeText(context, resId, duration)

@@ -23,6 +23,7 @@
     <string name="sensitive_content">Sensitive content\nClick to view</string>
     <string name="video_content">Click to play</string>
     <string name="unknown_content">Unknown content\nClick to open</string>
+    <string name="post">Post</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

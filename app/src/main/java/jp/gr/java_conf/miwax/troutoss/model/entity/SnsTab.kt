@@ -22,13 +22,33 @@ open class SnsTab(
     protected open var typeStr: String = type.toString()
 
     enum class TabType {
-        NONE,
+        NONE {
+            override val accountType: AccountType
+                get() = AccountType.UNKNOWN
+        },
 
-        MASTODON_HOME,
-        MASTODON_NOTIFICATIONS,
-        MASTODON_FAVOURITES,
-        MASTODON_LOCAL,
-        MASTODON_FEDERATED
+        MASTODON_HOME {
+            override val accountType: AccountType
+                get() = AccountType.MASTODON
+        },
+        MASTODON_NOTIFICATIONS {
+            override val accountType: AccountType
+                get() = AccountType.MASTODON
+        },
+        MASTODON_FAVOURITES {
+            override val accountType: AccountType
+                get() = AccountType.MASTODON
+        },
+        MASTODON_LOCAL {
+            override val accountType: AccountType
+                get() = AccountType.MASTODON
+        },
+        MASTODON_FEDERATED {
+            override val accountType: AccountType
+                get() = AccountType.MASTODON
+        };
+
+        abstract val accountType: AccountType
     }
 
     var type: TabType

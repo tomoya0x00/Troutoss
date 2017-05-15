@@ -8,6 +8,7 @@ import io.realm.Realm
 import io.realm.Sort
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 import jp.gr.java_conf.miwax.troutoss.view.fragment.DummyFragment
 import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonTimelineFragment
@@ -62,14 +63,14 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
                     if (countAccount?.toInt() == 1) {
                         context.getString(R.string.mastodon_home_title_short, account.instanceName)
                     } else {
-                        context.getString(R.string.mastodon_home_title_long, account?.userNameWithinstance ?: "")
+                        context.getString(R.string.mastodon_home_title_long, account?.userNameWithInstance ?: "")
                     }
                 }
                 SnsTab.TabType.MASTODON_FAVOURITES -> {
                     if (countAccount?.toInt() == 1) {
                         context.getString(R.string.mastodon_favourites_title_short, account.instanceName)
                     } else {
-                        context.getString(R.string.mastodon_favourites_title_long, account?.userNameWithinstance ?: "")
+                        context.getString(R.string.mastodon_favourites_title_long, account?.userNameWithInstance ?: "")
                     }
 
                 }
@@ -77,7 +78,7 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
                     if (countAccount?.toInt() == 1) {
                         context.getString(R.string.mastodon_notifications_title_short, account.instanceName)
                     } else {
-                        context.getString(R.string.mastodon_notifications_title_long, account?.userNameWithinstance ?: "")
+                        context.getString(R.string.mastodon_notifications_title_long, account?.userNameWithInstance ?: "")
                     }
                 }
                 SnsTab.TabType.MASTODON_LOCAL -> {
@@ -95,5 +96,10 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
 
     override fun getCount(): Int {
         return tabs.count()
+    }
+
+    fun getAccount(position: Int): Pair<AccountType, String> {
+        val tab = tabs[position]
+        return Pair(tab.type.accountType, tab.accountUuid)
     }
 }
