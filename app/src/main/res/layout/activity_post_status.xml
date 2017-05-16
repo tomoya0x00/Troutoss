@@ -1,10 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity">
+
+        <EditText
+            android:id="@+id/status"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/round_corner_shape"
+            android:gravity="top"
+            android:hint="今なにしてる？"
+            android:padding="8dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/grey"
+            app:layout_constraintBottom_toTopOf="@+id/post"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cw_text"
+            tools:text="status"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/accounts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/post"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="トゥート！"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status"/>
+
+        <ImageButton
+            android:id="@+id/media"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/post_button"
+            android:layout_height="@dimen/post_button"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status"
+            app:srcCompat="@drawable/camera"/>
+
+        <ImageButton
+            android:id="@+id/visibility"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/post_button"
+            android:layout_height="@dimen/post_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/media"
+            app:layout_constraintTop_toBottomOf="@+id/status"
+            app:srcCompat="@drawable/public_earth"/>
+
+        <ToggleButton
+            android:id="@+id/cw"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/post_button"
+            android:layout_height="@dimen/post_button"
+            android:padding="0dp"
+            android:textColor="@drawable/toggle_text_color"
+            android:textOff="CW"
+            android:textOn="CW"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/nsfw"
+            app:layout_constraintTop_toBottomOf="@+id/status"/>
+
+        <EditText
+            android:id="@+id/cw_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/round_corner_shape"
+            android:hint="警告"
+            android:padding="8dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/grey"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accounts"
+            tools:text="spoiler"/>
+
+        <ToggleButton
+            android:id="@+id/nsfw"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/post_button"
+            android:layout_height="@dimen/post_button"
+            android:padding="0dp"
+            android:textColor="@drawable/toggle_text_color"
+            android:textOff="NSFW"
+            android:textOn="NSFW"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/visibility"
+            app:layout_constraintTop_toBottomOf="@+id/status"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
