@@ -40,7 +40,8 @@
         </activity>
         <activity
             android:name=".view.activity.ImagesViewActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name=".view.activity.PostStatusActivity"

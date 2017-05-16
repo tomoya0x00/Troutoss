@@ -9,7 +9,7 @@
         tools:context="jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity">
 
         <EditText
-            android:id="@+id/status"
+            android:id="@+id/status_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
@@ -26,8 +26,12 @@
             app:layout_constraintBottom_toTopOf="@+id/post"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cw_text"
-            tools:text="status"/>
+            app:layout_constraintTop_toBottomOf="@+id/cw_edit"
+            tools:text="status">
+
+            <requestFocus/>
+
+        </EditText>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/accounts"
@@ -37,8 +41,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:paddingTop="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -56,7 +59,7 @@
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status"/>
+            app:layout_constraintTop_toBottomOf="@id/status_edit"/>
 
         <ImageButton
             android:id="@+id/media"
@@ -67,7 +70,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status"
+            app:layout_constraintTop_toBottomOf="@id/status_edit"
             app:srcCompat="@drawable/camera"/>
 
         <ImageButton
@@ -77,7 +80,7 @@
             android:layout_height="@dimen/post_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/media"
-            app:layout_constraintTop_toBottomOf="@+id/status"
+            app:layout_constraintTop_toBottomOf="@id/status_edit"
             app:srcCompat="@drawable/public_earth"/>
 
         <ToggleButton
@@ -91,10 +94,10 @@
             android:textOn="CW"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/nsfw"
-            app:layout_constraintTop_toBottomOf="@+id/status"/>
+            app:layout_constraintTop_toBottomOf="@id/status_edit"/>
 
         <EditText
-            android:id="@+id/cw_text"
+            android:id="@+id/cw_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -107,9 +110,10 @@
             android:padding="8dp"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
+            app:layout_constraintBottom_toTopOf="@id/status_edit"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accounts"
+            app:layout_constraintTop_toBottomOf="@id/accounts"
             tools:text="spoiler"/>
 
         <ToggleButton
@@ -122,8 +126,8 @@
             android:textOff="NSFW"
             android:textOn="NSFW"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/visibility"
-            app:layout_constraintTop_toBottomOf="@+id/status"/>
+            app:layout_constraintLeft_toRightOf="@id/visibility"
+            app:layout_constraintTop_toBottomOf="@id/status_edit"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>
