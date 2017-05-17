@@ -3,6 +3,17 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel"/>
+
+        <import type="android.view.View"/>
+
+    </data>
+
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,19 +38,22 @@
             android:id="@+id/status_edit"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:background="@android:color/white"
             android:gravity="top"
             android:hint="今なにしてる？"
+            android:text="@={viewModel.status}"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
             app:layout_constraintBottom_toTopOf="@+id/status_media"
             app:layout_constraintLeft_toLeftOf="@id/status"
             app:layout_constraintRight_toRightOf="@id/status"
-            app:layout_constraintTop_toTopOf="@id/status"
+            app:layout_constraintTop_toBottomOf="@+id/cw_edit"
             tools:text="status">
 
             <requestFocus/>
@@ -51,7 +65,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:layout_constraintBottom_toBottomOf="@id/status"
+            android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/post"
             app:layout_constraintLeft_toLeftOf="@id/status"
             app:layout_constraintRight_toRightOf="@id/status"
             app:layout_constraintTop_toBottomOf="@id/status_edit"/>
@@ -79,6 +94,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{viewModel::onClickPost}"
             android:text="トゥート！"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -90,8 +106,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:textColor="@android:color/white"
             android:text="500"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/post"
             app:layout_constraintTop_toBottomOf="@id/status"
@@ -124,6 +140,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/post_button"
             android:layout_height="@dimen/post_button"
+            android:checked="@={viewModel.spoiler}"
             android:padding="0dp"
             android:textColor="@drawable/toggle_text_color"
             android:textOff="CW"
@@ -146,6 +163,7 @@
             android:padding="8dp"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
+            android:visibility="@{viewModel.spoiler ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/status"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -161,6 +179,7 @@
             android:textColor="@drawable/toggle_text_color"
             android:textOff="NSFW"
             android:textOn="NSFW"
+            android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/visibility"
             app:layout_constraintTop_toBottomOf="@id/status"/>

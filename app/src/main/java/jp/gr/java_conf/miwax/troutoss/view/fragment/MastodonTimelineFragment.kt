@@ -4,6 +4,8 @@ package jp.gr.java_conf.miwax.troutoss.view.fragment
 import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
@@ -38,6 +40,7 @@ class MastodonTimelineFragment : Fragment() {
     private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
     private var option: String? = null
+    private val handler = Handler(Looper.getMainLooper())
     private var toast: Toast? = null
 
     lateinit private var binding: FragmentMastodonHomeBinding
@@ -111,7 +114,7 @@ class MastodonTimelineFragment : Fragment() {
             adapter?.refresh()?.await()
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
-            Toast.makeText(getContext(), R.string.error_comm, Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(getContext(), R.string.comm_error, Snackbar.LENGTH_SHORT).show()
         } finally {
             binding.timeline.setRefreshing(false)
         }
@@ -123,7 +126,7 @@ class MastodonTimelineFragment : Fragment() {
             adapter?.loadMoreOld()?.await()
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
-            Toast.makeText(getContext(), R.string.error_comm, Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(getContext(), R.string.comm_error, Snackbar.LENGTH_SHORT).show()
         } finally {
             binding.timeline.reenableLoadmore()
         }
@@ -134,9 +137,11 @@ class MastodonTimelineFragment : Fragment() {
     }
 
     private fun showToast(@StringRes resId: Int, duration: Int) {
-        toast?.cancel()
-        toast = Toast.makeText(context, resId, duration)
-        toast?.show()
+        handler.post {
+            toast?.cancel()
+            toast = Toast.makeText(context, resId, duration)
+            toast?.show()
+        }
     }
 
     companion object {

@@ -29,4 +29,9 @@ class ShowImagesMessage(val urls: Array<String>, val index: Int) : Message
  */
 class OpenUrlMessage(val url: String) : Message
 
+/**
+ * Activity終了用のメッセージ
+ */
+class CloseThisActivityMessage(): Message
+
 

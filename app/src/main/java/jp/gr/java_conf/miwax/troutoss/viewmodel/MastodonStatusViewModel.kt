@@ -161,7 +161,7 @@ class MastodonStatusViewModel(private val context: Context, private val holder: 
                     // レスポンスが422の場合は他のクライアントで操作されたと判断して無視
                     if (e.response?.code() != 422) {
                         Timber.e("post(Un)Reblog failed: %s", e)
-                        messenger.send(ShowToastMessage(R.string.error_comm))
+                        messenger.send(ShowToastMessage(R.string.comm_error))
                     } else {
                         holder.isReblogged = !holder.isReblogged
                     }
@@ -188,7 +188,7 @@ class MastodonStatusViewModel(private val context: Context, private val holder: 
                     // レスポンスが422の場合は他のクライアントで操作されたと判断して無視
                     if (e.response?.code() != 422) {
                         Timber.e("post(Un)Favourite failed: %s", e)
-                        messenger.send(ShowToastMessage(R.string.error_comm))
+                        messenger.send(ShowToastMessage(R.string.comm_error))
                     } else {
                         holder.isFavourited = !holder.isFavourited
                     }

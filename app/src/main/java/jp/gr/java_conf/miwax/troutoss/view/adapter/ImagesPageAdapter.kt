@@ -38,7 +38,7 @@ class ImagesPageAdapter(private val context: Context, private val urls: Array<St
 
                     override fun onException(e: Exception?, model: String?, target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
                         binding.progressBar.visibility = View.GONE
-                        showToast(R.string.error_load_image, Toast.LENGTH_SHORT)
+                        showToast(R.string.load_image_error, Toast.LENGTH_SHORT)
                         return false
                     }
                 })

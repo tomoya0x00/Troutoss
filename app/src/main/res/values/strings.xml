@@ -17,13 +17,14 @@
     <string name="mastodon_local_title">Local@%1$s</string>
     <string name="mastodon_federated_title">Federated@%1$s</string>
     <string name="mastodon_boost_by">%1$s boosted</string>
-    <string name="error_comm">Communication failed.\nPlease try again after a while.</string>
-    <string name="error_load_image">Failed to load image.\nPlease try again after a while.</string>
+    <string name="comm_error">Communication failed.\nPlease try again after a while.</string>
+    <string name="load_image_error">Failed to load image.\nPlease try again after a while.</string>
     <string name="status_now">now</string>
     <string name="sensitive_content">Sensitive content\nClick to view</string>
     <string name="video_content">Click to play</string>
     <string name="unknown_content">Unknown content\nClick to open</string>
     <string name="post">Post</string>
+    <string name="post_success">Posted.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
