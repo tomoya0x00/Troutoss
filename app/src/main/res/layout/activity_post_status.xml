@@ -161,6 +161,7 @@
             android:background="@drawable/round_corner_shape"
             android:hint="警告"
             android:padding="8dp"
+            android:text="@={viewModel.spoilerText}"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
             android:visibility="@{viewModel.spoiler ? View.VISIBLE : View.GONE}"

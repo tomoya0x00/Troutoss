@@ -45,17 +45,20 @@ class PostStatusViewModel(private val context: Context, accountType: AccountType
         }
 
     @set:Bindable
+    var spoilerText: String = ""
+
+    @set:Bindable
     var status: String = ""
 
     fun onClickPost(view: View) {
         launch(CommonPool) {
             try {
                 statuses?.postStatus(
-                        status = this@PostStatusViewModel.status,
+                        status = status,
                         inReplyToId = null,
                         mediaIds = null,
                         sensitive = false,
-                        spoilerText = null
+                        spoilerText = if (spoiler) spoilerText else null
                 )?.await()
             } catch (e: Exception) {
                 Timber.e("postStatus failed: %s", e)
