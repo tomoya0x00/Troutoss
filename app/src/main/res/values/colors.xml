@@ -8,4 +8,5 @@
     <color name="replied">#1bc900</color>
     <color name="reblogged">#0088f0</color>
     <color name="more_actions">#f0f0f0</color>
+    <color name="reply">#f0f0f0</color>
 </resources>

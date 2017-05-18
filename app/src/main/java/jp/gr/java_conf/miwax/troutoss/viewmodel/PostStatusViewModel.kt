@@ -22,16 +22,12 @@ import timber.log.Timber
  * ステータス投稿用のViewModel
  */
 
-class PostStatusViewModel(private val context: Context, accountType: AccountType, accountUuid: String) : BaseObservable() {
+class PostStatusViewModel(context: Context, accountType: AccountType, accountUuid: String,
+                          private val replyToId: Long? = null, replyToUsers: Array<String>? = null) :
+        BaseObservable() {
 
     val messenger = Messenger()
     private val statuses: RxStatuses?
-
-    init {
-        val helper = MastodonHelper(context)
-        val client = helper.createAuthedClientOf(accountUuid)
-        statuses = client?.let { RxStatuses(it) }
-    }
 
     @get:Bindable
     val hasAttachments: Boolean
@@ -47,21 +43,36 @@ class PostStatusViewModel(private val context: Context, accountType: AccountType
     @set:Bindable
     var spoilerText: String = ""
 
-    @set:Bindable
+    @Bindable
     var status: String = ""
+
+    @get:Bindable
+    var statusCursor: Int = 0
+
+    init {
+        Timber.d("PostStatusViewModel accountUuid:$accountUuid, replyToId:$replyToId, replyToUsers:$replyToUsers")
+        val helper = MastodonHelper(context)
+        val client = helper.createAuthedClientOf(accountUuid)
+        statuses = client?.let { RxStatuses(it) }
+
+        replyToUsers?.let {
+            status = it.joinToString(separator = " ", prefix = "@", postfix = " ")
+            statusCursor = status.length
+        }
+    }
 
     fun onClickPost(view: View) {
         launch(CommonPool) {
             try {
                 statuses?.postStatus(
                         status = status,
-                        inReplyToId = null,
+                        inReplyToId = replyToId,
                         mediaIds = null,
                         sensitive = false,
                         spoilerText = if (spoiler) spoilerText else null
                 )?.await()
             } catch (e: Exception) {
-                Timber.e("postStatus failed: %s", e)
+                Timber.e("postStatus failed: %s", e.toString())
                 messenger.send(ShowToastMessage(R.string.comm_error))
                 return@launch
             }

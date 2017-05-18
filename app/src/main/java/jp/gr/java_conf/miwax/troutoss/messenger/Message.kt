@@ -1,6 +1,7 @@
 package jp.gr.java_conf.miwax.troutoss.messenger
 
 import android.support.annotation.StringRes
+import com.sys1yagi.mastodon4j.api.entity.Status
 
 /**
  * Created by Tomoya Miwa on 2017/05/07.
@@ -32,6 +33,10 @@ class OpenUrlMessage(val url: String) : Message
 /**
  * Activity終了用のメッセージ
  */
-class CloseThisActivityMessage(): Message
+class CloseThisActivityMessage : Message
 
+/**
+ * Reply画面表示用の目セージ
+ */
 
+class ShowReplyActivityMessage(val status: Status) : Message

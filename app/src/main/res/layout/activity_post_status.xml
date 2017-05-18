@@ -50,6 +50,7 @@
             android:text="@={viewModel.status}"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
+            app:selection="@{viewModel.statusCursor}"
             app:layout_constraintBottom_toTopOf="@+id/status_media"
             app:layout_constraintLeft_toLeftOf="@id/status"
             app:layout_constraintRight_toRightOf="@id/status"

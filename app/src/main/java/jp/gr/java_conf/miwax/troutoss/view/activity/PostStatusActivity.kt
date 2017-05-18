@@ -11,11 +11,13 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
+import com.sys1yagi.mastodon4j.api.entity.Status
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityPostStatusBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
 import timber.log.Timber
@@ -34,11 +36,15 @@ class PostStatusActivity : AppCompatActivity() {
     }
 
     private val accountUuid: String by lazy { intent.extras.getString(EXTRA_ACCOUNT_UUID) }
+    private val replyToId: Long? by lazy {
+        if (intent.extras.containsKey(EXTRA_REPLY_TO_ID)) intent.extras.getLong(EXTRA_REPLY_TO_ID) else null
+    }
+    private val replyToUsers: Array<String>? by lazy { intent.extras.getStringArray(EXTRA_REPLY_TO_USERS) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_status)
-        viewModel = PostStatusViewModel(this, accountType, accountUuid)
+        viewModel = PostStatusViewModel(this, accountType, accountUuid, replyToId, replyToUsers)
         binding.viewModel = viewModel
 
         disposables.addAll(
@@ -58,6 +64,12 @@ class PostStatusActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Statusのカーソル位置を末尾に指定
+//        binding.statusEdit.setSelection(binding.statusEdit.text.length)
+    }
+
     override fun onDestroy() {
         disposables.clear()
         super.onDestroy()
@@ -74,11 +86,21 @@ class PostStatusActivity : AppCompatActivity() {
     companion object {
         private val EXTRA_ACCOUNT_TYPE = "account_type"
         private val EXTRA_ACCOUNT_UUID = "account_uuid"
+        private val EXTRA_REPLY_TO_ID = "reply_to_id"
+        private val EXTRA_REPLY_TO_USERS = "reply_to_users"
 
-        fun startActivity(context: Context, accountType: AccountType, accountUuid: String) {
+        fun startActivity(context: Context, accountType: AccountType, accountUuid: String, replyTo: Status? = null) {
             val intent = Intent(context, PostStatusActivity::class.java)
             intent.putExtra(PostStatusActivity.EXTRA_ACCOUNT_TYPE, accountType.toString())
             intent.putExtra(PostStatusActivity.EXTRA_ACCOUNT_UUID, accountUuid)
+
+            replyTo?.let {
+                val myAccount = MastodonHelper(context).loadAccountOf(accountUuid)
+                val replyToUsers = it.mentions.map { it.acct }.filter { it != myAccount?.userName }.toMutableList()
+                it.account?.let { replyToUsers.add(0, it.acct) }
+                intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_USERS, replyToUsers.toTypedArray())
+                intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_ID, it.id)
+            }
             context.startActivity(intent)
         }
     }

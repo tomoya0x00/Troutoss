@@ -146,14 +146,12 @@
             app:layout_constraintRight_toRightOf="@id/attachments"
             app:layout_constraintTop_toTopOf="@id/attachments"/>
 
-        <ToggleButton
+        <ImageButton
             android:id="@+id/reply"
             android:layout_width="@dimen/status_button"
             android:layout_height="@dimen/status_button"
-            android:background="@drawable/reply_toggle"
+            android:background="@drawable/reply"
             android:onClick="@{viewModel::onClickReply}"
-            android:textOff=""
-            android:textOn=""
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/attachments"/>
 

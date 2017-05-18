@@ -22,9 +22,12 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowReplyActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
+import jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -85,6 +88,10 @@ class MastodonTimelineFragment : Fragment() {
                     adapter.messenger.register(OpenUrlMessage::class.java).doOnNext {
                         Timber.d("received OpenUrlMessage")
                         tabsIntent.launchUrl(activity, Uri.parse(it.url))
+                    }.subscribe(),
+                    adapter.messenger.register(ShowReplyActivityMessage::class.java).doOnNext { m ->
+                        Timber.d("received ShowReplyActivityMessage")
+                        accountUuid?.let { PostStatusActivity.startActivity(activity, AccountType.MASTODON, it, m.status) }
                     }.subscribe()
             )
         }

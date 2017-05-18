@@ -12,10 +12,7 @@ import com.sys1yagi.mastodon4j.api.exception.Mastodon4jRequestException
 import com.sys1yagi.mastodon4j.rx.RxStatuses
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
-import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
-import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
 import kotlinx.coroutines.experimental.CommonPool
@@ -142,7 +139,7 @@ class MastodonStatusViewModel(private val context: Context, private val holder: 
     }
 
     fun onClickReply(view: View) {
-
+        messenger.send(ShowReplyActivityMessage(showableStatus))
     }
 
     val boostChangeListener = CompoundButton.OnCheckedChangeListener { _, checked ->
