@@ -1,6 +1,5 @@
 package jp.gr.java_conf.miwax.troutoss.model
 
-import android.content.Context
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.Scope
@@ -8,6 +7,7 @@ import com.sys1yagi.mastodon4j.rx.RxApps
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers.io
 import io.realm.Realm
+import jp.gr.java_conf.miwax.troutoss.App.Companion.appContext
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.extension.OkHttpClientBuilderWithTimeout
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
@@ -18,10 +18,10 @@ import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAppRegistration
  * Mastodon用のヘルパー
  */
 
-class MastodonHelper(val context: Context) {
+class MastodonHelper {
 
     val authCbUrl: String by lazy {
-        context.getString(R.string.cb_scheme) + "://" + context.getString(R.string.mastodon_cb_host) + "/"
+        appContext.getString(R.string.cb_scheme) + "://" + appContext.getString(R.string.mastodon_cb_host) + "/"
     }
 
     /**
@@ -59,7 +59,7 @@ class MastodonHelper(val context: Context) {
         val apps = RxApps(client)
 
         return apps.createApp(
-                clientName = context.getString(R.string.app_name),
+                clientName = appContext.getString(R.string.app_name),
                 redirectUris = authCbUrl,
                 scope = Scope(Scope.Name.ALL))
                 .subscribeOn(io())

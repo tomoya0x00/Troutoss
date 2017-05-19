@@ -20,7 +20,7 @@ import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonTimelineFragment
 
 class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context) : FragmentPagerAdapter(fm) {
 
-    private val helper = MastodonHelper(context)
+    private val helper = MastodonHelper()
     // TODO: 動的なタブの追加削除移動に対応（http://qiita.com/akitaika_/items/80aeffb4bd28270bd609）
     private val tabs = realm.where(SnsTab::class.java)
             .findAllSorted(SnsTab::position.name, Sort.ASCENDING)

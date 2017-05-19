@@ -1,6 +1,8 @@
 package jp.gr.java_conf.miwax.troutoss
 
 import android.app.Application
+import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import com.deploygate.sdk.DeployGate
 import com.google.firebase.crash.FirebaseCrash
@@ -18,6 +20,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        App.app = this
 
         AndroidThreeTen.init(this)
 
@@ -51,5 +55,15 @@ class App : Application() {
                 FirebaseCrash.report(e)
             }
         }
+    }
+
+    companion object {
+        lateinit private var app: Application
+
+        val appContext: Context
+            get() = app
+
+        val appResources: Resources
+            get() = app.resources
     }
 }

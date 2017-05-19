@@ -51,7 +51,7 @@ class PostStatusViewModel(context: Context, accountType: AccountType, accountUui
 
     init {
         Timber.d("PostStatusViewModel accountUuid:$accountUuid, replyToId:$replyToId, replyToUsers:$replyToUsers")
-        val helper = MastodonHelper(context)
+        val helper = MastodonHelper()
         val client = helper.createAuthedClientOf(accountUuid)
         statuses = client?.let { RxStatuses(it) }
 

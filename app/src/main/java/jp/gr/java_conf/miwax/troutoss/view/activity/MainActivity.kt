@@ -15,7 +15,7 @@ import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
 class MainActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityMainBinding
-    private val helper: MastodonHelper by lazy { MastodonHelper(this) }
+    private val helper: MastodonHelper by lazy { MastodonHelper() }
     private val realm: Realm = Realm.getDefaultInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {

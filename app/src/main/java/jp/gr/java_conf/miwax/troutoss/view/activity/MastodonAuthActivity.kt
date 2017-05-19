@@ -24,7 +24,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
     }
 
     lateinit private var binding: jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
-    private val helper: jp.gr.java_conf.miwax.troutoss.model.MastodonHelper by lazy { jp.gr.java_conf.miwax.troutoss.model.MastodonHelper(this) }
+    private val helper: jp.gr.java_conf.miwax.troutoss.model.MastodonHelper by lazy { jp.gr.java_conf.miwax.troutoss.model.MastodonHelper() }
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)

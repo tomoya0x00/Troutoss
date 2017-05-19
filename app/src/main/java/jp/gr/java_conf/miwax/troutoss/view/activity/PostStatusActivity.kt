@@ -15,9 +15,9 @@ import com.sys1yagi.mastodon4j.api.entity.Status
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityPostStatusBinding
+import jp.gr.java_conf.miwax.troutoss.extension.extractReplyToUsers
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
-import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
 import timber.log.Timber
@@ -95,10 +95,7 @@ class PostStatusActivity : AppCompatActivity() {
             intent.putExtra(PostStatusActivity.EXTRA_ACCOUNT_UUID, accountUuid)
 
             replyTo?.let {
-                val myAccount = MastodonHelper(context).loadAccountOf(accountUuid)
-                val replyToUsers = it.mentions.map { it.acct }.filter { it != myAccount?.userName }.toMutableList()
-                it.account?.let { replyToUsers.add(0, it.acct) }
-                intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_USERS, replyToUsers.toTypedArray())
+                intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_USERS, it.extractReplyToUsers(accountUuid))
                 intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_ID, it.id)
             }
             context.startActivity(intent)

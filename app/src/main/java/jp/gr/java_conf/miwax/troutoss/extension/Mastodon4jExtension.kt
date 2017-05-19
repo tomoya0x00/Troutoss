@@ -1,6 +1,8 @@
 package jp.gr.java_conf.miwax.troutoss.extension
 
 import com.sys1yagi.mastodon4j.api.entity.Attachment
+import com.sys1yagi.mastodon4j.api.entity.Status
+import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import java.net.URI
 import java.net.URLConnection
 
@@ -37,5 +39,11 @@ fun Attachment.actualType(): String {
             }
         }
     }
+}
 
+fun Status.extractReplyToUsers(excludeAccountUuid: String): Array<String> {
+    val myAccount = MastodonHelper().loadAccountOf(excludeAccountUuid)
+    val replyToUsers = this.mentions.map { it.acct }.filter { it != myAccount?.userName }.toMutableList()
+    this.account?.let { replyToUsers.add(0, it.acct) }
+    return replyToUsers.toTypedArray()
 }

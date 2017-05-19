@@ -71,7 +71,7 @@ class MastodonTimelineFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
-        val helper = MastodonHelper(context)
+        val helper = MastodonHelper()
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
         adapter = client?.let { MastodonTimelineAdapter(context, it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
 
