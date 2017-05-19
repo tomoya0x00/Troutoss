@@ -44,7 +44,7 @@ class PostStatusActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_status)
-        viewModel = PostStatusViewModel(this, accountType, accountUuid, replyToId, replyToUsers)
+        viewModel = PostStatusViewModel(accountType, accountUuid, replyToId, replyToUsers)
         binding.viewModel = viewModel
 
         disposables.addAll(

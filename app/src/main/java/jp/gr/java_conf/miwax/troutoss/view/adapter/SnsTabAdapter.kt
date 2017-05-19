@@ -1,11 +1,11 @@
 package jp.gr.java_conf.miwax.troutoss.view.adapter
 
-import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import io.realm.Realm
 import io.realm.Sort
+import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
@@ -18,7 +18,7 @@ import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonTimelineFragment
  * SNSタブのアダプター
  */
 
-class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context) : FragmentPagerAdapter(fm) {
+class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapter(fm) {
 
     private val helper = MastodonHelper()
     // TODO: 動的なタブの追加削除移動に対応（http://qiita.com/akitaika_/items/80aeffb4bd28270bd609）
@@ -61,31 +61,31 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm, val context: Context
             return when (tab.type) {
                 SnsTab.TabType.MASTODON_HOME -> {
                     if (countAccount?.toInt() == 1) {
-                        context.getString(R.string.mastodon_home_title_short, account.instanceName)
+                        appResources.getString(R.string.mastodon_home_title_short, account.instanceName)
                     } else {
-                        context.getString(R.string.mastodon_home_title_long, account?.userNameWithInstance ?: "")
+                        appResources.getString(R.string.mastodon_home_title_long, account?.userNameWithInstance ?: "")
                     }
                 }
                 SnsTab.TabType.MASTODON_FAVOURITES -> {
                     if (countAccount?.toInt() == 1) {
-                        context.getString(R.string.mastodon_favourites_title_short, account.instanceName)
+                        appResources.getString(R.string.mastodon_favourites_title_short, account.instanceName)
                     } else {
-                        context.getString(R.string.mastodon_favourites_title_long, account?.userNameWithInstance ?: "")
+                        appResources.getString(R.string.mastodon_favourites_title_long, account?.userNameWithInstance ?: "")
                     }
 
                 }
                 SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
                     if (countAccount?.toInt() == 1) {
-                        context.getString(R.string.mastodon_notifications_title_short, account.instanceName)
+                        appResources.getString(R.string.mastodon_notifications_title_short, account.instanceName)
                     } else {
-                        context.getString(R.string.mastodon_notifications_title_long, account?.userNameWithInstance ?: "")
+                        appResources.getString(R.string.mastodon_notifications_title_long, account?.userNameWithInstance ?: "")
                     }
                 }
                 SnsTab.TabType.MASTODON_LOCAL -> {
-                    context.getString(R.string.mastodon_local_title, account?.instanceName ?: "")
+                    appResources.getString(R.string.mastodon_local_title, account?.instanceName ?: "")
                 }
                 SnsTab.TabType.MASTODON_FEDERATED -> {
-                    context.getString(R.string.mastodon_federated_title, account?.instanceName ?: "")
+                    appResources.getString(R.string.mastodon_federated_title, account?.instanceName ?: "")
                 }
                 else -> {
                     tabs[position].type.toString()

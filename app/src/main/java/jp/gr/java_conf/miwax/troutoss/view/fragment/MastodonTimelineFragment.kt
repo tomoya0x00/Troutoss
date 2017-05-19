@@ -73,7 +73,7 @@ class MastodonTimelineFragment : Fragment() {
 
         val helper = MastodonHelper()
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        adapter = client?.let { MastodonTimelineAdapter(context, it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
+        adapter = client?.let { MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
 
         adapter?.let { adapter ->
             disposables.addAll(

@@ -1,6 +1,5 @@
 package jp.gr.java_conf.miwax.troutoss.viewmodel
 
-import android.content.Context
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.view.View
@@ -22,7 +21,7 @@ import timber.log.Timber
  * ステータス投稿用のViewModel
  */
 
-class PostStatusViewModel(context: Context, accountType: AccountType, accountUuid: String,
+class PostStatusViewModel(accountType: AccountType, accountUuid: String,
                           private val replyToId: Long? = null, replyToUsers: Array<String>? = null) :
         BaseObservable() {
 

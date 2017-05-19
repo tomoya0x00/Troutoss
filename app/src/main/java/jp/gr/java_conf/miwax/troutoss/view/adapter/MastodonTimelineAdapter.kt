@@ -1,6 +1,5 @@
 package jp.gr.java_conf.miwax.troutoss.view.adapter
 
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.text.method.LinkMovementMethod
@@ -35,7 +34,7 @@ import kotlinx.coroutines.experimental.rx2.await
  * Mastodonのホーム用アダプタ
  */
 
-class MastodonTimelineAdapter(private val context: Context, private val client: MastodonClient, type: Timeline) :
+class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline) :
         UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
     val messenger = Messenger()
@@ -118,7 +117,7 @@ class MastodonTimelineAdapter(private val context: Context, private val client: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.disposables.clear()
         holder.binding?.let { binding ->
-            binding.viewModel = MastodonStatusViewModel(context, holders[position], client)
+            binding.viewModel = MastodonStatusViewModel(holders[position], client)
             // ViewModelのメッセージを購読
             holder.disposables.add(
                     binding.viewModel.messenger.bus.doOnNext { messenger.send(it) }.subscribe()

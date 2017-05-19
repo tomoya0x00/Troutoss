@@ -1,6 +1,5 @@
 package jp.gr.java_conf.miwax.troutoss.viewmodel
 
-import android.content.Context
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.view.View
@@ -10,6 +9,8 @@ import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.api.exception.Mastodon4jRequestException
 import com.sys1yagi.mastodon4j.rx.RxStatuses
+import jp.gr.java_conf.miwax.troutoss.App.Companion.appContext
+import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.messenger.*
@@ -31,12 +32,11 @@ import java.net.URI
  * Mastodonのステータス用ViewModel
  */
 
-class MastodonStatusViewModel(private val context: Context, private val holder: MastodonStatusHolder, client: MastodonClient) :
+class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: MastodonClient) :
         BaseObservable() {
 
     val messenger = Messenger()
 
-    private val resources = context.resources
     private val rxStatuses = RxStatuses(client)
     private val status: Status
         get() = holder.status
@@ -47,7 +47,7 @@ class MastodonStatusViewModel(private val context: Context, private val holder: 
 
     @get:Bindable
     val boostBy: String
-        get() = String.format(context.getString(R.string.mastodon_boost_by),
+        get() = String.format(appResources.getString(R.string.mastodon_boost_by),
                 status.account?.let { getNonEmptyName(it) } ?: "")
 
     @get:Bindable
@@ -89,11 +89,11 @@ class MastodonStatusViewModel(private val context: Context, private val holder: 
             val elapsed = Duration.between(createdAt, now)
             val elapsedSec = elapsed.toMillis() / 1000
             return when {
-                elapsedSec < 1 -> context.getString(R.string.status_now)
-                elapsedSec < 60 -> resources.getQuantityString(R.plurals.status_second, elapsedSec.toInt(), elapsedSec)
-                elapsedSec < 3600 -> resources.getQuantityString(R.plurals.status_minute, elapsed.toMinutes().toInt(), elapsed.toMinutes())
-                elapsedSec < 3600 * 24 -> resources.getQuantityString(R.plurals.status_hour, elapsed.toHours().toInt(), elapsed.toHours())
-                else -> resources.getQuantityString(R.plurals.status_day, elapsed.toDays().toInt(), elapsed.toDays())
+                elapsedSec < 1 -> appResources.getString(R.string.status_now)
+                elapsedSec < 60 -> appResources.getQuantityString(R.plurals.status_second, elapsedSec.toInt(), elapsedSec)
+                elapsedSec < 3600 -> appResources.getQuantityString(R.plurals.status_minute, elapsed.toMinutes().toInt(), elapsed.toMinutes())
+                elapsedSec < 3600 * 24 -> appResources.getQuantityString(R.plurals.status_hour, elapsed.toHours().toInt(), elapsed.toHours())
+                else -> appResources.getQuantityString(R.plurals.status_day, elapsed.toDays().toInt(), elapsed.toDays())
             }
         }
 
