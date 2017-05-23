@@ -8,7 +8,6 @@ import android.os.Handler
 import android.os.Looper
 import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -121,7 +120,7 @@ class MastodonTimelineFragment : Fragment() {
             adapter?.refresh()?.await()
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
-            Toast.makeText(getContext(), R.string.comm_error, Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(getContext(), R.string.comm_error, Toast.LENGTH_SHORT).show()
         } finally {
             binding.timeline.setRefreshing(false)
         }
@@ -133,7 +132,7 @@ class MastodonTimelineFragment : Fragment() {
             adapter?.loadMoreOld()?.await()
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
-            Toast.makeText(getContext(), R.string.comm_error, Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(getContext(), R.string.comm_error, Toast.LENGTH_SHORT).show()
         } finally {
             binding.timeline.reenableLoadmore()
         }
