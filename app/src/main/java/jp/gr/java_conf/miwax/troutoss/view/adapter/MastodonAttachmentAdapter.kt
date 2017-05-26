@@ -19,7 +19,8 @@ import timber.log.Timber
  * MastodonのAttachment用アダプター
  */
 
-open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) : RecyclerView.Adapter<MastodonAttachmentAdapter.ViewHolder>() {
+open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) :
+        RecyclerView.Adapter<MastodonAttachmentAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.row_attachment, parent, false)
