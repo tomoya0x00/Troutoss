@@ -17,8 +17,10 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityPostStatusBinding
 import jp.gr.java_conf.miwax.troutoss.extension.extractReplyToUsers
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
+import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
 import timber.log.Timber
 
@@ -40,11 +42,14 @@ class PostStatusActivity : AppCompatActivity() {
         if (intent.extras.containsKey(EXTRA_REPLY_TO_ID)) intent.extras.getLong(EXTRA_REPLY_TO_ID) else null
     }
     private val replyToUsers: Array<String>? by lazy { intent.extras.getStringArray(EXTRA_REPLY_TO_USERS) }
+    private val visibility: Status.Visibility by lazy {
+        intent.extras.getString(EXTRA_VISIBILITY)?.let { Status.Visibility.valueOf(it) } ?: Status.Visibility.Public
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_status)
-        viewModel = PostStatusViewModel(accountType, accountUuid, replyToId, replyToUsers)
+        viewModel = PostStatusViewModel(accountType, accountUuid, replyToId, replyToUsers, visibility)
         binding.viewModel = viewModel
 
         disposables.addAll(
@@ -55,6 +60,13 @@ class PostStatusActivity : AppCompatActivity() {
                 viewModel.messenger.register(CloseThisActivityMessage::class.java).doOnNext {
                     Timber.d("received CloseThisActivityMessage")
                     finish()
+                }.subscribe(),
+                viewModel.messenger.register(ShowMastodonVisibilityDialog::class.java).doOnNext {
+                    Timber.d("received ShowMastodonVisibilityDialog")
+                }.flatMap {
+                    MastodonVisibilityDialog(this@PostStatusActivity).show()
+                }.doOnNext {
+                    viewModel.onSelectVisibility(it)
                 }.subscribe()
         )
 
@@ -66,8 +78,6 @@ class PostStatusActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Statusのカーソル位置を末尾に指定
-//        binding.statusEdit.setSelection(binding.statusEdit.text.length)
     }
 
     override fun onDestroy() {
@@ -88,6 +98,7 @@ class PostStatusActivity : AppCompatActivity() {
         private val EXTRA_ACCOUNT_UUID = "account_uuid"
         private val EXTRA_REPLY_TO_ID = "reply_to_id"
         private val EXTRA_REPLY_TO_USERS = "reply_to_users"
+        private val EXTRA_VISIBILITY = "visibility"
 
         fun startActivity(context: Context, accountType: AccountType, accountUuid: String, replyTo: Status? = null) {
             val intent = Intent(context, PostStatusActivity::class.java)
@@ -97,6 +108,7 @@ class PostStatusActivity : AppCompatActivity() {
             replyTo?.let {
                 intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_USERS, it.extractReplyToUsers(accountUuid))
                 intent.putExtra(PostStatusActivity.EXTRA_REPLY_TO_ID, it.id)
+                intent.putExtra(PostStatusActivity.EXTRA_VISIBILITY, it.visibility)
             }
             context.startActivity(intent)
         }

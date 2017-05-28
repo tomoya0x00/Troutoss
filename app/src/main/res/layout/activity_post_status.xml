@@ -13,7 +13,6 @@
 
     </data>
 
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,15 +45,15 @@
             android:layout_marginTop="16dp"
             android:background="@android:color/white"
             android:gravity="top"
-            android:hint="今なにしてる？"
+            android:hint="@string/status_hint"
             android:text="@={viewModel.status}"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
-            app:selection="@{viewModel.statusCursor}"
             app:layout_constraintBottom_toTopOf="@+id/status_media"
             app:layout_constraintLeft_toLeftOf="@id/status"
             app:layout_constraintRight_toRightOf="@id/status"
             app:layout_constraintTop_toBottomOf="@+id/cw_edit"
+            app:selection="@{viewModel.statusCursor}"
             tools:text="status">
 
             <requestFocus/>
@@ -96,7 +95,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:onClick="@{viewModel::onClickPost}"
-            android:text="トゥート！"
+            android:text="@string/toot"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -124,17 +123,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:srcCompat="@drawable/camera"/>
+            app:srcCompat="@drawable/camera"
+            android:contentDescription="@string/attachment_media"/>
 
         <ImageButton
             android:id="@+id/visibility"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/post_button"
             android:layout_height="@dimen/post_button"
+            android:onClick="@{viewModel::onClickVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/media"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:srcCompat="@drawable/public_earth"/>
+            app:srcCompat="@{viewModel.visibilityIcon}"
+            android:contentDescription="@string/select_visibility"/>
 
         <ToggleButton
             android:id="@+id/cw"
@@ -144,8 +146,8 @@
             android:checked="@={viewModel.spoiler}"
             android:padding="0dp"
             android:textColor="@drawable/toggle_text_color"
-            android:textOff="CW"
-            android:textOn="CW"
+            android:textOff="@string/cw"
+            android:textOn="@string/cw"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/nsfw"
             app:layout_constraintTop_toBottomOf="@id/status"/>
@@ -160,7 +162,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/round_corner_shape"
-            android:hint="警告"
+            android:hint="@string/content_warning"
             android:padding="8dp"
             android:text="@={viewModel.spoilerText}"
             android:textColor="@android:color/black"
@@ -179,8 +181,8 @@
             android:layout_height="@dimen/post_button"
             android:padding="0dp"
             android:textColor="@drawable/toggle_text_color"
-            android:textOff="NSFW"
-            android:textOn="NSFW"
+            android:textOff="@string/nsfw"
+            android:textOn="@string/nsfw"
             android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/visibility"

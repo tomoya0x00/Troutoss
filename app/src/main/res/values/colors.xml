@@ -9,4 +9,6 @@
     <color name="reblogged">#0088f0</color>
     <color name="more_actions">#f0f0f0</color>
     <color name="reply">#f0f0f0</color>
+
+    <color name="dialog_background">#ff424242</color>
 </resources>

@@ -3,6 +3,7 @@ package jp.gr.java_conf.miwax.troutoss
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
+import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.deploygate.sdk.DeployGate
 import com.google.firebase.crash.FirebaseCrash
@@ -16,7 +17,7 @@ import timber.log.Timber
  * App class
  */
 
-class App : Application() {
+class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()

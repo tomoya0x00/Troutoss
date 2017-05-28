@@ -36,7 +36,13 @@ class OpenUrlMessage(val url: String) : Message
 class CloseThisActivityMessage : Message
 
 /**
- * Reply画面表示用の目セージ
+ * Reply画面表示用のメッセージ
  */
 
 class ShowReplyActivityMessage(val status: Status) : Message
+
+/**
+ * MastodonVisibility選択ダイアログ表示用のメッセージ
+ */
+
+class ShowMastodonVisibilityDialog(): Message

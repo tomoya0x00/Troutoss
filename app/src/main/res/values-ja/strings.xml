@@ -21,6 +21,15 @@
     <string name="unknown_content">不明なコンテンツ\nクリックして開く</string>
     <string name="post">投稿</string>
     <string name="post_success">投稿しました</string>
+    <string name="visibility_public">公開：公開TLに表示</string>
+    <string name="visibility_unlisted">未収載：公開TLに非表示</string>
+    <string name="visibility_private">非公開：フォロワーだけに表示</string>
+    <string name="visibility_direct">ダイレクト：宛先ユーザーだけに表示</string>
+    <string name="cancel">キャンセル</string>
+    <string name="status_hint">今なにしてる？</string>
+    <string name="toot">トゥート！</string>
+    <string name="content_warning">注意書き</string>
+
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
     </plurals>

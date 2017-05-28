@@ -26,3 +26,9 @@ fun TextView.setHtml(html: String) {
         this.text = Html.fromHtml(html).trimTrailingWhitespace()
     }
 }
+
+@BindingAdapter("srcCompat")
+fun ImageView.srcCompat(resourceId: Int) {
+    this.setImageResource(resourceId)
+}
+

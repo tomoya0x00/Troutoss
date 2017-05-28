@@ -25,6 +25,18 @@
     <string name="unknown_content">Unknown content\nClick to open</string>
     <string name="post">Post</string>
     <string name="post_success">Posted.</string>
+    <string name="visibility_public">Public：Post to public timelines</string>
+    <string name="visibility_unlisted">Unlisted:Do not post to public timelines</string>
+    <string name="visibility_private">Private：Post to followers only</string>
+    <string name="visibility_direct">Direct：Post to mentioned users only</string>
+    <string name="cancel">Cancel</string>
+    <string name="status_hint">What is on your mind?</string>
+    <string name="toot">Toot!</string>
+    <string name="nsfw" translatable="false">NSFW</string>
+    <string name="content_warning">Content warning</string>
+    <string name="cw" translatable="false">CW</string>
+    <string name="attachment_media" translatable="false">Attachment media</string>
+    <string name="select_visibility" translatable="false">Select visibility</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
