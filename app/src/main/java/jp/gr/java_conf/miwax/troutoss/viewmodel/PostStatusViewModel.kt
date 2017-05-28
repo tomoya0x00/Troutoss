@@ -2,6 +2,7 @@ package jp.gr.java_conf.miwax.troutoss.viewmodel
 
 import android.databinding.BaseObservable
 import android.databinding.Bindable
+import android.graphics.Color
 import android.view.View
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.rx.RxStatuses
@@ -24,7 +25,7 @@ import timber.log.Timber
  * ステータス投稿用のViewModel
  */
 
-class PostStatusViewModel(accountType: AccountType, accountUuid: String,
+class PostStatusViewModel(private val accountType: AccountType, accountUuid: String,
                           private val replyToId: Long? = null, replyToUsers: Array<String>? = null,
                           private var visibility: Status.Visibility) :
         BaseObservable() {
@@ -51,6 +52,14 @@ class PostStatusViewModel(accountType: AccountType, accountUuid: String,
 
     @get:Bindable
     var statusCursor: Int = 0
+
+    @get:Bindable
+    val statusCount: String
+        get() = (accountType.maxStatusLen - status.length).toString()
+
+    @get:Bindable
+    val statusCountColor: Int
+        get() = if ((accountType.maxStatusLen - status.length) >= 0) Color.WHITE else Color.RED
 
     @get:Bindable
     val visibilityIcon: Int
@@ -109,5 +118,10 @@ class PostStatusViewModel(accountType: AccountType, accountUuid: String,
             else -> Status.Visibility.Public
         }
         notifyPropertyChanged(BR.visibilityIcon)
+    }
+
+    fun onStatusChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        notifyPropertyChanged(BR.statusCount)
+        notifyPropertyChanged(BR.statusCountColor)
     }
 }

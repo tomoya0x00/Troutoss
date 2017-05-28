@@ -46,6 +46,7 @@
             android:background="@android:color/white"
             android:gravity="top"
             android:hint="@string/status_hint"
+            android:onTextChanged="@{viewModel::onStatusChanged}"
             android:text="@={viewModel.status}"
             android:textColor="@android:color/black"
             android:textColorHint="@color/grey"
@@ -106,8 +107,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="500"
-            android:textColor="@android:color/white"
+            android:text="@{viewModel.statusCount}"
+            android:textColor="@{viewModel.statusCountColor}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/post"
             app:layout_constraintTop_toBottomOf="@id/status"
@@ -120,23 +121,23 @@
             android:layout_height="@dimen/post_button"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:contentDescription="@string/attachment_media"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:srcCompat="@drawable/camera"
-            android:contentDescription="@string/attachment_media"/>
+            app:srcCompat="@drawable/camera"/>
 
         <ImageButton
             android:id="@+id/visibility"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/post_button"
             android:layout_height="@dimen/post_button"
+            android:contentDescription="@string/select_visibility"
             android:onClick="@{viewModel::onClickVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/media"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:srcCompat="@{viewModel.visibilityIcon}"
-            android:contentDescription="@string/select_visibility"/>
+            app:srcCompat="@{viewModel.visibilityIcon}"/>
 
         <ToggleButton
             android:id="@+id/cw"

@@ -6,7 +6,15 @@ package jp.gr.java_conf.miwax.troutoss.model.entity
  */
 
 enum class AccountType {
-    MASTODON,
-    UNKNOWN;
+    MASTODON {
+        override val maxStatusLen: Int
+            get() = 500
+    },
+    UNKNOWN {
+        override val maxStatusLen: Int
+            get() = 0
+    };
+
+    abstract val maxStatusLen: Int
 }
 
