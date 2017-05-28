@@ -53,13 +53,16 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     @get:Bindable
     var statusCursor: Int = 0
 
+    val statusRestCount: Int
+        get() = accountType.maxStatusLen - status.length
+
     @get:Bindable
     val statusCount: String
-        get() = (accountType.maxStatusLen - status.length).toString()
+        get() = statusRestCount.toString()
 
     @get:Bindable
     val statusCountColor: Int
-        get() = if ((accountType.maxStatusLen - status.length) >= 0) Color.WHITE else Color.RED
+        get() = if (statusRestCount >= 0) Color.WHITE else Color.RED
 
     @get:Bindable
     val visibilityIcon: Int
@@ -70,6 +73,10 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
             Status.Visibility.Direct -> R.drawable.direct
             else -> R.drawable.public_earth
         }
+
+    @get:Bindable
+    val postable: Boolean
+        get() =  status.isNotEmpty() && statusRestCount >= 0
 
     init {
         Timber.d("PostStatusViewModel accountUuid:$accountUuid, replyToId:$replyToId, replyToUsers:$replyToUsers")
@@ -123,5 +130,6 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     fun onStatusChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         notifyPropertyChanged(BR.statusCount)
         notifyPropertyChanged(BR.statusCountColor)
+        notifyPropertyChanged(BR.postable)
     }
 }
