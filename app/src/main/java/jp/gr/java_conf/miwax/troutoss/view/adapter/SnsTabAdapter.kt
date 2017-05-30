@@ -11,6 +11,7 @@ import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 import jp.gr.java_conf.miwax.troutoss.view.fragment.DummyFragment
+import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonNotificationsFragment
 import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonTimelineFragment
 
 /**
@@ -37,6 +38,9 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapt
             }
             SnsTab.TabType.MASTODON_FAVOURITES -> {
                 MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.FAVOURITES, tab.accountUuid, tab.option)
+            }
+            SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
+                MastodonNotificationsFragment.newInstance(tab.accountUuid, tab.option)
             }
             SnsTab.TabType.MASTODON_LOCAL -> {
                 MastodonTimelineFragment.newInstance(MastodonTimelineAdapter.Timeline.LOCAL, tab.accountUuid, tab.option)

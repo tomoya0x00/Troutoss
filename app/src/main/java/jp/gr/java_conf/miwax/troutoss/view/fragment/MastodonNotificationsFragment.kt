@@ -18,7 +18,7 @@ import android.widget.Toast
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
-import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
+import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonNotificationBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowReplyActivityMessage
@@ -27,26 +27,26 @@ import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
 import jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity
-import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
+import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonNotificationAdapter
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import timber.log.Timber
 
+
 /**
  * A simple [Fragment] subclass.
- * Use the [MastodonTimelineFragment.newInstance] factory method to
+ * Use the [MastodonNotificationsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MastodonTimelineFragment : Fragment() {
+class MastodonNotificationsFragment : Fragment() {
 
-    private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
     private var option: String? = null
     private val handler = Handler(Looper.getMainLooper())
     private var toast: Toast? = null
 
-    lateinit private var binding: FragmentMastodonHomeBinding
-    private var adapter: MastodonTimelineAdapter? = null
+    lateinit private var binding: FragmentMastodonNotificationBinding
+    private var adapter: MastodonNotificationAdapter? = null
     private val disposables = CompositeDisposable()
 
     private val tabsIntent: CustomTabsIntent by lazy {
@@ -60,7 +60,6 @@ class MastodonTimelineFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        timeline = arguments?.getString(ARG_TIMELINE)?.let { MastodonTimelineAdapter.Timeline.valueOf(it) }
         accountUuid = arguments?.getString(ARG_ACCOUNT_UUID)
         option = arguments?.getString(ARG_OPTION)
     }
@@ -68,11 +67,11 @@ class MastodonTimelineFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_notification, container, false)
 
         val helper = MastodonHelper()
         val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        adapter = client?.let { MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
+        adapter = client?.let { MastodonNotificationAdapter(it) }
 
         adapter?.let { adapter ->
             disposables.addAll(
@@ -95,13 +94,13 @@ class MastodonTimelineFragment : Fragment() {
             )
         }
 
-        binding.timeline.apply {
+        binding.notifications.apply {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
             setDefaultOnRefreshListener { onRefresh() }
             setOnLoadMoreListener { _, _ -> onLoadMoreOld() }
             setLoadMoreView(R.layout.center_progressbar)
-            setAdapter(this@MastodonTimelineFragment.adapter)
+            setAdapter(this@MastodonNotificationsFragment.adapter)
         }
 
         onRefresh()
@@ -115,26 +114,26 @@ class MastodonTimelineFragment : Fragment() {
     }
 
     private fun onRefresh() = launch(UI) {
-        binding.timeline.setRefreshing(true)
+        binding.notifications.setRefreshing(true)
         try {
             adapter?.refresh()?.await()
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
             Toast.makeText(getContext(), R.string.comm_error, Toast.LENGTH_SHORT).show()
         } finally {
-            binding.timeline.setRefreshing(false)
+            binding.notifications.setRefreshing(false)
         }
     }
 
     private fun onLoadMoreOld() = launch(UI) {
-        binding.timeline.disableLoadmore()
+        binding.notifications.disableLoadmore()
         try {
             adapter?.loadMoreOld()?.await()
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             Toast.makeText(getContext(), R.string.comm_error, Toast.LENGTH_SHORT).show()
         } finally {
-            binding.timeline.reenableLoadmore()
+            binding.notifications.reenableLoadmore()
         }
     }
 
@@ -147,10 +146,8 @@ class MastodonTimelineFragment : Fragment() {
     }
 
     companion object {
-        private val ARG_TIMELINE = "timeline"
         private val ARG_ACCOUNT_UUID = "account_uuid"
         private val ARG_OPTION = "option"
-
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -159,16 +156,16 @@ class MastodonTimelineFragment : Fragment() {
          * *
          * @param option
          * *
-         * @return A new instance of fragment MastodonHomeFragment.
+         * @return A new instance of fragment MastodonNotificationFragment.
          */
-        fun newInstance(timeline: MastodonTimelineAdapter.Timeline, accountUuid: String, option: String): MastodonTimelineFragment {
-            val fragment = MastodonTimelineFragment()
+        fun newInstance(accountUuid: String, option: String): MastodonNotificationsFragment {
+            val fragment = MastodonNotificationsFragment()
             val args = Bundle()
-            args.putString(ARG_TIMELINE, timeline.toString())
             args.putString(ARG_ACCOUNT_UUID, accountUuid)
             args.putString(ARG_OPTION, option)
             fragment.arguments = args
             return fragment
         }
     }
-}
+
+}// Required empty public constructor

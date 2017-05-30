@@ -1,5 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.extension
 
+import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Status
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
@@ -47,3 +48,6 @@ fun Status.extractReplyToUsers(excludeAccountUuid: String): Array<String> {
     this.account?.let { replyToUsers.add(0, it.acct) }
     return replyToUsers.toTypedArray()
 }
+
+fun Account.getNonEmptyName(): String =
+        if (this.displayName.isNotEmpty()) this.displayName else this.userName

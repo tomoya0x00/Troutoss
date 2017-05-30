@@ -71,17 +71,19 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
     }
 
     fun loadMoreOld() = async(CommonPool) {
-        try {
-            pageable = pageable?.let { getTimeline(it.nextRange(limit = 20)).await() }
-        } catch (e: Exception) {
-            // プログレス表示を消去
-            launch(UI) { notifyDataSetChanged() }
-            throw e
-        }
-        pageable?.let {
-            val pos = holders.size
-            holders.addAll(it.part.map { MastodonStatusHolder(it) })
-            launch(UI) { notifyItemRangeInserted(pos, it.part.size) }
+        if (pageable?.link != null) {
+            try {
+                pageable = pageable?.let { getTimeline(it.nextRange(limit = 20)).await() }
+            } catch (e: Exception) {
+                // プログレス表示を消去
+                launch(UI) { notifyDataSetChanged() }
+                throw e
+            }
+            pageable?.let {
+                val pos = holders.size
+                holders.addAll(it.part.map { MastodonStatusHolder(it) })
+                launch(UI) { notifyItemRangeInserted(pos, it.part.size) }
+            }
         }
     }
 

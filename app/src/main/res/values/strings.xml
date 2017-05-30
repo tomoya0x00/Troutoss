@@ -17,6 +17,8 @@
     <string name="mastodon_local_title">Local@%1$s</string>
     <string name="mastodon_federated_title">Federated@%1$s</string>
     <string name="mastodon_boost_by">%1$s boosted</string>
+    <string name="mastodon_favourite_by">%1$s favourited</string>
+    <string name="mastodon_follow_by">%1$s followed you</string>
     <string name="comm_error">Communication failed.\nPlease try again after a while.</string>
     <string name="load_image_error">Failed to load image.\nPlease try again after a while.</string>
     <string name="status_now">now</string>

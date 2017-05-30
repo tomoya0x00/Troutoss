@@ -43,7 +43,7 @@ class PostStatusActivity : AppCompatActivity() {
     }
     private val replyToUsers: Array<String>? by lazy { intent.extras.getStringArray(EXTRA_REPLY_TO_USERS) }
     private val visibility: Status.Visibility by lazy {
-        intent.extras.getString(EXTRA_VISIBILITY)?.let { Status.Visibility.valueOf(it) } ?: Status.Visibility.Public
+        intent.extras.getString(EXTRA_VISIBILITY)?.let { Status.Visibility.valueOf(it.capitalize()) } ?: Status.Visibility.Public
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
