@@ -9,6 +9,7 @@ import android.os.Looper
 import android.support.annotation.StringRes
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import android.widget.Toast
 import com.sys1yagi.mastodon4j.api.entity.Status
@@ -99,6 +100,10 @@ class PostStatusActivity : AppCompatActivity() {
         private val EXTRA_REPLY_TO_ID = "reply_to_id"
         private val EXTRA_REPLY_TO_USERS = "reply_to_users"
         private val EXTRA_VISIBILITY = "visibility"
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
 
         fun startActivity(context: Context, accountType: AccountType, accountUuid: String, replyTo: Status? = null) {
             val intent = Intent(context, PostStatusActivity::class.java)

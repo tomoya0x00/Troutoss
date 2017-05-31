@@ -4,6 +4,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import io.realm.Realm
@@ -63,5 +64,11 @@ class MainActivity : AppCompatActivity() {
         binding.container.adapter = null
         realm.close()
         super.onDestroy()
+    }
+
+    companion object {
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 }
