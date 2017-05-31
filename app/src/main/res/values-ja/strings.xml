@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="settings">設定</string>
     <string name="hint_mastodon_instance">mstdn.jp</string>
     <string name="input_instance">接続先インスタンス</string>
     <string name="login">ログイン</string>

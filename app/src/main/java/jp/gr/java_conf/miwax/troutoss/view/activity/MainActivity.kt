@@ -3,10 +3,9 @@ package jp.gr.java_conf.miwax.troutoss.view.activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
-import android.view.Menu
-import android.view.MenuItem
 import io.realm.Realm
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
@@ -33,31 +32,15 @@ class MainActivity : AppCompatActivity() {
             PostStatusActivity.startActivity(this, accountType, accountUuid)
         }
 
+        val drawerToggle = ActionBarDrawerToggle(this,
+                binding.drawer, binding.toolbar,
+                R.string.drawer_open, R.string.drawer_close)
+        binding.drawer.addDrawerListener(drawerToggle)
+
         // アカウントを持っていない場合、Mastodon認証画面を出す
         if (!helper.hasAccount()) {
             startActivity(Intent(this, MastodonAuthActivity::class.java))
         }
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
-
-
-        if (id == R.id.action_settings) {
-            return true
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
