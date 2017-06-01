@@ -44,6 +44,11 @@
     <string name="tab_customize">Customize Tab</string>
     <string name="general_settings">General Settings</string>
     <string name="add_account">Add Account</string>
+    <string name="about_this_app">About this app</string>
+    <string name="copyright" translatable="false">Copyright 2017 tomoya0x00. All rights reserved.</string>
+    <string name="copyright_notice">Copyright notice</string>
+    <string name="version">Version</string>
+    <string name="oss_license">Open Source Licenses</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

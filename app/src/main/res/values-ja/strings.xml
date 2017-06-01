@@ -35,6 +35,10 @@
     <string name="tab_customize">タブのカスタマイズ</string>
     <string name="general_settings">全体設定</string>
     <string name="add_account">アカウントを追加</string>
+    <string name="about_this_app">このアプリについて</string>
+    <string name="copyright_notice">著作権情報</string>
+    <string name="version">バージョン</string>
+    <string name="oss_license">オープンソース ライセンス</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

@@ -4,6 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.miwax.troutoss.viewmodel.MainViewModel"/>
+
+    </data>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"
@@ -70,7 +78,9 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="false">
 
-            <include layout="@layout/navigation_drawer"/>
+            <include
+                layout="@layout/navigation_drawer"
+                app:viewModel="@{viewModel}"/>
 
         </android.support.design.widget.NavigationView>
     </android.support.v4.widget.DrawerLayout>

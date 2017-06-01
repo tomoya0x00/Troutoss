@@ -45,4 +45,10 @@ class ShowReplyActivityMessage(val status: Status) : Message
  * MastodonVisibility選択ダイアログ表示用のメッセージ
  */
 
-class ShowMastodonVisibilityDialog(): Message
+class ShowMastodonVisibilityDialog : Message
+
+/**
+ * 設定画面表示用のメッセージ
+ */
+
+class ShowSettingsActivityMessage: Message

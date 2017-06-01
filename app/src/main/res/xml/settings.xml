@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="このアプリについて"/>
+
+    <Preference
+        android:title="@string/version"
+        android:summary="@string/versionName"/>
+
+    <Preference
+        android:title="@string/oss_license">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass=""
+            android:targetPackage="@string/applicationName">
+        </intent>
+    </Preference>
+
+    <Preference
+        android:title="@string/copyright_notice"
+        android:summary="@string/copyright"/>
+
+</PreferenceScreen>
