@@ -1,10 +1,10 @@
 - artifact: com.afollestad.material-dialogs:commons:+
-  name: commons
+  name: material-dialogs-commons
   copyrightHolder: Aidan Michael Follestad
   license: mit
   url: https://github.com/afollestad/material-dialogs
 - artifact: com.afollestad.material-dialogs:core:+
-  name: core
+  name: material-dialogs-core
   copyrightHolder: Aidan Michael Follestad
   license: mit
   url: https://github.com/afollestad/material-dialogs
@@ -185,7 +185,7 @@
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/ReactiveX/RxAndroid
 - artifact: io.reactivex.rxjava2:rxjava:+
-  name: rxjava
+  name: RxJava
   copyrightHolder: RxJava Contributors.
   license: The Apache Software License, Version 2.0
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt

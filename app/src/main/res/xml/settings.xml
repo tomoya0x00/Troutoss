@@ -5,20 +5,20 @@
         android:title="このアプリについて"/>
 
     <Preference
-        android:title="@string/version"
-        android:summary="@string/versionName"/>
+        android:summary="@string/versionName"
+        android:title="@string/version"/>
 
     <Preference
         android:title="@string/oss_license">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass=""
+            android:targetClass="jp.gr.java_conf.miwax.troutoss.view.activity.LicensesActivity"
             android:targetPackage="@string/applicationName">
         </intent>
     </Preference>
 
     <Preference
-        android:title="@string/copyright_notice"
-        android:summary="@string/copyright"/>
+        android:summary="@string/copyright"
+        android:title="@string/copyright_notice"/>
 
 </PreferenceScreen>

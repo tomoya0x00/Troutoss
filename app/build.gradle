@@ -77,6 +77,7 @@ android {
             debuggable true
             zipAlignEnabled true
             testCoverageEnabled true
+            resValue "string", "applicationName", packageName + applicationIdSuffix
         }
         release {
             // signingConfig signingConfigs.release

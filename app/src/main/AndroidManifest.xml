@@ -53,6 +53,11 @@
             android:label="@string/general_settings"
             android:theme="@style/AppTheme">
         </activity>
+        <activity
+            android:name=".view.activity.LicensesActivity"
+            android:label="@string/oss_license"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>
