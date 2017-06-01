@@ -41,6 +41,9 @@
     <string name="select_visibility" translatable="false">Select visibility</string>
     <string name="drawer_open" translatable="false">open drawer</string>
     <string name="drawer_close" translatable="false">close drawer</string>
+    <string name="tab_customize">Customize Tab</string>
+    <string name="general_settings">General Settings</string>
+    <string name="add_account">Add Account</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

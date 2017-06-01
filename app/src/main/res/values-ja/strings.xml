@@ -32,6 +32,9 @@
     <string name="status_hint">今なにしてる？</string>
     <string name="toot">トゥート！</string>
     <string name="content_warning">注意書き</string>
+    <string name="tab_customize">タブのカスタマイズ</string>
+    <string name="general_settings">全体設定</string>
+    <string name="add_account">アカウントを追加</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
