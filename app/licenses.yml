@@ -1,0 +1,260 @@
+- artifact: com.afollestad.material-dialogs:commons:+
+  name: commons
+  copyrightHolder: Aidan Michael Follestad
+  license: mit
+  url: https://github.com/afollestad/material-dialogs
+- artifact: com.afollestad.material-dialogs:core:+
+  name: core
+  copyrightHolder: Aidan Michael Follestad
+  license: mit
+  url: https://github.com/afollestad/material-dialogs
+- artifact: com.android.databinding:adapters:+
+  name: adapters
+  skip: true
+- artifact: com.android.databinding:baseLibrary:+
+  name: com.android.databinding.baseLibrary
+  skip: true
+- artifact: com.android.databinding:library:+
+  name: library
+  skip: true
+- artifact: com.android.support.constraint:constraint-layout-solver:+
+  name: constraint-layout-solver
+  skip: true
+- artifact: com.android.support.constraint:constraint-layout:+
+  name: constraint-layout
+  skip: true
+- artifact: com.android.support:animated-vector-drawable:+
+  name: animated-vector-drawable
+  skip: true  
+- artifact: com.android.support:appcompat-v7:+
+  name: appcompat-v7
+  skip: true  
+- artifact: com.android.support:customtabs:+
+  name: customtabs
+  skip: true  
+- artifact: com.android.support:design:+
+  name: design
+  skip: true  
+- artifact: com.android.support:multidex:+
+  name: multidex
+  skip: true  
+- artifact: com.android.support:preference-v14:+
+  name: preference-v14
+  skip: true  
+- artifact: com.android.support:preference-v7:+
+  name: preference-v7
+  skip: true
+- artifact: com.android.support:recyclerview-v7:+
+  name: recyclerview-v7
+  skip: true  
+- artifact: com.android.support:support-annotations:+
+  name: support-annotations
+  skip: true  
+- artifact: com.android.support:support-compat:+
+  name: support-compat
+  skip: true  
+- artifact: com.android.support:support-core-ui:+
+  name: support-core-ui
+  skip: true  
+- artifact: com.android.support:support-core-utils:+
+  name: support-core-utils
+  skip: true  
+- artifact: com.android.support:support-fragment:+
+  name: support-fragment
+  skip: true  
+- artifact: com.android.support:support-media-compat:+
+  name: support-media-compat
+  skip: true  
+- artifact: com.android.support:support-v13:+
+  name: support-v13
+  skip: true  
+- artifact: com.android.support:support-v4:+
+  name: support-v4
+  skip: true  
+- artifact: com.android.support:support-vector-drawable:+
+  name: support-vector-drawable
+  skip: true  
+- artifact: com.android.support:transition:+
+  name: transition
+  skip: true
+- artifact: com.deploygate:sdk:+
+  name: DeployGate SDK
+  copyrightHolder: DeployGate, tnj, henteko
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/DeployGate/deploygate-android-sdk
+- artifact: com.getkeepsafe.relinker:relinker:+
+  name: ReLinker
+  copyrightHolder: Keepsafe Software Inc.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/KeepSafe/ReLinker
+- artifact: com.github.bumptech.glide:glide:+
+  name: Glide
+  copyrightHolder: Google, Inc. All rights reserved.
+  license: Simplified BSD License
+  licenseUrl: http://www.opensource.org/licenses/bsd-license
+  url: https://github.com/bumptech/glide
+- artifact: com.github.chrisbanes:PhotoView:+
+  name: PhotoView
+  copyrightHolder: Chris Banes
+  license: apache2
+  url: https://github.com/chrisbanes/PhotoView
+- artifact: com.github.sys1yagi.mastodon4j:mastodon4j-rx:+
+  name: mastodon4j-rx
+  copyrightHolder: Toshihiro Yagi
+  license: mit
+  url: https://github.com/sys1yagi/mastodon4j
+- artifact: com.github.sys1yagi.mastodon4j:mastodon4j:+
+  name: mastodon4j
+  copyrightHolder: Toshihiro Yagi
+  license: mit
+  url: https://github.com/sys1yagi/mastodon4j
+- artifact: com.google.android.gms:play-services-basement:+
+  name: play-services-basement
+  skip: true
+- artifact: com.google.android.gms:play-services-tasks:+
+  name: play-services-tasks
+  skip: true  
+- artifact: com.google.code.gson:gson:+
+  name: Gson
+  copyrightHolder: Google Inc.
+  license: apache2
+  url: https://github.com/google/gson
+- artifact: com.google.firebase:firebase-analytics-impl:+
+  name: firebase-analytics-impl
+  skip: true
+- artifact: com.google.firebase:firebase-analytics:+
+  name: firebase-analytics
+  skip: true  
+- artifact: com.google.firebase:firebase-common:+
+  name: firebase-common
+  skip: true  
+- artifact: com.google.firebase:firebase-core:+
+  name: firebase-core
+  skip: true  
+- artifact: com.google.firebase:firebase-crash:+
+  name: firebase-crash
+  skip: true  
+- artifact: com.google.firebase:firebase-iid:+
+  name: firebase-iid
+  skip: true  
+- artifact: com.jakewharton.threetenabp:threetenabp:+
+  name: ThreeTenAbp
+  copyrightHolder: Jake Wharton
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/JakeWharton/ThreeTenABP/
+- artifact: com.jakewharton.timber:timber:+
+  name: Timber
+  copyrightHolder: Jake Wharton
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/JakeWharton/timber
+- artifact: com.makeramen:roundedimageview:+
+  name: RoundedImageView
+  copyrightHolder: Vincent Mi
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/vinc3m1/RoundedImageView
+- artifact: com.marshalchen.ultimaterecyclerview:library:+
+  name: library
+  copyrightHolder: Marshal Chen
+  license: apache2
+  url: https://github.com/cymcsg/UltimateRecyclerView
+- artifact: com.squareup.okhttp3:okhttp:+
+  name: OkHttp
+  copyrightHolder: Square, Inc.
+  license: apache2
+  url: http://square.github.io/okhttp/
+- artifact: com.squareup.okio:okio:+
+  name: Okio
+  copyrightHolder: Square, Inc.
+  license: apache2
+  url: https://github.com/square/okio
+- artifact: in.srain.cube:ultra-ptr:+
+  name: Android Ultra Pull to Refresh
+  copyrightHolder: liaohuqiu.net
+  license: MIT
+  licenseUrl: http://opensource.org/licenses/MIT
+  url: https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh
+- artifact: io.reactivex.rxjava2:rxandroid:+
+  name: RxAndroid
+  copyrightHolder: The RxAndroid authors
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/ReactiveX/RxAndroid
+- artifact: io.reactivex.rxjava2:rxjava:+
+  name: rxjava
+  copyrightHolder: RxJava Contributors.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/ReactiveX/RxJava
+- artifact: io.realm:realm-android-library:+
+  name: realm-android-library
+  copyrightHolder: Realm
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: http://realm.io
+- artifact: io.realm:realm-annotations:+
+  name: realm-annotations
+  copyrightHolder: Realm
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: http://realm.io
+- artifact: jp.wasabeef:recyclerview-animators:+
+  name: recyclerview-animators
+  copyrightHolder: Wasabeef
+  license: apache2
+  url: https://github.com/wasabeef/recyclerview-animators
+- artifact: me.zhanghai.android.materialprogressbar:library:+
+  name: MaterialProgressBar Library
+  copyrightHolder: Zhang Hai
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/DreaminginCodeZH/MaterialProgressBar
+- artifact: org.jetbrains.kotlin:kotlin-stdlib-jre7:+
+  name: kotlin-stdlib-jre7
+  copyrightHolder: JetBrains s.r.o.
+  license: apache2
+  url: https://github.com/JetBrains/kotlin
+- artifact: org.jetbrains.kotlin:kotlin-stdlib:+
+  name: kotlin-stdlib
+  copyrightHolder: JetBrains s.r.o.
+  license: apache2
+  url: https://github.com/JetBrains/kotlin
+- artifact: org.jetbrains.kotlinx:kotlinx-coroutines-android:+
+  name: kotlinx-coroutines-android
+  copyrightHolder: JetBrains s.r.o.
+  license: apache2
+  url: https://github.com/Kotlin/kotlinx.coroutines  
+- artifact: org.jetbrains.kotlinx:kotlinx-coroutines-core:+
+  name: kotlinx-coroutines-core
+  copyrightHolder: JetBrains s.r.o.
+  license: apache2
+  url: https://github.com/Kotlin/kotlinx.coroutines  
+- artifact: org.jetbrains.kotlinx:kotlinx-coroutines-reactive:+
+  name: kotlinx-coroutines-reactive
+  copyrightHolder: JetBrains s.r.o.
+  license: apache2
+  url: https://github.com/Kotlin/kotlinx.coroutines  
+- artifact: org.jetbrains.kotlinx:kotlinx-coroutines-rx2:+
+  name: kotlinx-coroutines-rx2
+  copyrightHolder: JetBrains s.r.o.
+  license: apache2
+  url: https://github.com/Kotlin/kotlinx.coroutines
+- artifact: org.jetbrains:annotations:+
+  name: IntelliJ IDEA Annotations
+  copyrightHolder: JetBrains s.r.o.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: http://www.jetbrains.org
+- artifact: org.reactivestreams:reactive-streams:+
+  name: reactive-streams
+  skip: true
+- artifact: org.threeten:threetenbp:+
+  name: ThreeTen backport
+  copyrightHolder: Stephen Colebourne & Michael Nascimento Santos
+  license: BSD 3-clause
+  licenseUrl: https://raw.githubusercontent.com/ThreeTen/threetenbp/master/LICENSE.txt
+  url: https://www.threeten.org/threetenbp
