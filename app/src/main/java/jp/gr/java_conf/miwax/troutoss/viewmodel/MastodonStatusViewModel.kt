@@ -9,7 +9,6 @@ import com.sys1yagi.mastodon4j.api.entity.Account
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.api.exception.Mastodon4jRequestException
 import com.sys1yagi.mastodon4j.rx.RxStatuses
-import jp.gr.java_conf.miwax.troutoss.App.Companion.appContext
 import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
@@ -137,6 +136,10 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
 
     fun onClickUser(view: View) {
         showableAccount?.let { messenger.send(OpenUrlMessage(it.url)) }
+    }
+
+    fun onClickBoostByUser(view: View) {
+        status.account?.let { messenger.send(OpenUrlMessage(it.url)) }
     }
 
     fun onClickReply(view: View) {
