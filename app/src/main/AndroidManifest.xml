@@ -58,6 +58,10 @@
             android:label="@string/oss_license"
             android:theme="@style/AppTheme">
         </activity>
+
+        <meta-data
+            android:name="jp.gr.java_conf.miwax.troutoss.model.StethoGlideModule"
+            android:value="GlideModule"/>
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ dependencies:
 
 test:
   override:
+    - ./gradlew checkLicenses
     - ./gradlew assembleRelease && cp -r app/build/outputs $CIRCLE_ARTIFACTS
 
 deployment:

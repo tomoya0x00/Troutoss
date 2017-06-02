@@ -6,8 +6,10 @@ import android.content.res.Resources
 import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.deploygate.sdk.DeployGate
+import com.facebook.stetho.Stetho
 import com.google.firebase.crash.FirebaseCrash
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import timber.log.Timber
@@ -41,6 +43,12 @@ class App : MultiDexApplication() {
                 .schemaVersion(1)
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
+
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build())
     }
 
     private class FirebaseTree : Timber.Tree() {
