@@ -2,6 +2,7 @@ package jp.gr.java_conf.miwax.troutoss.viewmodel
 
 import android.databinding.BaseObservable
 import android.view.View
+import jp.gr.java_conf.miwax.troutoss.messenger.CloseDrawerMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowSettingsActivityMessage
 
@@ -15,6 +16,7 @@ class MainViewModel: BaseObservable() {
     val messenger = Messenger()
 
     fun onClickSettings(view: View) {
+        messenger.send(CloseDrawerMessage())
         messenger.send(ShowSettingsActivityMessage())
     }
 }

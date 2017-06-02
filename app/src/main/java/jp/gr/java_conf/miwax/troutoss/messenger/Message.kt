@@ -52,3 +52,9 @@ class ShowMastodonVisibilityDialog : Message
  */
 
 class ShowSettingsActivityMessage: Message
+
+/**
+ * ドロワークローズ用のメッセージ
+ */
+
+class CloseDrawerMessage: Message
