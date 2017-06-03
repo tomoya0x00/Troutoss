@@ -1,14 +1,14 @@
 <vector android:height="24dp" android:viewportHeight="63.5"
     android:viewportWidth="63.5" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillAlpha="1" android:fillColor="@color/button_enable"
+    <path android:fillAlpha="1" android:fillColor="@color/button_disable"
         android:pathData="M2.65,7.94C1.18,7.94 0,9.12 0,10.58l0,42.33c0,1.47 1.18,2.65 2.65,2.65L13.26,55.56L7.94,51.54 13.18,47.62L10.58,47.62c-1.47,0 -2.65,-1.18 -2.65,-2.65L7.94,18.52c0,-1.47 1.18,-2.65 2.65,-2.65l29.14,0l-0.02,-7.94zM50.32,7.94 L55.56,11.85 50.24,15.87L52.92,15.87c1.47,0 2.65,1.18 2.65,2.65l0,26.46c0,1.47 -1.18,2.65 -2.65,2.65L23.8,47.62l-0.02,7.94L60.85,55.56c1.47,0 2.65,-1.18 2.65,-2.65L63.5,10.58c0,-1.47 -1.18,-2.65 -2.65,-2.65z"
         android:strokeAlpha="1" android:strokeColor="#00000000"
         android:strokeLineJoin="round" android:strokeWidth="17.67404175"/>
-    <path android:fillAlpha="1" android:fillColor="@color/button_enable"
+    <path android:fillAlpha="1" android:fillColor="@color/button_disable"
         android:pathData="m34.45,23.81 l-0.05,-23.81 15.87,11.85z"
         android:strokeAlpha="1" android:strokeColor="#00000000"
         android:strokeLineJoin="round" android:strokeWidth="4.30599976"/>
-    <path android:fillAlpha="1" android:fillColor="@color/button_enable"
+    <path android:fillAlpha="1" android:fillColor="@color/button_disable"
         android:pathData="m29.05,63.5 l0.05,-23.81 -15.87,11.85z"
         android:strokeAlpha="1" android:strokeColor="#00000000"
         android:strokeLineJoin="round" android:strokeWidth="4.30599976"/>

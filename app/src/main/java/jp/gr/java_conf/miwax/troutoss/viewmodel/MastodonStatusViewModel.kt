@@ -13,6 +13,7 @@ import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.extension.getNonEmptyName
+import jp.gr.java_conf.miwax.troutoss.extension.isBoostable
 import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
@@ -128,6 +129,10 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
     @get:Bindable
     val hideMedia: Boolean
         get() = !holder.isShowSensitive && showableStatus.isSensitive
+
+    @get:Bindable
+    val boostable: Boolean
+        get() = showableStatus.isBoostable()
 
     fun onClickShowMedia(view: View) {
         holder.isShowSensitive = true

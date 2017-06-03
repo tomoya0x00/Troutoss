@@ -10,6 +10,8 @@
     <color name="followed">#0088f0</color>
     <color name="more_actions">#f0f0f0</color>
     <color name="reply">#f0f0f0</color>
+    <color name="button_disable">#424242</color>
+    <color name="button_enable">#9e9e9e</color>
 
     <color name="dialog_background">#ff424242</color>
 </resources>

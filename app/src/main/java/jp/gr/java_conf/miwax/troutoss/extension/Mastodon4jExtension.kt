@@ -49,5 +49,13 @@ fun Status.extractReplyToUsers(excludeAccountUuid: String): Array<String> {
     return replyToUsers.toTypedArray()
 }
 
+
+fun Status.isBoostable(): Boolean {
+    return when (this.visibility) {
+        "public", "unlisted" -> true
+        else -> false
+    }
+}
+
 fun Account.getNonEmptyName(): String =
         if (this.displayName.isNotEmpty()) this.displayName else this.userName

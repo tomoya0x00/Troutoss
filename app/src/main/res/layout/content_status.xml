@@ -160,6 +160,7 @@
             android:background="@drawable/boost_toggle"
             android:checked="@{viewModel.boosted}"
             android:drawablePadding="9dip"
+            android:enabled="@{viewModel.boostable}"
             android:textOff=""
             android:textOn=""
             app:layout_constraintLeft_toRightOf="@id/reply"
