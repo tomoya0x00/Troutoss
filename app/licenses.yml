@@ -293,3 +293,33 @@
   copyrightHolder: The Apache Software Foundation.
   license: apache2
   url: http://commons.apache.org/cli/
+- artifact: com.google.android.gms:play-services-ads-lite:+
+  name: play-services-ads-lite
+  copyrightHolder: #COPYRIGHT_HOLDER#
+  license: #LICENSE#
+  skip: true
+- artifact: com.google.android.gms:play-services-ads:+
+  name: play-services-ads
+  copyrightHolder: #COPYRIGHT_HOLDER#
+  license: #LICENSE#
+  skip: true
+- artifact: com.google.android.gms:play-services-base:+
+  name: play-services-base
+  copyrightHolder: #COPYRIGHT_HOLDER#
+  license: #LICENSE#
+  skip: true
+- artifact: com.google.android.gms:play-services-clearcut:+
+  name: play-services-clearcut
+  copyrightHolder: #COPYRIGHT_HOLDER#
+  license: #LICENSE#
+  skip: true
+- artifact: com.google.android.gms:play-services-gass:+
+  name: play-services-gass
+  copyrightHolder: #COPYRIGHT_HOLDER#
+  license: #LICENSE#
+  skip: true
+- artifact: com.google.firebase:firebase-ads:+
+  name: firebase-ads
+  copyrightHolder: #COPYRIGHT_HOLDER#
+  license: #LICENSE#
+  skip: true
