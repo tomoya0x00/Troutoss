@@ -38,6 +38,10 @@ android {
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
+    if(project.hasProperty('devBuild')) {
+        aaptOptions.cruncherEnabled = false
+    }
+
     defaultConfig {
         applicationId packageName
         minSdkVersion 15
@@ -54,7 +58,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled false
     }
 
     signingConfigs {
@@ -77,8 +80,8 @@ android {
             debuggable true
             zipAlignEnabled true
             testCoverageEnabled true
-            minifyEnabled true
-            useProguard false
+            minifyEnabled false
+            multiDexEnabled true
             resValue "string", "applicationName", packageName + applicationIdSuffix
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -87,7 +90,7 @@ android {
             debuggable false
             zipAlignEnabled true
             minifyEnabled true
-            useProguard true
+            multiDexEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
