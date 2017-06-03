@@ -83,7 +83,7 @@ android {
             minifyEnabled false
             multiDexEnabled true
             resValue "string", "applicationName", packageName + applicationIdSuffix
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "bannerAdUnitId", "ca-app-pub-3940256099942544/6300978111"
         }
         release {
             signingConfig signingConfigs.release
@@ -91,6 +91,7 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             multiDexEnabled false
+            resValue "string", "bannerAdUnitId", "ca-app-pub-3940256099942544/6300978111"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -176,8 +177,9 @@ dependencies {
     compile 'com.deploygate:sdk:3.1.1'
 
     // Firebase
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile "com.google.firebase:firebase-core:$firebaseVersion"
+    compile "com.google.firebase:firebase-crash:$firebaseVersion"
+    compile "com.google.firebase:firebase-ads:$firebaseVersion"
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import io.reactivex.disposables.CompositeDisposable
 import io.realm.Realm
+import jp.gr.java_conf.miwax.troutoss.BuildConfig
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseDrawerMessage
@@ -57,6 +60,14 @@ class MainActivity : AppCompatActivity() {
                 binding.drawer, binding.toolbar,
                 R.string.drawer_open, R.string.drawer_close)
         binding.drawer.addDrawerListener(drawerToggle)
+
+        MobileAds.initialize(applicationContext, getString(R.string.addAppId))
+        val adBuilder = AdRequest.Builder()
+        if (BuildConfig.DEBUG) {
+            adBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("3FB68A2D733507E23491D9D48E953313")
+        }
+        binding.adBanner.loadAd(adBuilder.build())
 
         // アカウントを持っていない場合、Mastodon認証画面を出す
         if (!helper.hasAccount()) {

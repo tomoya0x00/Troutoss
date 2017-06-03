@@ -49,6 +49,7 @@
     <string name="copyright_notice">Copyright notice</string>
     <string name="version">Version</string>
     <string name="oss_license">Open Source Licenses</string>
+    <string name="addAppId" translatable="false">ca-app-pub-6081758982341230~3908408707</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
