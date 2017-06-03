@@ -54,7 +54,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
+        multiDexEnabled false
     }
 
     signingConfigs {
@@ -71,19 +71,23 @@ android {
 
     buildTypes {
         debug {
-            //signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             debuggable true
             zipAlignEnabled true
             testCoverageEnabled true
+            minifyEnabled true
+            useProguard false
             resValue "string", "applicationName", packageName + applicationIdSuffix
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            // signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             debuggable false
             zipAlignEnabled true
             minifyEnabled true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
