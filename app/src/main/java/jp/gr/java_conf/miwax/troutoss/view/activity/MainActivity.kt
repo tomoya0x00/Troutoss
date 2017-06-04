@@ -17,13 +17,14 @@ import jp.gr.java_conf.miwax.troutoss.BuildConfig
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseDrawerMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonNotificationsActivityMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonTimelineActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowSettingsActivityMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.view.adapter.DrawerAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MainViewModel
 import timber.log.Timber
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,17 +42,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         viewModel = MainViewModel()
         binding.viewModel = viewModel
-
-        disposables.addAll(
-                viewModel.messenger.register(ShowSettingsActivityMessage::class.java).doOnNext {
-                    Timber.d("received ShowSettingsActivityMessage")
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                }.subscribe(),
-                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
-                    Timber.d("received CloseDrawerMessage")
-                    binding.drawer.closeDrawer(binding.navigation)
-                }.subscribe()
-        )
 
         setSupportActionBar(binding.toolbar)
         val adapter = SnsTabAdapter(supportFragmentManager, realm)
@@ -84,8 +74,32 @@ class MainActivity : AppCompatActivity() {
                 binding.drawer, binding.toolbar,
                 R.string.drawer_open, R.string.drawer_close)
         binding.drawer.addDrawerListener(drawerToggle)
+
+        val adapter = DrawerAccountAdapter(realm)
+        disposables.addAll(
+                adapter.messenger.register(ShowMastodonNotificationsActivityMessage::class.java).doOnNext {
+                    Timber.d("received ShowMastodonNotificationsActivityMessage")
+                    MastodonNotificationsActivity.startActivity(this, it.accountUuid)
+                }.subscribe(),
+                adapter.messenger.register(ShowMastodonTimelineActivityMessage::class.java).doOnNext {
+                    Timber.d("received ShowMastodonTimelineActivityMessage")
+                    MastodonTimelineActivity.startActivity(this, it.timeline, it.accountUuid)
+                }.subscribe(),
+                adapter.messenger.register(CloseDrawerMessage::class.java).doOnNext {
+                    Timber.d("received CloseDrawerMessage")
+                    binding.drawer.closeDrawer(binding.navigation)
+                }.subscribe(),
+                viewModel.messenger.register(ShowSettingsActivityMessage::class.java).doOnNext {
+                    Timber.d("received ShowSettingsActivityMessage")
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                }.subscribe(),
+                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
+                    Timber.d("received CloseDrawerMessage")
+                    binding.drawer.closeDrawer(binding.navigation)
+                }.subscribe()
+        )
         drawerAccountView.layoutManager = LinearLayoutManager(this)
-        drawerAccountView.adapter = DrawerAccountAdapter(realm)
+        drawerAccountView.adapter = adapter
         drawerAccountView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 

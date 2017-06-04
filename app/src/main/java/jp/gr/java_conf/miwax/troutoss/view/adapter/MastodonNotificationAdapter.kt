@@ -157,6 +157,14 @@ class MastodonNotificationAdapter(client: MastodonClient) :
         class ViewHolder(itemView: View) : UltimateRecyclerviewViewHolder<View>(itemView) {
             var binding: ContentStatusBinding = DataBindingUtil.bind(itemView)
             val disposables = CompositeDisposable()
+
+            init {
+                // ちらつき防止のため、通常不要なViewを非表示
+                binding.boostByText.visibility = View.GONE
+                binding.boostByIcon.visibility = View.GONE
+                binding.spoiler.visibility = View.GONE
+                binding.spoilerSpace.visibility = View.GONE
+            }
         }
     }
 

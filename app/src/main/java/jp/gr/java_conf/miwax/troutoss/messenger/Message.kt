@@ -2,6 +2,7 @@ package jp.gr.java_conf.miwax.troutoss.messenger
 
 import android.support.annotation.StringRes
 import com.sys1yagi.mastodon4j.api.entity.Status
+import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
 
 /**
  * Created by Tomoya Miwa on 2017/05/07.
@@ -58,3 +59,15 @@ class ShowSettingsActivityMessage: Message
  */
 
 class CloseDrawerMessage: Message
+
+/**
+ * Mastodon通知画面表示用のメッセージ
+ */
+
+class ShowMastodonNotificationsActivityMessage(val accountUuid: String): Message
+
+/**
+ * Mastodonタイムライン画面表示用のメッセージ
+ */
+
+class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.Timeline, val accountUuid: String): Message

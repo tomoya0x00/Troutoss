@@ -42,6 +42,9 @@
     <string name="show_more">続きを表示</string>
     <string name="notifications">通知</string>
     <string name="favourite">お気に入り</string>
+    <string name="home">ホーム</string>
+    <string name="local">ローカル</string>
+    <string name="federated">連合</string>
     <string name="account_preference">アカウント設定</string>
 
     <plurals name="status_second">

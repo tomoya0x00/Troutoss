@@ -53,6 +53,10 @@
     <string name="show_more">SHOW MORE</string>
     <string name="notifications">Notifications</string>
     <string name="favourite">Favourite</string>
+    <string name="home">Home</string>
+    <string name="local">Local</string>
+    <string name="federated">Federated</string>
+
     <string name="account_preference">Preference</string>
 
     <plurals name="status_second">
