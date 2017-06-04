@@ -11,7 +11,7 @@ import jp.gr.java_conf.miwax.troutoss.messenger.ShowSettingsActivityMessage
  * Main画面用のViewModel
  */
 
-class MainViewModel: BaseObservable() {
+class MainViewModel : BaseObservable() {
 
     val messenger = Messenger()
 

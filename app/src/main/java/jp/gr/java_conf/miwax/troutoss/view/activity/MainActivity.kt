@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import io.reactivex.disposables.CompositeDisposable
@@ -16,9 +19,12 @@ import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseDrawerMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowSettingsActivityMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.view.adapter.DrawerAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MainViewModel
 import timber.log.Timber
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val helper: MastodonHelper by lazy { MastodonHelper() }
     private val realm: Realm = Realm.getDefaultInstance()
     private val disposables = CompositeDisposable()
+    private val drawerAccountView: RecyclerView by lazy { findViewById(R.id.account_view) as RecyclerView }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +63,7 @@ class MainActivity : AppCompatActivity() {
             PostStatusActivity.startActivity(this, accountType, accountUuid)
         }
 
-        val drawerToggle = ActionBarDrawerToggle(this,
-                binding.drawer, binding.toolbar,
-                R.string.drawer_open, R.string.drawer_close)
-        binding.drawer.addDrawerListener(drawerToggle)
+        setupDrawer()
 
         MobileAds.initialize(applicationContext, getString(R.string.addAppId))
         val adBuilder = AdRequest.Builder()
@@ -75,8 +79,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupDrawer() {
+        val drawerToggle = ActionBarDrawerToggle(this,
+                binding.drawer, binding.toolbar,
+                R.string.drawer_open, R.string.drawer_close)
+        binding.drawer.addDrawerListener(drawerToggle)
+        drawerAccountView.layoutManager = LinearLayoutManager(this)
+        drawerAccountView.adapter = DrawerAccountAdapter(realm)
+        drawerAccountView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+    }
+
     override fun onDestroy() {
         binding.container.adapter = null
+        drawerAccountView.adapter = null
         realm.close()
         disposables.clear()
         super.onDestroy()

@@ -150,6 +150,7 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
     compile 'com.google.android:flexbox:0.2.6'
+    compile 'io.realm:android-adapters:2.0.0'
 
     // Mastodon
     compile 'com.github.sys1yagi.mastodon4j:mastodon4j:1.0.0'
