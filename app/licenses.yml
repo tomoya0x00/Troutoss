@@ -208,6 +208,12 @@
   license: The Apache Software License, Version 2.0
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: http://realm.io
+- artifact: io.realm:android-adapters:+
+  name: android-adapters
+  copyrightHolder: Realm
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: http://realm.io
 - artifact: jp.wasabeef:recyclerview-animators:+
   name: recyclerview-animators
   copyrightHolder: Wasabeef
