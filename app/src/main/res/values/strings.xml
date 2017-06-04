@@ -51,6 +51,9 @@
     <string name="oss_license">Open Source Licenses</string>
     <string name="addAppId" translatable="false">ca-app-pub-6081758982341230~3908408707</string>
     <string name="show_more">SHOW MORE</string>
+    <string name="notifications">Notifications</string>
+    <string name="favourite">Favourite</string>
+    <string name="account_preference">Preference</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

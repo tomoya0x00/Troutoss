@@ -36,8 +36,6 @@
         <Button
             android:id="@+id/add_account"
             style="@style/DrawerButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:drawableLeft="@drawable/add"
             android:drawableStart="@drawable/add"
             android:text="@string/add_account"
@@ -59,8 +57,6 @@
         <Button
             android:id="@+id/settings"
             style="@style/DrawerButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:drawableLeft="@drawable/settings"
             android:drawableStart="@drawable/settings"
             android:onClick="@{viewModel::onClickSettings}"
@@ -72,9 +68,6 @@
         <Button
             android:id="@+id/tab_customize"
             style="@style/DrawerButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:clickable="true"
             android:drawableLeft="@drawable/tab"
             android:drawableStart="@drawable/tab"
             android:text="@string/tab_customize"

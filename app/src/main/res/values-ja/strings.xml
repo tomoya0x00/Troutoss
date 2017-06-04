@@ -40,6 +40,9 @@
     <string name="version">バージョン</string>
     <string name="oss_license">オープンソース ライセンス</string>
     <string name="show_more">続きを表示</string>
+    <string name="notifications">通知</string>
+    <string name="favourite">お気に入り</string>
+    <string name="account_preference">アカウント設定</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

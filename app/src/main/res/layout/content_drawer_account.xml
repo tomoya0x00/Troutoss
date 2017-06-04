@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/subtitle"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/drawer_item_height"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/drawer_item_padding"
+            android:paddingLeft="@dimen/drawer_item_padding"
+            android:paddingRight="@dimen/drawer_item_padding"
+            android:paddingStart="@dimen/drawer_item_padding"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:text="hoge@mstdn.jp"/>
+
+        <Button
+            android:id="@+id/notifications"
+            style="@style/DrawerButton"
+            android:drawableLeft="@drawable/notifications"
+            android:drawableStart="@drawable/notifications"
+            android:text="@string/notifications"
+            app:layout_constraintTop_toBottomOf="@id/subtitle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <Button
+            android:id="@+id/favourite"
+            style="@style/DrawerButton"
+            android:drawableLeft="@drawable/favourite_white"
+            android:drawableStart="@drawable/favourite_white"
+            android:text="@string/favourite"
+            app:layout_constraintTop_toBottomOf="@id/notifications"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <Button
+            android:id="@+id/preference"
+            style="@style/DrawerButton"
+            android:drawableLeft="@drawable/settings"
+            android:drawableStart="@drawable/settings"
+            android:text="@string/account_preference"
+            app:layout_constraintTop_toBottomOf="@id/favourite"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
