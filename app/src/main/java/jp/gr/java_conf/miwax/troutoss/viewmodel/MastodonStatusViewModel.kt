@@ -14,6 +14,7 @@ import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.extension.getNonEmptyName
 import jp.gr.java_conf.miwax.troutoss.extension.isBoostable
+import jp.gr.java_conf.miwax.troutoss.extension.showableStatus
 import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
@@ -98,10 +99,25 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
             }
         }
 
-    // TODO: CWなどを処理する
     @get:Bindable
     val content: String
         get() = showableStatus.content
+
+    @get:Bindable
+    val spoilerText: String
+        get() = showableStatus.spoilerText
+
+    @get:Bindable
+    val hasContentWarning: Boolean
+        get() = spoilerText.isNotEmpty()
+
+    @get:Bindable
+    val isShowContent
+        get() = holder.isShowContent
+
+    @get:Bindable
+    val showSpoilerSpace: Boolean
+        get() = hasContentWarning && isShowContent
 
     @get:Bindable
     val hasAttachments: Boolean
@@ -133,6 +149,12 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
     @get:Bindable
     val boostable: Boolean
         get() = showableStatus.isBoostable()
+
+    fun onClickShowContent(view: View) {
+        holder.isShowContent = true
+        notifyPropertyChanged(BR.showContent)
+        notifyPropertyChanged(BR.showSpoilerSpace)
+    }
 
     fun onClickShowMedia(view: View) {
         holder.isShowSensitive = true
@@ -213,8 +235,8 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
         get() = showableStatus.account
 
     private val showableStatus: Status
-        get() = if (!isBoost) status else status.reblog!!
+        get() = status.showableStatus()
 
     private fun getNonEmptyName(account: Account): String =
-            if (!account.displayName.isEmpty()) account.displayName else account.userName
+            account.getNonEmptyName()
 }

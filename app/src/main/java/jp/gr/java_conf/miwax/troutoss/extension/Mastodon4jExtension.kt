@@ -57,5 +57,9 @@ fun Status.isBoostable(): Boolean {
     }
 }
 
+fun Status.showableStatus(): Status {
+    return this.reblog ?: this
+}
+
 fun Account.getNonEmptyName(): String =
         if (this.displayName.isNotEmpty()) this.displayName else this.userName

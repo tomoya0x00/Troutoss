@@ -39,6 +39,7 @@
     <string name="copyright_notice">著作権情報</string>
     <string name="version">バージョン</string>
     <string name="oss_license">オープンソース ライセンス</string>
+    <string name="show_more">続きを表示</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

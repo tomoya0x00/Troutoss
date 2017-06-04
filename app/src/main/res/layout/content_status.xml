@@ -100,17 +100,51 @@
             tools:text="user"/>
 
         <TextView
-            android:id="@+id/content"
+            android:id="@+id/spoiler_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/white"
-            app:html="@{viewModel.content}"
+            android:visibility="@{viewModel.hasContentWarning ? View.VISIBLE : View.GONE}"
+            app:html="@{viewModel.spoilerText}"
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/display_name"
+            tools:text="spoilerText"/>
+
+        <Button
+            android:id="@+id/show_content_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center"
+            android:onClick="@{viewModel::onClickShowContent}"
+            android:text="@string/show_more"
+            android:visibility="@{viewModel.showContent ? View.GONE : View.VISIBLE}"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/spoiler_text"/>
+
+        <View
+            android:id="@+id/spoiler_space"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:visibility="@{viewModel.showSpoilerSpace ? View.VISIBLE : View.GONE}"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/show_content_button"/>
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/white"
+            android:visibility="@{viewModel.showContent ? View.VISIBLE : View.GONE}"
+            app:html="@{viewModel.content}"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spoiler_space"
             tools:text="content"/>
 
         <android.support.v7.widget.RecyclerView
