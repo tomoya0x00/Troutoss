@@ -323,3 +323,9 @@
   copyrightHolder: #COPYRIGHT_HOLDER#
   license: #LICENSE#
   skip: true
+- artifact: com.google.android:flexbox:+
+  name: flexbox-layout
+  copyrightHolder: Google, Inc.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/google/flexbox-layout

@@ -99,31 +99,41 @@
             app:layout_constraintTop_toTopOf="@id/avatar"
             tools:text="user"/>
 
-        <TextView
-            android:id="@+id/spoiler_text"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/spoiler"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@android:color/white"
             android:visibility="@{viewModel.hasContentWarning ? View.VISIBLE : View.GONE}"
-            app:html="@{viewModel.spoilerText}"
+            app:alignItems="flex_start"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/display_name"
-            tools:text="spoilerText"/>
+            app:layout_constraintTop_toBottomOf="@id/display_name">
 
-        <Button
-            android:id="@+id/show_content_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start|center"
-            android:onClick="@{viewModel::onClickShowContent}"
-            android:text="@string/show_more"
-            android:visibility="@{viewModel.showContent ? View.GONE : View.VISIBLE}"
-            app:layout_constraintLeft_toRightOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="@id/spoiler_text"/>
+            <TextView
+                android:id="@+id/spoiler_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@android:color/white"
+                app:html="@{viewModel.spoilerText}"
+                app:layout_alignSelf="baseline"
+                tools:text="spoilerText"/>
+
+            <Button
+                android:id="@+id/show_content_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center"
+                android:onClick="@{viewModel::onClickShowContent}"
+                android:text="@string/show_more"
+                android:visibility="@{viewModel.showContent ? View.GONE : View.VISIBLE}"/>
+
+        </com.google.android.flexbox.FlexboxLayout>
 
         <View
             android:id="@+id/spoiler_space"
@@ -131,7 +141,7 @@
             android:layout_height="8dp"
             android:visibility="@{viewModel.showSpoilerSpace ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toRightOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="@id/show_content_button"/>
+            app:layout_constraintTop_toBottomOf="@id/spoiler"/>
 
         <TextView
             android:id="@+id/content"

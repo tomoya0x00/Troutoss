@@ -107,9 +107,8 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
                 // ちらつき防止のため、通常不要なViewを非表示
                 binding?.boostByText?.visibility = View.GONE
                 binding?.boostByIcon?.visibility = View.GONE
-                binding?.spoilerText?.visibility = View.GONE
+                binding?.spoiler?.visibility = View.GONE
                 binding?.spoilerSpace?.visibility = View.GONE
-                binding?.showContentButton?.visibility = View.GONE
             }
         }
     }
