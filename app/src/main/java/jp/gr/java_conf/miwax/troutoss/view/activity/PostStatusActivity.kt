@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.StringRes
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
@@ -20,6 +19,7 @@ import jp.gr.java_conf.miwax.troutoss.extension.extractReplyToUsers
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
@@ -71,9 +71,11 @@ class PostStatusActivity : AppCompatActivity() {
                 }.subscribe()
         )
 
-        supportActionBar?.let {
-            it.displayOptions = ActionBar.DISPLAY_SHOW_TITLE or ActionBar.DISPLAY_SHOW_HOME or ActionBar.DISPLAY_HOME_AS_UP
-            it.setDisplayHomeAsUpEnabled(true)
+
+        val account = MastodonHelper().loadAccountOf(accountUuid)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            account?.let { subtitle = it.userNameWithInstance }
         }
     }
 
