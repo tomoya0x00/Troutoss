@@ -51,6 +51,7 @@
             style="@style/DrawerButton"
             android:drawableLeft="@drawable/add"
             android:drawableStart="@drawable/add"
+            android:onClick="@{viewModel.onClickAddAccount}"
             android:text="@string/add_account"
             app:layout_constraintBottom_toTopOf="@+id/account_divider"
             app:layout_constraintLeft_toLeftOf="parent"
