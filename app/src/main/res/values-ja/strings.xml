@@ -33,7 +33,6 @@
     <string name="toot">トゥート！</string>
     <string name="content_warning">注意書き</string>
     <string name="tab_customize">タブのカスタマイズ</string>
-    <string name="general_settings">全体設定</string>
     <string name="add_account">アカウントを追加</string>
     <string name="about_this_app">このアプリについて</string>
     <string name="copyright_notice">著作権情報</string>
@@ -45,7 +44,12 @@
     <string name="home">ホーム</string>
     <string name="local">ローカル</string>
     <string name="federated">連合</string>
-    <string name="account_preference">アカウント設定</string>
+    <string name="users_settings">ユーザー設定</string>
+    <string name="muted_users">ミュートしたユーザー</string>
+    <string name="blocked_users">ブロックしたユーザー</string>
+    <string name="other">その他</string>
+    <string name="Logout">ログアウト</string>
+    <string name="account_settings">アカウント設定</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

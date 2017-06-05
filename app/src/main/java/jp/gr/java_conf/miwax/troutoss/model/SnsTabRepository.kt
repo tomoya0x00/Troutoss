@@ -11,7 +11,7 @@ import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 
 class SnsTabRepository(val helper: MastodonHelper) {
 
-    fun addDefaultTabsFrom(account: MastodonAccount) {
+    fun addDefaultTabsOf(account: MastodonAccount) {
         Realm.getDefaultInstance().use { realm ->
             val basePos = realm.where(SnsTab::class.java)
                     .max(SnsTab::position.name)?.let { it.toInt() + 1 } ?: 0
@@ -21,6 +21,17 @@ class SnsTabRepository(val helper: MastodonHelper) {
                 // 初登録のインスタンスだったならローカルと連合タブも追加
                 it.copyToRealm(SnsTab(position = basePos + 1, type = SnsTab.TabType.MASTODON_LOCAL, accountUuid = account.uuid))
                 it.copyToRealm(SnsTab(position = basePos + 2, type = SnsTab.TabType.MASTODON_FEDERATED, accountUuid = account.uuid))
+            }
+        }
+    }
+
+    fun deleteTabsOf(accountUuid: String) {
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction {
+                it.where(SnsTab::class.java)
+                        .equalTo(SnsTab::accountUuid.name, accountUuid)
+                        .findAll()
+                        .deleteAllFromRealm()
             }
         }
     }

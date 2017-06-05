@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/users_settings"/>
+
+    <Preference
+        android:key="@string/pref_key_mastodon_muted_users"
+        android:title="@string/muted_users"/>
+
+    <Preference
+        android:key="@string/pref_key_mastodon_blocked_users"
+        android:title="@string/blocked_users"/>
+
+    <PreferenceCategory
+        android:title="@string/other"/>
+
+    <Preference
+        android:key="@string/pref_key_mastodon_logout"
+        android:title="@string/Logout"/>
+
+</PreferenceScreen>

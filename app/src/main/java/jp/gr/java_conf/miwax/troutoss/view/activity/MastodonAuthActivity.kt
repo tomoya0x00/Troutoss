@@ -83,7 +83,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                                 accessToken = accessToken.accessToken
                         )
                         helper.storeAccount(mastodonAccount)
-                        SnsTabRepository(helper).addDefaultTabsFrom(mastodonAccount)
+                        SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
                         return@async mastodonAccount.uuid
                     }
                     val intent = Intent()

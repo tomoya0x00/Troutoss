@@ -101,7 +101,7 @@ class MastodonTimelineFragment : Fragment() {
             setDefaultOnRefreshListener { onRefresh() }
             setOnLoadMoreListener { _, _ -> onLoadMoreOld() }
             setLoadMoreView(R.layout.center_progressbar)
-            setAdapter(this@MastodonTimelineFragment.adapter)
+            this@MastodonTimelineFragment.adapter?.let { setAdapter(it) }
         }
 
         onRefresh()

@@ -56,4 +56,32 @@ open class SnsTab(
         set(value) {
             typeStr = value.toString()
         }
+
+    override fun hashCode(): Int {
+        var result = 30
+
+        result = 31 * result + position
+        result = 31 * result + typeStr.hashCode()
+        result = 31 * result + accountUuid.hashCode()
+        result = 31 * result + option.hashCode()
+        result = 31 * result + title.hashCode()
+
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as SnsTab
+
+        if (uuid != other.uuid) return false
+        if (position != other.position) return false
+        if (accountUuid != other.accountUuid) return false
+        if (option != other.option) return false
+        if (title != other.title) return false
+        if (typeStr != other.typeStr) return false
+
+        return true
+    }
 }

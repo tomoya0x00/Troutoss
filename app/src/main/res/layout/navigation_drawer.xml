@@ -74,7 +74,7 @@
             android:drawableLeft="@drawable/settings"
             android:drawableStart="@drawable/settings"
             android:onClick="@{viewModel::onClickSettings}"
-            android:text="@string/general_settings"
+            android:text="@string/settings"
             app:layout_constraintBottom_toTopOf="@+id/tab_customize"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

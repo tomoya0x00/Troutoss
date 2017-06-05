@@ -167,13 +167,13 @@ class MastodonHelper {
     /**
      * アカウント情報の消去。
      */
-    fun clearAccountOf(instanceName: String, userName: String) {
+    fun clearAccountOf(uuid: String) {
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransaction {
                 it.where(MastodonAccount::class.java)
-                        .equalTo(MastodonAccount::instanceName.name, instanceName)
-                        .equalTo(MastodonAccount::userName.name, userName)
-                        .findFirst()?.deleteFromRealm()
+                        .equalTo(MastodonAccount::uuid.name, uuid)
+                        .findAll()
+                        .deleteAllFromRealm()
             }
         }
     }

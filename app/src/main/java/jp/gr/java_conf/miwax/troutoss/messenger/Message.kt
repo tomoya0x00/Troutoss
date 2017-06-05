@@ -55,6 +55,12 @@ class ShowMastodonVisibilityDialog : Message
 class ShowSettingsActivityMessage: Message
 
 /**
+ * Mastodonアカウント設定画面表示用のメッセージ
+ */
+
+class ShowMastodonAccountSettingsActivityMessage(val accountUuid: String): Message
+
+/**
  * ドロワークローズ用のメッセージ
  */
 
@@ -76,4 +82,4 @@ class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.
  * アカウント認証用のメッセージ
  */
 
-class ShowAccountAuthActivityMesssage: Message
+class ShowAccountAuthActivityMessage : Message

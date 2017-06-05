@@ -41,9 +41,8 @@
     <string name="select_visibility" translatable="false">Select visibility</string>
     <string name="drawer_open" translatable="false">open drawer</string>
     <string name="drawer_close" translatable="false">close drawer</string>
-    <string name="tab_customize">Customize Tab</string>
-    <string name="general_settings">General Settings</string>
-    <string name="add_account">Add Account</string>
+    <string name="tab_customize">Customize tab</string>
+    <string name="add_account">Add account</string>
     <string name="about_this_app">About this app</string>
     <string name="copyright" translatable="false">Copyright 2017 tomoya0x00. All rights reserved.</string>
     <string name="copyright_notice">Copyright notice</string>
@@ -56,8 +55,15 @@
     <string name="home">Home</string>
     <string name="local">Local</string>
     <string name="federated">Federated</string>
-
-    <string name="account_preference">Preference</string>
+    <string name="users_settings">Users settings</string>
+    <string name="muted_users">Muted users</string>
+    <string name="blocked_users">Blocked users</string>
+    <string name="other">Other</string>
+    <string name="Logout">Logout</string>
+    <string name="account_settings">Account settings</string>
+    <string name="pref_key_mastodon_muted_users" translatable="false">pref_key_mastodon_muted_users</string>
+    <string name="pref_key_mastodon_blocked_users" translatable="false">pref_key_mastodon_blocked_users</string>
+    <string name="pref_key_mastodon_logout" translatable="false">pref_key_mastodon_logout</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

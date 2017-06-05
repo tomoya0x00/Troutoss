@@ -18,6 +18,7 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.adapter.DrawerAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MainViewModel
@@ -47,7 +48,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener { _ ->
             val (accountType, accountUuid) = (adapter.getAccount(binding.container.currentItem))
-            PostStatusActivity.startActivity(this, accountType, accountUuid)
+            if (accountType != AccountType.UNKNOWN) {
+                PostStatusActivity.startActivity(this, accountType, accountUuid)
+            }
         }
 
         setupDrawer()
@@ -74,6 +77,10 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = DrawerAccountAdapter(realm)
         disposables.addAll(
+                adapter.messenger.register(ShowMastodonAccountSettingsActivityMessage::class.java).doOnNext {
+                    Timber.d("received ShowMastodonAccountSettingsActivityMessage")
+                    MastodonAccountSettingsActivity.startActivity(this, it.accountUuid)
+                }.subscribe(),
                 adapter.messenger.register(ShowMastodonNotificationsActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowMastodonNotificationsActivityMessage")
                     MastodonNotificationsActivity.startActivity(this, it.accountUuid)
@@ -90,10 +97,11 @@ class MainActivity : AppCompatActivity() {
                     Timber.d("received ShowSettingsActivityMessage")
                     startActivity(Intent(this, SettingsActivity::class.java))
                 }.subscribe(),
-                viewModel.messenger.register(ShowAccountAuthActivityMesssage::class.java).doOnNext {
-                    Timber.d("received ShowAccountAuthActivityMesssage")
+                viewModel.messenger.register(ShowAccountAuthActivityMessage::class.java).doOnNext {
+                    Timber.d("received ShowAccountAuthActivityMessage")
                     startActivity(Intent(this, MastodonAuthActivity::class.java))
-                }.subscribe(),                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
+                }.subscribe(),
+                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
                     Timber.d("received CloseDrawerMessage")
                     binding.drawer.closeDrawer(binding.navigation)
                 }.subscribe()

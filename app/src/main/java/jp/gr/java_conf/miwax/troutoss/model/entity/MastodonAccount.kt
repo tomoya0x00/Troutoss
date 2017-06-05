@@ -19,4 +19,10 @@ open class MastodonAccount(
 
     val userNameWithInstance: String
         get() = userName + "@" + instanceName
+
+    val mutesUrl: String
+        get() = "https://$instanceName/web/mutes"
+
+    val blocksUrl: String
+        get() = "https://$instanceName/web/blocks"
 }
