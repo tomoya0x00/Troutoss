@@ -16,10 +16,7 @@ import io.realm.Realm
 import jp.gr.java_conf.miwax.troutoss.BuildConfig
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
-import jp.gr.java_conf.miwax.troutoss.messenger.CloseDrawerMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonNotificationsActivityMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonTimelineActivityMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowSettingsActivityMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.view.adapter.DrawerAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
@@ -93,7 +90,10 @@ class MainActivity : AppCompatActivity() {
                     Timber.d("received ShowSettingsActivityMessage")
                     startActivity(Intent(this, SettingsActivity::class.java))
                 }.subscribe(),
-                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
+                viewModel.messenger.register(ShowAccountAuthActivityMesssage::class.java).doOnNext {
+                    Timber.d("received ShowAccountAuthActivityMesssage")
+                    startActivity(Intent(this, MastodonAuthActivity::class.java))
+                }.subscribe(),                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
                     Timber.d("received CloseDrawerMessage")
                     binding.drawer.closeDrawer(binding.navigation)
                 }.subscribe()

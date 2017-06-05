@@ -71,3 +71,9 @@ class ShowMastodonNotificationsActivityMessage(val accountUuid: String): Message
  */
 
 class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.Timeline, val accountUuid: String): Message
+
+/**
+ * アカウント認証用のメッセージ
+ */
+
+class ShowAccountAuthActivityMesssage: Message
