@@ -103,6 +103,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                             userName = mastodonAccount.userName) == null) {
                         helper.storeAccount(mastodonAccount)
                         SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
+                        showToast(R.string.login_and_add_tabs, Toast.LENGTH_SHORT)
                         setResult(Activity.RESULT_OK)
                         finish()
                     } else {
