@@ -42,6 +42,8 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
     private val rxStatuses = RxStatuses(client)
     private val status: Status
         get() = holder.status
+    val statusId: Long
+        get() = status.id
 
     @get:Bindable
     val isBoost: Boolean

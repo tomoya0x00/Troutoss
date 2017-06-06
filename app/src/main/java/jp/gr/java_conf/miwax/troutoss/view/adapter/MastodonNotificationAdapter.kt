@@ -38,15 +38,17 @@ class MastodonNotificationAdapter(client: MastodonClient) :
     val messenger = Messenger()
 
     private var pageable: Pageable<Notification>? = null
-    private var notifications: MutableList<Notification> = mutableListOf()
+    private val notifications: MutableList<Notification> = mutableListOf()
     private val rxNotifications = RxNotifications(client)
+    private val mentionBinder: MentionBinder
 
     enum class ViewType {
         MENTION, REBLOG, FAVOURITE, FOLLOW, NONE
     }
 
     init {
-        putBinder(ViewType.MENTION, MentionBinder(this, notifications, client))
+        mentionBinder = MentionBinder(this, notifications, client)
+        putBinder(ViewType.MENTION, mentionBinder)
         putBinder(ViewType.REBLOG, NotificationBinder(this, notifications))
         putBinder(ViewType.FAVOURITE, NotificationBinder(this, notifications))
         putBinder(ViewType.FOLLOW, NotificationBinder(this, notifications))
@@ -74,7 +76,10 @@ class MastodonNotificationAdapter(client: MastodonClient) :
             pageable?.let {
                 val pos = notifications.size
                 notifications.addAll(it.part)
-                launch(UI) { notifyItemRangeInserted(pos, it.part.size) }
+                launch(UI) {
+                    notifyItemRangeInserted(pos, it.part.size)
+                    mentionBinder.updateStatusElapsed(0, pos)
+                }
             }
         }
     }
@@ -127,7 +132,7 @@ class MastodonNotificationAdapter(client: MastodonClient) :
                         private val client: MastodonClient) :
             DataBinder<MentionBinder.ViewHolder>(adapter) {
 
-        private val holders: MutableMap<Long, MastodonStatusHolder> = hashMapOf()
+        private val viewModels: MutableMap<Long, MastodonStatusViewModel> = hashMapOf()
 
         override fun getItemCount(): Int {
             return 1
@@ -141,10 +146,10 @@ class MastodonNotificationAdapter(client: MastodonClient) :
         override fun bindViewHolder(vh: ViewHolder, position: Int) {
             vh.disposables.clear()
             notifications[position].status?.let {
-                if (!holders.containsKey(it.id)) {
-                    holders[it.id] = MastodonStatusHolder(it)
+                if (!viewModels.containsKey(it.id)) {
+                    viewModels[it.id] = MastodonStatusViewModel(MastodonStatusHolder(it), client)
                 }
-                vh.binding.viewModel = MastodonStatusViewModel(holders[it.id]!!, client)
+                vh.binding.viewModel = viewModels[it.id]
                 // ViewModelのメッセージを購読
                 vh.disposables.add(
                         vh.binding.viewModel.messenger.bus.doOnNext {
@@ -152,6 +157,12 @@ class MastodonNotificationAdapter(client: MastodonClient) :
                         }.subscribe()
                 )
             }
+        }
+
+        fun updateStatusElapsed(positionStart: Int, itemCount: Int) {
+            notifications.slice(positionStart until itemCount)
+                    .filter { viewModels.containsKey(it.id) }
+                    .forEach { viewModels[it.id]?.updateElapsed() }
         }
 
         class ViewHolder(itemView: View) : UltimateRecyclerviewViewHolder<View>(itemView) {
