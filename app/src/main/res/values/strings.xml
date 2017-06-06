@@ -62,6 +62,7 @@
     <string name="Logout">Logout</string>
     <string name="account_settings">Account settings</string>
     <string name="logout_and_delete_tabs">Logged out.\nDeleted tabs of the account.</string>
+    <string name="logged_in_account_error">This account is already logged in.\nIf you want to add another account of the same instance, please log out of the instance by web browser, and try again.</string>
 
     <string name="pref_key_mastodon_muted_users" translatable="false">pref_key_mastodon_muted_users</string>
     <string name="pref_key_mastodon_blocked_users" translatable="false">pref_key_mastodon_blocked_users</string>

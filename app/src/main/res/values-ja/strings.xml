@@ -51,6 +51,7 @@
     <string name="Logout">ログアウト</string>
     <string name="account_settings">アカウント設定</string>
     <string name="logout_and_delete_tabs">ログアウトしました。\nアカウントのタブを削除しました。</string>
+    <string name="logged_in_account_error">ログイン済みのアカウントです。\n同一インスタンスの別アカウントを追加する場合、Webブラウザでログアウトしてから再度試して下さい。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

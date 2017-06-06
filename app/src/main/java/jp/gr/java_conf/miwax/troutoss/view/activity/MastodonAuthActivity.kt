@@ -1,7 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,11 +12,14 @@ import com.sys1yagi.mastodon4j.rx.RxApps
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
 import jp.gr.java_conf.miwax.troutoss.extension.OkHttpClientBuilderWithTimeout
+import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.rx2.await
 import timber.log.Timber
 
@@ -64,7 +66,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
         intent.data?.let { onAuthCallBack(it) }
     }
 
-    private fun onAuthCallBack(uri: android.net.Uri) = kotlinx.coroutines.experimental.launch(kotlinx.coroutines.experimental.android.UI) {
+    private fun onAuthCallBack(uri: Uri) = launch(UI) {
         // TODO: 通信中のプログレス表示をおこなう
         // TODO: 失敗時のエラー処理
         if (uri.toString().startsWith(helper.authCbUrl)) {
@@ -75,7 +77,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                 val apps = RxApps(client)
                 val appRegistration = helper.loadAppRegistrationOf(instance)
                 if (appRegistration != null) {
-                    val uuid = async(context + CommonPool) {
+                    val mastodonAccount = async(context + CommonPool) {
                         val accessToken = apps.getAccessToken(
                                 appRegistration.clientId,
                                 appRegistration.clientSecret,
@@ -86,19 +88,24 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                                 .accessToken(accessToken.accessToken).build()
                         val accounts = RxAccounts(authClient)
                         val account = accounts.getVerifyCredentials().await()
-                        val mastodonAccount = MastodonAccount(
+                        return@async MastodonAccount(
                                 instanceName = instance,
                                 userName = account.userName,
                                 accessToken = accessToken.accessToken
                         )
+                    }.await()
+
+                    // ログイン済みのアカウントか確認
+                    if (helper.loadAccountOf(
+                            instanceName = mastodonAccount.instanceName,
+                            userName = mastodonAccount.userName) == null) {
                         helper.storeAccount(mastodonAccount)
                         SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
-                        return@async mastodonAccount.uuid
+                        setResult(Activity.RESULT_OK)
+                        finish()
+                    } else {
+                        showToast(R.string.logged_in_account_error, Toast.LENGTH_LONG)
                     }
-                    val intent = Intent()
-                    intent.putExtra(INTENT_ACCOUNT_UUID, uuid.await())
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
                 }
             } else {
                 // User canceled!
