@@ -46,6 +46,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
     }
 
     private fun requestAuthCode() = kotlinx.coroutines.experimental.launch(kotlinx.coroutines.experimental.android.UI) {
+        binding.loginButton.isEnabled = false
         val instance = binding.instanceEdit.text.toString()
         val client = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson()).build()
         val apps = RxApps(client)
@@ -56,6 +57,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
         } catch (e: Exception) {
             Timber.e("Login failed: %s", e)
             showToast(R.string.login_failed, Toast.LENGTH_SHORT)
+            binding.loginButton.isEnabled = true
         }
     }
 
@@ -105,13 +107,16 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                         finish()
                     } else {
                         showToast(R.string.logged_in_account_error, Toast.LENGTH_LONG)
+                        binding.loginButton.isEnabled = true
                     }
                 }
             } else {
                 // User canceled!
+                binding.loginButton.isEnabled = true
             }
         } else {
             // other
+            binding.loginButton.isEnabled = true
         }
     }
 
