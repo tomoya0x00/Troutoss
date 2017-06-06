@@ -6,10 +6,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.preference.PreferenceFragment
-import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -18,6 +15,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAccountSettingsBinding
+import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
@@ -57,7 +55,6 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
 
     class SettingsFragment : PreferenceFragment() {
 
-        private val handler = Handler(Looper.getMainLooper())
         private val accountUuid: String by lazy { arguments.getString(ARG_ACCOUNT_UUID) }
         private val helper: MastodonHelper by lazy { MastodonHelper() }
         private val account: MastodonAccount? by lazy { helper.loadAccountOf(accountUuid) }
@@ -94,13 +91,6 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
             helper.clearAccountOf(accountUuid)
             activity.setResult(Activity.RESULT_OK)
             activity.finish()
-        }
-
-
-        private fun showToast(@StringRes resId: Int, duration: Int) {
-            handler.post {
-                Toast.makeText(activity, resId, duration).show()
-            }
         }
 
         companion object {

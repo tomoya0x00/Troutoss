@@ -4,9 +4,6 @@ package jp.gr.java_conf.miwax.troutoss.view.fragment
 import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.support.annotation.StringRes
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -19,6 +16,7 @@ import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalD
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonNotificationBinding
+import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowReplyActivityMessage
@@ -42,8 +40,6 @@ class MastodonNotificationsFragment : Fragment() {
 
     private var accountUuid: String? = null
     private var option: String? = null
-    private val handler = Handler(Looper.getMainLooper())
-    private var toast: Toast? = null
 
     lateinit private var binding: FragmentMastodonNotificationBinding
     private var adapter: MastodonNotificationAdapter? = null
@@ -119,7 +115,7 @@ class MastodonNotificationsFragment : Fragment() {
             adapter?.refresh()?.await()
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
-            Toast.makeText(getContext(), R.string.comm_error, Toast.LENGTH_SHORT).show()
+            showToast(R.string.comm_error, Toast.LENGTH_SHORT)
         } finally {
             binding.notifications.setRefreshing(false)
         }
@@ -131,17 +127,9 @@ class MastodonNotificationsFragment : Fragment() {
             adapter?.loadMoreOld()?.await()
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
-            Toast.makeText(getContext(), R.string.comm_error, Toast.LENGTH_SHORT).show()
+            showToast(R.string.comm_error, Toast.LENGTH_SHORT)
         } finally {
             binding.notifications.reenableLoadmore()
-        }
-    }
-
-    private fun showToast(@StringRes resId: Int, duration: Int) {
-        handler.post {
-            toast?.cancel()
-            toast = Toast.makeText(context, resId, duration)
-            toast?.show()
         }
     }
 

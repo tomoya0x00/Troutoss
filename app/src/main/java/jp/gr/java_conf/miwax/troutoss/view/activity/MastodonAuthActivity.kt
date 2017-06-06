@@ -55,7 +55,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
             startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url.await())))
         } catch (e: Exception) {
             Timber.e("Login failed: %s", e)
-            Toast.makeText(this@MastodonAuthActivity, R.string.login_failed, Toast.LENGTH_SHORT).show()
+            showToast(R.string.login_failed, Toast.LENGTH_SHORT)
         }
     }
 

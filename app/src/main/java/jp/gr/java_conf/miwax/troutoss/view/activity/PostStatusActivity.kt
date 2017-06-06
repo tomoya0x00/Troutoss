@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
@@ -16,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityPostStatusBinding
 import jp.gr.java_conf.miwax.troutoss.extension.extractReplyToUsers
+import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
@@ -30,8 +28,6 @@ class PostStatusActivity : AppCompatActivity() {
     lateinit private var binding: ActivityPostStatusBinding
     lateinit private var viewModel: PostStatusViewModel
 
-    private val handler = Handler(Looper.getMainLooper())
-    private var toast: Toast? = null
     private val disposables = CompositeDisposable()
 
     private val accountType: AccountType by lazy {
@@ -118,14 +114,6 @@ class PostStatusActivity : AppCompatActivity() {
                 intent.putExtra(PostStatusActivity.EXTRA_VISIBILITY, it.visibility)
             }
             context.startActivity(intent)
-        }
-    }
-
-    private fun showToast(@StringRes resId: Int, duration: Int) {
-        handler.post {
-            toast?.cancel()
-            toast = Toast.makeText(this, resId, duration)
-            toast?.show()
         }
     }
 }

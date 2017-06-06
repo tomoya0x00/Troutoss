@@ -2,7 +2,6 @@ package jp.gr.java_conf.miwax.troutoss.view.adapter
 
 import android.content.Context
 import android.databinding.DataBindingUtil
-import android.support.annotation.StringRes
 import android.support.v4.view.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentImageBinding
+import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import java.lang.Exception
 
 /**
@@ -23,8 +23,6 @@ import java.lang.Exception
 
 class ImagesPageAdapter(private val context: Context, private val urls: Array<String>) :
         PagerAdapter() {
-
-    private var toast: Toast? = null
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding: ContentImageBinding = DataBindingUtil.bind(LayoutInflater.from(context).inflate(R.layout.content_image, container, false))
@@ -38,7 +36,7 @@ class ImagesPageAdapter(private val context: Context, private val urls: Array<St
 
                     override fun onException(e: Exception?, model: String?, target: Target<GlideDrawable>?, isFirstResource: Boolean): Boolean {
                         binding.progressBar.visibility = View.GONE
-                        showToast(R.string.load_image_error, Toast.LENGTH_SHORT)
+                        context.showToast(R.string.load_image_error, Toast.LENGTH_SHORT)
                         return false
                     }
                 })
@@ -60,11 +58,5 @@ class ImagesPageAdapter(private val context: Context, private val urls: Array<St
     override fun isViewFromObject(view: View, any: Any): Boolean {
         val binding = any as ContentImageBinding
         return view == binding.root
-    }
-
-    private fun showToast(@StringRes resId: Int, duration: Int) {
-        toast?.cancel()
-        toast = Toast.makeText(context, resId, duration)
-        toast?.show()
     }
 }
