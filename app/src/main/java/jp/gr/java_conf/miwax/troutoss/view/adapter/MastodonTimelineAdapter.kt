@@ -41,6 +41,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
 
     private var pageable: Pageable<Status>? = null
     private val holders: MutableList<MastodonStatusHolder> = mutableListOf()
+    private val viewModels: MutableList<MastodonStatusViewModel> = mutableListOf()
     private val getTimeline: (Range) -> Single<Pageable<Status>> =
             when (type) {
                 Timeline.HOME -> RxTimelines(client)::getHome
@@ -61,10 +62,16 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
             if (addable) {
                 val addStatuses = it.part.takeWhile { it.id != holders[0].status.id }
                 holders.addAll(0, addStatuses.map { MastodonStatusHolder(it) })
-                launch(UI) { notifyItemRangeInserted(0, addStatuses.size) }
+                viewModels.addAll(0, holders.take(addStatuses.size).map { MastodonStatusViewModel(it, client) })
+                launch(UI) {
+                    notifyItemRangeInserted(0, addStatuses.size)
+                    updateStatusElapsed(addStatuses.size, holders.size - addStatuses.size)
+                }
             } else {
                 holders.clear()
+                viewModels.clear()
                 holders.addAll(it.part.map { MastodonStatusHolder(it) })
+                viewModels.addAll(holders.map { MastodonStatusViewModel(it, client) })
                 launch(UI) { notifyDataSetChanged() }
             }
         }
@@ -82,9 +89,17 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
             pageable?.let {
                 val pos = holders.size
                 holders.addAll(it.part.map { MastodonStatusHolder(it) })
-                launch(UI) { notifyItemRangeInserted(pos, it.part.size) }
+                viewModels.addAll(holders.takeLast(it.part.size).map { MastodonStatusViewModel(it, client) })
+                launch(UI) {
+                    notifyItemRangeInserted(pos, it.part.size)
+                    updateStatusElapsed(0, pos)
+                }
             }
         }
+    }
+
+    private fun updateStatusElapsed(positionStart :Int, itemCount: Int) {
+        viewModels.slice(positionStart until itemCount).forEach { it.updateElapsed() }
     }
 
     override fun getAdapterItemCount(): Int {
@@ -121,7 +136,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.disposables.clear()
         holder.binding?.let { binding ->
-            binding.viewModel = MastodonStatusViewModel(holders[position], client)
+            binding.viewModel = viewModels[position]
             // ViewModelのメッセージを購読
             holder.disposables.add(
                     binding.viewModel.messenger.bus.doOnNext { messenger.send(it) }.subscribe()

@@ -231,6 +231,10 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
 
     }
 
+    fun updateElapsed() {
+        notifyPropertyChanged(BR.elapsed)
+    }
+
     private val showableAccount: Account?
         get() = showableStatus.account
 
