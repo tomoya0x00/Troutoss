@@ -50,6 +50,7 @@
     <string name="other">その他</string>
     <string name="Logout">ログアウト</string>
     <string name="account_settings">アカウント設定</string>
+    <string name="logout_and_delete_tabs">ログアウトしました。\nアカウントのタブを削除しました。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
