@@ -1,5 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -48,6 +49,7 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
+            setResult(Activity.RESULT_OK)
             finish()
             return true
         }
@@ -91,6 +93,7 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
         private fun deleteAccount() {
             SnsTabRepository(helper).deleteTabsOf(accountUuid)
             helper.clearAccountOf(accountUuid)
+            activity.setResult(Activity.RESULT_OK)
             activity.finish()
         }
 
@@ -125,6 +128,12 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
             val intent = Intent(context, MastodonAccountSettingsActivity::class.java)
             intent.putExtra(EXTRA_ACCOUNT_UUID, accountUuid)
             context.startActivity(intent)
+        }
+
+        fun startActivityForResult(activity: Activity, accountUuid: String, requestCode: Int) {
+            val intent = Intent(activity, MastodonAccountSettingsActivity::class.java)
+            intent.putExtra(EXTRA_ACCOUNT_UUID, accountUuid)
+            activity.startActivityForResult(intent, requestCode)
         }
     }
 }

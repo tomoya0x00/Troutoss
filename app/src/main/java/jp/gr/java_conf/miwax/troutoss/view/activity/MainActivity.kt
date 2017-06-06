@@ -1,5 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         disposables.addAll(
                 adapter.messenger.register(ShowMastodonAccountSettingsActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowMastodonAccountSettingsActivityMessage")
-                    MastodonAccountSettingsActivity.startActivity(this, it.accountUuid)
+                    MastodonAccountSettingsActivity.startActivityForResult(this, it.accountUuid, REQUEST_MASTODON_ACCOUNT_SETTINGS)
                 }.subscribe(),
                 adapter.messenger.register(ShowMastodonNotificationsActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowMastodonNotificationsActivityMessage")
@@ -111,6 +112,17 @@ class MainActivity : AppCompatActivity() {
         drawerAccountView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when {
+            requestCode == REQUEST_MASTODON_ACCOUNT_SETTINGS && resultCode == Activity.RESULT_OK -> {
+                // アカウントが無くなった場合、Mastodon認証画面を出す
+                if (!helper.hasAccount()) {
+                    startActivity(Intent(this, MastodonAuthActivity::class.java))
+                }
+            }
+        }
+    }
+
     override fun onDestroy() {
         binding.container.adapter = null
         drawerAccountView.adapter = null
@@ -120,6 +132,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+
+        private val REQUEST_MASTODON_ACCOUNT_SETTINGS = 100
+
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
