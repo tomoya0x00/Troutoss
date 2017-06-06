@@ -39,7 +39,6 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
             account?.let { subtitle = it.userNameWithInstance }
         }
 
-
         val fragment = fragmentManager.findFragmentByTag(SettingsFragment::class.java.name) ?:
                 SettingsFragment.newInstance(accountUuid)
         fragmentManager.beginTransaction()

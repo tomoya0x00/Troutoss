@@ -1,7 +1,9 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.view.MenuItem
 import android.widget.Toast
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.MastodonClient
@@ -9,7 +11,9 @@ import com.sys1yagi.mastodon4j.api.Scope
 import com.sys1yagi.mastodon4j.rx.RxAccounts
 import com.sys1yagi.mastodon4j.rx.RxApps
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
 import jp.gr.java_conf.miwax.troutoss.extension.OkHttpClientBuilderWithTimeout
+import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import kotlinx.coroutines.experimental.CommonPool
@@ -23,12 +27,17 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
         val INTENT_ACCOUNT_UUID = "account_uuid"
     }
 
-    lateinit private var binding: jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
-    private val helper: jp.gr.java_conf.miwax.troutoss.model.MastodonHelper by lazy { jp.gr.java_conf.miwax.troutoss.model.MastodonHelper() }
+    lateinit private var binding: ActivityMastodonAuthBinding
+    private val helper: MastodonHelper by lazy { MastodonHelper() }
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = android.databinding.DataBindingUtil.setContentView<jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding>(this, jp.gr.java_conf.miwax.troutoss.R.layout.activity_mastodon_auth)
+        binding = android.databinding.DataBindingUtil.setContentView<ActivityMastodonAuthBinding>(this, R.layout.activity_mastodon_auth)
+
+        // アカウントを持っている場合は戻れるようにする
+        if (helper.hasAccount()) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
 
         // TODO: インスタンス名のValidation強化
         binding.loginButton.setOnClickListener { requestAuthCode() }
@@ -88,7 +97,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                     }
                     val intent = Intent()
                     intent.putExtra(INTENT_ACCOUNT_UUID, uuid.await())
-                    setResult(android.app.Activity.RESULT_OK, intent)
+                    setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
             } else {
@@ -99,21 +108,22 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+            return true
+        }
+        return false
     }
 
     override fun onBackPressed() {
-        // TODO: アカウント追加の場合はアプリのメイン画面に戻れるようにする
-        moveTaskToBack(true)
+        // アカウントを持っていない場合はアプリを隠す
+        if (helper.hasAccount()) {
+            super.onBackPressed()
+        } else {
+            moveTaskToBack(true)
+        }
     }
 }
 
