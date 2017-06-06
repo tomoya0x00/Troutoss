@@ -40,6 +40,7 @@ class MastodonTimelineFragment : Fragment() {
     private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
     private var option: String? = null
+    private var clearOnRefresh = false
 
     lateinit private var binding: FragmentMastodonHomeBinding
     private var adapter: MastodonTimelineAdapter? = null
@@ -59,6 +60,7 @@ class MastodonTimelineFragment : Fragment() {
         timeline = arguments?.getString(ARG_TIMELINE)?.let { MastodonTimelineAdapter.Timeline.valueOf(it) }
         accountUuid = arguments?.getString(ARG_ACCOUNT_UUID)
         option = arguments?.getString(ARG_OPTION)
+        timeline?.let { clearOnRefresh = it == MastodonTimelineAdapter.Timeline.FAVOURITES }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -113,7 +115,7 @@ class MastodonTimelineFragment : Fragment() {
     private fun onRefresh() = launch(UI) {
         binding.timeline.setRefreshing(true)
         try {
-            adapter?.refresh()?.await()
+            adapter?.refresh(clearOnRefresh)?.await()
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)

@@ -54,10 +54,10 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
         HOME, LOCAL, FEDERATED, FAVOURITES
     }
 
-    fun refresh() = async(CommonPool) {
+    fun refresh(clear: Boolean = false) = async(CommonPool) {
         pageable = getTimeline(Range(limit = 20)).await()
         pageable?.let {
-            val addable = (holders.size > 0) && it.part.any { it.id == holders[0].status.id }
+            val addable = if (clear) false else (holders.size > 0) && it.part.any { it.id == holders[0].status.id }
             if (addable) {
                 val addStatuses = it.part.takeWhile { it.id != holders[0].status.id }
                 holders.addAll(0, addStatuses.map { MastodonStatusHolder(it) })
