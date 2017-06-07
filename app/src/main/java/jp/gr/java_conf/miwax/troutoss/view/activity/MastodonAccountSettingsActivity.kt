@@ -16,6 +16,7 @@ import android.widget.Toast
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAccountSettingsBinding
 import jp.gr.java_conf.miwax.troutoss.extension.showToast
+import jp.gr.java_conf.miwax.troutoss.model.CustomTabsHelper
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
@@ -60,12 +61,7 @@ class MastodonAccountSettingsActivity : AppCompatActivity() {
         private val account: MastodonAccount? by lazy { helper.loadAccountOf(accountUuid) }
 
         private val tabsIntent: CustomTabsIntent by lazy {
-            CustomTabsIntent.Builder()
-                    .setShowTitle(true)
-                    .setToolbarColor(ContextCompat.getColor(activity, R.color.colorPrimary))
-                    .setStartAnimations(activity, R.anim.slide_in_right, R.anim.slide_out_left)
-                    .setExitAnimations(activity, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                    .build()
+            CustomTabsHelper.createTabsIntent(activity)
         }
 
         override fun onCreate(savedInstanceState: Bundle?) {

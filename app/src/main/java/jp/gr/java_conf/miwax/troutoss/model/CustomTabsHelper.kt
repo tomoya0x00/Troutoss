@@ -25,9 +25,9 @@ import jp.gr.java_conf.miwax.troutoss.R
 class CustomTabsHelper {
 
     companion object {
-        fun createTabsIntent(context: Context): CustomTabsIntent
-                = CustomTabsIntent.Builder()
+        fun createTabsIntent(context: Context): CustomTabsIntent = CustomTabsIntent.Builder()
                 .setShowTitle(true)
+                .addDefaultShareMenuItem()
                 .setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .setStartAnimations(context, R.anim.slide_in_right, R.anim.slide_out_left)
                 .setExitAnimations(context, android.R.anim.slide_in_left, android.R.anim.slide_out_right)

@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +20,7 @@ import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowReplyActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.model.CustomTabsHelper
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
@@ -46,12 +46,7 @@ class MastodonNotificationsFragment : Fragment() {
     private val disposables = CompositeDisposable()
 
     private val tabsIntent: CustomTabsIntent by lazy {
-        CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setToolbarColor(ContextCompat.getColor(activity, R.color.colorPrimary))
-                .setStartAnimations(activity, R.anim.slide_in_right, R.anim.slide_out_left)
-                .setExitAnimations(activity, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                .build()
+        CustomTabsHelper.createTabsIntent(activity)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
