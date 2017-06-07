@@ -3,7 +3,7 @@ package jp.gr.java_conf.miwax.troutoss.extension
 import android.content.Context
 import android.os.Handler
 import android.support.annotation.StringRes
-import jp.gr.java_conf.miwax.troutoss.view.ToastHolder
+import jp.gr.java_conf.miwax.troutoss.model.ToastHolder
 
 /**
  * Created by Tomoya Miwa on 2017/06/06.

@@ -1,4 +1,4 @@
-package jp.gr.java_conf.miwax.troutoss.view
+package jp.gr.java_conf.miwax.troutoss.model
 
 import android.content.Context
 import android.support.annotation.StringRes
@@ -19,7 +19,7 @@ class ToastHolder {
             toast?.show()
         }
 
-        fun showToast(context: Context,  text: CharSequence, duration: Int) {
+        fun showToast(context: Context, text: CharSequence, duration: Int) {
             toast?.cancel()
             toast = Toast.makeText(context, text, duration)
             toast?.show()
