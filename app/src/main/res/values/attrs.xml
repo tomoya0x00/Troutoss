@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="CustomTextView">
+    <declare-styleable name="DrawableCompatTextView">
         <attr name="drawableLeftCompat" format="reference"/>
         <attr name="drawableRightCompat" format="reference"/>
         <attr name="drawableTopCompat" format="reference"/>

@@ -112,7 +112,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/display_name">
 
-            <TextView
+            <jp.gr.java_conf.miwax.troutoss.view.widget.MastodonTextView
                 android:id="@+id/spoiler_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/spoiler"/>
 
-        <TextView
+        <jp.gr.java_conf.miwax.troutoss.view.widget.MastodonTextView
             android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

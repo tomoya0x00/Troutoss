@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="@id/subtitle"
             app:srcCompat="@drawable/settings"/>
 
-        <jp.gr.java_conf.miwax.troutoss.view.widget.CustomTextView
+        <jp.gr.java_conf.miwax.troutoss.view.widget.DrawableCompatTextView
             android:id="@+id/notifications"
             style="@style/DrawerButton"
             android:onClick="@{viewModel.onClickNotifications}"
@@ -54,7 +54,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/subtitle"/>
 
-        <jp.gr.java_conf.miwax.troutoss.view.widget.CustomTextView
+        <jp.gr.java_conf.miwax.troutoss.view.widget.DrawableCompatTextView
             android:id="@+id/favourite"
             style="@style/DrawerButton"
             android:onClick="@{viewModel.onClickFavourite}"
