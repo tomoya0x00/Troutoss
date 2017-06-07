@@ -94,9 +94,10 @@ class MastodonNotificationsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
             setDefaultOnRefreshListener { onRefresh() }
-            setOnLoadMoreListener { _, _ -> onLoadMoreOld() }
+            setOnLoadMoreListener { itemsCount, lastPos -> onLoadMoreOld(itemsCount, lastPos) }
             setLoadMoreView(R.layout.center_progressbar)
-            setAdapter(this@MastodonNotificationsFragment.adapter)
+            disableLoadmore()
+            this@MastodonNotificationsFragment.adapter?.let { setAdapter(it) }
         }
 
         onRefresh()
@@ -112,7 +113,8 @@ class MastodonNotificationsFragment : Fragment() {
     private fun onRefresh() = launch(UI) {
         binding.notifications.setRefreshing(true)
         try {
-            adapter?.refresh()?.await()
+            val loadedSize = adapter?.refresh()?.await()
+            loadedSize?.let { if (it > 0) binding.notifications.reenableLoadmore() }
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
@@ -121,15 +123,14 @@ class MastodonNotificationsFragment : Fragment() {
         }
     }
 
-    private fun onLoadMoreOld() = launch(UI) {
-        binding.notifications.disableLoadmore()
+    private fun onLoadMoreOld(itemsCount: Int, lastPos: Int) = launch(UI) {
         try {
-            adapter?.loadMoreOld()?.await()
+            val loadedSize = adapter?.loadMoreOld(itemsCount, lastPos)?.await()
+            binding.notifications.disableLoadmore()
+            loadedSize?.let { if (it > 0) binding.notifications.reenableLoadmore() }
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
-        } finally {
-            binding.notifications.reenableLoadmore()
         }
     }
 

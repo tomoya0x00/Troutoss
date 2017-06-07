@@ -97,8 +97,9 @@ class MastodonTimelineFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
             setDefaultOnRefreshListener { onRefresh() }
-            setOnLoadMoreListener { _, _ -> onLoadMoreOld() }
+            setOnLoadMoreListener { itemsCount, lastPos -> onLoadMoreOld(itemsCount, lastPos) }
             setLoadMoreView(R.layout.center_progressbar)
+            disableLoadmore()
             this@MastodonTimelineFragment.adapter?.let { setAdapter(it) }
         }
 
@@ -115,7 +116,8 @@ class MastodonTimelineFragment : Fragment() {
     private fun onRefresh() = launch(UI) {
         binding.timeline.setRefreshing(true)
         try {
-            adapter?.refresh(clearOnRefresh)?.await()
+            val loadedSize = adapter?.refresh(clearOnRefresh)?.await()
+            loadedSize?.let { if (it > 0) binding.timeline.reenableLoadmore() }
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
@@ -124,15 +126,14 @@ class MastodonTimelineFragment : Fragment() {
         }
     }
 
-    private fun onLoadMoreOld() = launch(UI) {
-        binding.timeline.disableLoadmore()
+    private fun onLoadMoreOld(itemsCount: Int, lastPos: Int) = launch(UI) {
         try {
-            adapter?.loadMoreOld()?.await()
+            val loadedSize = adapter?.loadMoreOld(itemsCount, lastPos)?.await()
+            binding.timeline.disableLoadmore()
+            loadedSize?.let { if (it > 0) binding.timeline.reenableLoadmore() }
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
-        } finally {
-            binding.timeline.reenableLoadmore()
         }
     }
 

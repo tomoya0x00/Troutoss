@@ -64,33 +64,43 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
                 launch(UI) {
                     notifyItemRangeInserted(0, addStatuses.size)
                     updateStatusElapsed(addStatuses.size, viewModels.size - addStatuses.size)
-                }
+                }.join()
             } else {
                 viewModels.clear()
                 viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client) })
-                launch(UI) { notifyDataSetChanged() }
+                launch(UI) {
+                    notifyDataSetChanged()
+                }.join()
             }
+            return@async it.part.size
         }
+        return@async 0
     }
 
-    fun loadMoreOld() = async(CommonPool) {
-        if (pageable?.link != null) {
-            try {
-                pageable = pageable?.let { getTimeline(it.nextRange(limit = 20)).await() }
-            } catch (e: Exception) {
-                // プログレス表示を消去
-                launch(UI) { notifyDataSetChanged() }
-                throw e
-            }
-            pageable?.let {
-                val pos = viewModels.size
-                viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client) })
-                launch(UI) {
-                    notifyItemRangeInserted(pos, it.part.size)
-                    updateStatusElapsed(0, pos)
-                }
-            }
+    fun loadMoreOld(itemsCount: Int, lastPos: Int) = async(CommonPool) {
+        if (pageable?.link == null) {
+            // プログレス表示を消去
+            launch(UI) { notifyItemChanged(lastPos) }.join()
+            return@async 0
         }
+
+        try {
+            pageable = pageable?.let { getTimeline(it.nextRange(limit = 20)).await() }
+        } catch (e: Exception) {
+            // プログレス表示を消去
+            launch(UI) { notifyItemChanged(lastPos) }.join()
+            throw e
+        }
+        pageable?.let {
+            val pos = viewModels.size
+            viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client) })
+            launch(UI) {
+                notifyItemRangeInserted(pos, it.part.size)
+                updateStatusElapsed(0, pos)
+            }.join()
+            return@async it.part.size
+        }
+        return@async 0
     }
 
     private fun updateStatusElapsed(positionStart: Int, itemCount: Int) {
