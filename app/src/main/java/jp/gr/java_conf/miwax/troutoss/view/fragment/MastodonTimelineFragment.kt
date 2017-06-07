@@ -22,6 +22,7 @@ import jp.gr.java_conf.miwax.troutoss.messenger.ShowReplyActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
 import jp.gr.java_conf.miwax.troutoss.model.CustomTabsHelper
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.convertDp2Pixel
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
 import jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity
@@ -45,6 +46,8 @@ class MastodonTimelineFragment : Fragment() {
     lateinit private var binding: FragmentMastodonHomeBinding
     private var adapter: MastodonTimelineAdapter? = null
     private val disposables = CompositeDisposable()
+    private val timelineLayout: LinearLayoutManager
+        get() = binding.timeline.layoutManager as LinearLayoutManager
 
     private val tabsIntent: CustomTabsIntent by lazy {
         CustomTabsHelper.createTabsIntent(activity)
@@ -111,8 +114,19 @@ class MastodonTimelineFragment : Fragment() {
     private fun onRefresh() = launch(UI) {
         binding.timeline.setRefreshing(true)
         try {
-            val loadedSize = adapter?.refresh(clearOnRefresh)?.await()
-            loadedSize?.let { if (it > 0) binding.timeline.reenableLoadmore() }
+            adapter?.let { adapter ->
+                val (added, loadedSize) = adapter.refresh(clearOnRefresh).await()
+                if (loadedSize > 0) {
+                    if (added) {
+                        timelineLayout.scrollToPositionWithOffset(
+                                timelineLayout.findFirstVisibleItemPosition(),
+                                convertDp2Pixel(60).toInt())
+                    } else {
+                        timelineLayout.scrollToPositionWithOffset(0, 0)
+                    }
+                    binding.timeline.reenableLoadmore()
+                }
+            }
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)

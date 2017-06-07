@@ -44,6 +44,8 @@ class MastodonNotificationsFragment : Fragment() {
     lateinit private var binding: FragmentMastodonNotificationBinding
     private var adapter: MastodonNotificationAdapter? = null
     private val disposables = CompositeDisposable()
+    private val notificationsLayout: LinearLayoutManager
+        get() = binding.notifications.layoutManager as LinearLayoutManager
 
     private val tabsIntent: CustomTabsIntent by lazy {
         CustomTabsHelper.createTabsIntent(activity)
@@ -108,8 +110,13 @@ class MastodonNotificationsFragment : Fragment() {
     private fun onRefresh() = launch(UI) {
         binding.notifications.setRefreshing(true)
         try {
-            val loadedSize = adapter?.refresh()?.await()
-            loadedSize?.let { if (it > 0) binding.notifications.reenableLoadmore() }
+            adapter?.let { adapter ->
+                val loadedSize = adapter.refresh().await()
+                if (loadedSize > 0) {
+                    notificationsLayout.scrollToPositionWithOffset(0, 0)
+                    binding.notifications.reenableLoadmore()
+                }
+            }
         } catch (e: Exception) {
             Timber.e("refresh failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)

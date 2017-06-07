@@ -23,6 +23,7 @@ import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -54,7 +55,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
         HOME, LOCAL, FEDERATED, FAVOURITES
     }
 
-    fun refresh(clear: Boolean = false) = async(CommonPool) {
+    fun refresh(clear: Boolean = false): Deferred<Pair<Boolean, Int>> = async(CommonPool) {
         pageable = getTimeline(Range(limit = 20)).await()
         pageable?.let {
             val addable = if (clear) false else (viewModels.size > 0) && it.part.any { it.id == viewModels[0].statusId }
@@ -72,9 +73,9 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
                     notifyDataSetChanged()
                 }.join()
             }
-            return@async it.part.size
+            return@async Pair(addable, it.part.size)
         }
-        return@async 0
+        return@async Pair(false, 0)
     }
 
     fun loadMoreOld(itemsCount: Int, lastPos: Int) = async(CommonPool) {
