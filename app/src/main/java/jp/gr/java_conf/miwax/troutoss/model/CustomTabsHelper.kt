@@ -10,7 +10,6 @@ import android.text.Spannable
 import android.text.Spanned
 import android.text.method.TransformationMethod
 import android.text.style.URLSpan
-import android.text.util.Linkify
 import android.view.View
 import android.widget.TextView
 import jp.gr.java_conf.miwax.troutoss.R
@@ -48,7 +47,6 @@ class CustomTabsHelper {
         override fun getTransformation(source: CharSequence, view: View): CharSequence {
             if (view is TextView) {
                 val textView = view
-                Linkify.addLinks(textView, Linkify.WEB_URLS)
                 if (textView.text == null || textView.text !is Spannable) {
                     return source
                 }
