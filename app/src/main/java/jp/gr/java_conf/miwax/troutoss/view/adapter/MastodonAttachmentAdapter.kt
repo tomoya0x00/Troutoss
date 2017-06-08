@@ -38,7 +38,6 @@ open class MastodonAttachmentAdapter(private val attachments: List<Attachment>) 
         Timber.d("%d: type:%s, previewUrl:%s, url:%s, remote_url:%s",
                 position, attachment.type, attachment.previewUrl, attachment.url, attachment.remoteUrl)
 
-        // TODO: 画像ロード中のプログレス表示検討
         holder.binding.previewImage?.imageUrl(attachment.previewableUrl())
         when (attachment.actualType()) {
             "image" -> {

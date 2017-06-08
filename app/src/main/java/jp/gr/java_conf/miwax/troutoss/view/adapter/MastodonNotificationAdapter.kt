@@ -115,8 +115,7 @@ class MastodonNotificationAdapter(client: MastodonClient) :
     class DummyViewHolder(itemView: View) : UltimateRecyclerviewViewHolder<View>(itemView)
 
     override fun generateHeaderId(position: Int): Long {
-        // TODO: IDをちゃんと生成する
-        return position.toLong()
+        return notifications[position].id
     }
 
     override fun newFooterHolder(view: View): DummyViewHolder {

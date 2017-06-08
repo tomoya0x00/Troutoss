@@ -39,7 +39,6 @@ class App : MultiDexApplication() {
         // Realmデフォルト設定
         Realm.init(this)
         val realmConfig = RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded() // TODO: リリース時に外す
                 .schemaVersion(1)
                 .build()
         Realm.setDefaultConfiguration(realmConfig)
