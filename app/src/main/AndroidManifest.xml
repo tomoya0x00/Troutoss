@@ -69,6 +69,9 @@
         </activity>
         <activity android:name=".view.activity.MastodonAccountSettingsActivity">
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d3c905d06c149e2e86425e958d4cb483ff81f36b"/>
     </application>
 
 </manifest>
