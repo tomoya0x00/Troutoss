@@ -4,6 +4,7 @@ import android.app.Activity
 import android.net.Uri
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
 import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.api.Scope
@@ -12,6 +13,7 @@ import com.sys1yagi.mastodon4j.rx.RxApps
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonAuthBinding
 import jp.gr.java_conf.miwax.troutoss.extension.OkHttpClientBuilderWithTimeout
+import jp.gr.java_conf.miwax.troutoss.extension.logAuthMastodonEvent
 import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
@@ -25,12 +27,9 @@ import timber.log.Timber
 
 class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
 
-    companion object {
-        val INTENT_ACCOUNT_UUID = "account_uuid"
-    }
-
     lateinit private var binding: ActivityMastodonAuthBinding
     private val helper: MastodonHelper by lazy { MastodonHelper() }
+    private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +103,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                         helper.storeAccount(mastodonAccount)
                         SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
                         showToast(R.string.login_and_add_tabs, Toast.LENGTH_SHORT)
+                        analytics.logAuthMastodonEvent(mastodonAccount.instanceName)
                         setResult(Activity.RESULT_OK)
                         finish()
                     } else {

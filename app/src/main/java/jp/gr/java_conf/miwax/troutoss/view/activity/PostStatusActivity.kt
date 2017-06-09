@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.sys1yagi.mastodon4j.api.entity.Status
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityPostStatusBinding
 import jp.gr.java_conf.miwax.troutoss.extension.extractReplyToUsers
+import jp.gr.java_conf.miwax.troutoss.extension.logPostEvent
 import jp.gr.java_conf.miwax.troutoss.extension.showToast
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
@@ -29,6 +31,7 @@ class PostStatusActivity : AppCompatActivity() {
     lateinit private var viewModel: PostStatusViewModel
 
     private val disposables = CompositeDisposable()
+    private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     private val accountType: AccountType by lazy {
         intent.extras.getString(EXTRA_ACCOUNT_TYPE)?.let { AccountType.valueOf(it) } ?: AccountType.UNKNOWN
@@ -56,6 +59,7 @@ class PostStatusActivity : AppCompatActivity() {
                 }.subscribe(),
                 viewModel.messenger.register(CloseThisActivityMessage::class.java).doOnNext {
                     Timber.d("received CloseThisActivityMessage")
+                    analytics.logPostEvent()
                     finish()
                 }.subscribe(),
                 viewModel.messenger.register(ShowMastodonVisibilityDialog::class.java).doOnNext {
