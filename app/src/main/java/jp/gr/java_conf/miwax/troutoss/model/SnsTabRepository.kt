@@ -6,7 +6,7 @@ import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 
 /**
  * Created by Tomoya Miwa on 2017/04/30.
- * SNSタブリポジトリ
+ * SNSタブのリポジトリ
  */
 
 class SnsTabRepository(val helper: MastodonHelper) {
@@ -33,6 +33,17 @@ class SnsTabRepository(val helper: MastodonHelper) {
                         .findAll()
                         .deleteAllFromRealm()
             }
+        }
+    }
+
+    fun findFirstTabIndexOf(accountUuid: String): Int? {
+        Realm.getDefaultInstance().use { realm ->
+            val tabs = realm.where(SnsTab::class.java).findAll()
+            val tab = realm.where(SnsTab::class.java)
+                    .equalTo(SnsTab::accountUuid.name, accountUuid)
+                    .findFirst()
+
+            return tab?.let { tabs?.indexOf(it) }
         }
     }
 }

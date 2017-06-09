@@ -1,6 +1,7 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.view.MenuItem
 import android.widget.Toast
@@ -104,7 +105,10 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                         SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
                         showToast(R.string.login_and_add_tabs, Toast.LENGTH_SHORT)
                         analytics.logAuthMastodonEvent(mastodonAccount.instanceName)
-                        setResult(Activity.RESULT_OK)
+                        val intent = Intent().apply {
+                            putExtra(EXTRA_ACCOUNT_UUID, mastodonAccount.uuid)
+                        }
+                        setResult(Activity.RESULT_OK, intent)
                         finish()
                     } else {
                         showToast(R.string.logged_in_account_error, Toast.LENGTH_LONG)
@@ -137,6 +141,11 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
         } else {
             moveTaskToBack(true)
         }
+    }
+
+    companion object {
+
+        val EXTRA_ACCOUNT_UUID = "account_uuid"
     }
 }
 

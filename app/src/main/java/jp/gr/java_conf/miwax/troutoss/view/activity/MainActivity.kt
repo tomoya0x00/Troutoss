@@ -19,6 +19,7 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.adapter.DrawerAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     lateinit private var viewModel: MainViewModel
 
     private val helper: MastodonHelper by lazy { MastodonHelper() }
+    private val tabRepository: SnsTabRepository by lazy { SnsTabRepository(helper) }
     private val realm: Realm = Realm.getDefaultInstance()
     private val disposables = CompositeDisposable()
     private val drawerAccountView: RecyclerView by lazy { findViewById(R.id.account_view) as RecyclerView }
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 }.subscribe(),
                 viewModel.messenger.register(ShowAccountAuthActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowAccountAuthActivityMessage")
-                    startActivity(Intent(this, MastodonAuthActivity::class.java))
+                    startActivityForResult(Intent(this, MastodonAuthActivity::class.java), REQUEST_MASTODON_AUTH)
                 }.subscribe(),
                 viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
                     Timber.d("received CloseDrawerMessage")
@@ -120,6 +122,13 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, MastodonAuthActivity::class.java))
                 }
             }
+            requestCode == REQUEST_MASTODON_AUTH && resultCode == Activity.RESULT_OK -> {
+                // 追加したアカウントのタブを表示
+                data?.getStringExtra(MastodonAuthActivity.EXTRA_ACCOUNT_UUID)?.let { uuid ->
+                    val index = tabRepository.findFirstTabIndexOf(uuid)
+                    index?.let { binding.tabs.getTabAt(it)?.select() }
+                }
+            }
         }
     }
 
@@ -134,6 +143,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
 
         private val REQUEST_MASTODON_ACCOUNT_SETTINGS = 100
+        private val REQUEST_MASTODON_AUTH = REQUEST_MASTODON_ACCOUNT_SETTINGS + 1
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
