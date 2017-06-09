@@ -9,7 +9,7 @@ apply plugin: 'io.fabric'
 // Manifest version
 def versionMajor = 0
 def versionMinor = 1
-def versionPatch = 0
+def versionPatch = 1
 
 // CI
 def isCi = "true".equals(System.getenv("CI"))
