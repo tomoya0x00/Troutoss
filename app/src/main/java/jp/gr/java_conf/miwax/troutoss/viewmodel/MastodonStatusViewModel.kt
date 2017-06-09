@@ -233,6 +233,10 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
 
     }
 
+    fun onClickStatus(view: View) {
+        messenger.send(OpenUrlMessage(showableStatus.url))
+    }
+
     fun updateElapsed() {
         notifyPropertyChanged(BR.elapsed)
     }
