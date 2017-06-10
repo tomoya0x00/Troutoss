@@ -116,7 +116,20 @@
             tools:text="500"/>
 
         <ImageButton
-            android:id="@+id/media"
+            android:id="@+id/camera"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/post_button"
+            android:layout_height="@dimen/post_button"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/take_photo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status"
+            app:srcCompat="@drawable/camera"/>
+
+        <ImageButton
+            android:id="@+id/attach"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/post_button"
             android:layout_height="@dimen/post_button"
@@ -124,9 +137,9 @@
             android:layout_marginStart="8dp"
             android:contentDescription="@string/attachment_media"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/camera"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:srcCompat="@drawable/camera"/>
+            app:srcCompat="@drawable/attach"/>
 
         <ImageButton
             android:id="@+id/visibility"
@@ -136,22 +149,23 @@
             android:contentDescription="@string/select_visibility"
             android:onClick="@{viewModel::onClickVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/media"
+            app:layout_constraintLeft_toRightOf="@+id/attach"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:srcCompat="@{viewModel.visibilityIcon}"/>
+            app:srcCompat="@{viewModel.visibilityIcon}"
+            tools:src="@drawable/public_earth"/>
 
         <ToggleButton
-            android:id="@+id/cw"
+            android:id="@+id/nsfw"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/post_button"
             android:layout_height="@dimen/post_button"
-            android:checked="@={viewModel.spoiler}"
             android:padding="0dp"
             android:textColor="@drawable/toggle_text_color"
-            android:textOff="@string/cw"
-            android:textOn="@string/cw"
+            android:textOff="@string/nsfw"
+            android:textOn="@string/nsfw"
+            android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/nsfw"
+            app:layout_constraintLeft_toRightOf="@+id/cw"
             app:layout_constraintTop_toBottomOf="@id/status"/>
 
         <EditText
@@ -177,15 +191,15 @@
             tools:text="spoiler"/>
 
         <ToggleButton
-            android:id="@+id/nsfw"
+            android:id="@+id/cw"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="@dimen/post_button"
             android:layout_height="@dimen/post_button"
+            android:checked="@={viewModel.spoiler}"
             android:padding="0dp"
             android:textColor="@drawable/toggle_text_color"
-            android:textOff="@string/nsfw"
-            android:textOn="@string/nsfw"
-            android:visibility="@{viewModel.hasAttachments ? View.VISIBLE : View.GONE}"
+            android:textOff="@string/cw"
+            android:textOn="@string/cw"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/visibility"
             app:layout_constraintTop_toBottomOf="@id/status"/>
