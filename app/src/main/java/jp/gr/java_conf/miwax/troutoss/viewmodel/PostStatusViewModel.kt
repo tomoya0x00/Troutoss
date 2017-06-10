@@ -32,6 +32,11 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
 
     val messenger = Messenger()
     private val statuses: RxStatuses?
+    private var nowPosting = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.postable)
+        }
 
     @get:Bindable
     val hasAttachments: Boolean
@@ -76,7 +81,7 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
 
     @get:Bindable
     val postable: Boolean
-        get() =  status.isNotEmpty() && statusRestCount >= 0
+        get() = status.isNotEmpty() && statusRestCount >= 0 && !nowPosting
 
     init {
         Timber.d("PostStatusViewModel accountUuid:$accountUuid, replyToId:$replyToId, replyToUsers:$replyToUsers")
@@ -91,6 +96,7 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     }
 
     fun onClickPost(view: View) {
+        nowPosting = true
         launch(CommonPool) {
             try {
                 statuses?.postStatus(
@@ -104,6 +110,7 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
             } catch (e: Exception) {
                 Timber.e("postStatus failed: %s", e.toString())
                 messenger.send(ShowToastMessage(R.string.comm_error))
+                nowPosting = false
                 return@launch
             }
             messenger.send(ShowToastMessage(R.string.post_success))
