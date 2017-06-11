@@ -63,3 +63,10 @@ fun Status.showableStatus(): Status {
 
 fun Account.getNonEmptyName(): String =
         if (this.displayName.isNotEmpty()) this.displayName else this.userName
+
+enum class AttachmentType {
+    IMAGE,
+    VIDEO,
+    GIFV,
+    UNKNOWN
+}

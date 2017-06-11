@@ -3,6 +3,7 @@ package jp.gr.java_conf.miwax.troutoss.viewmodel
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.graphics.Color
+import android.net.Uri
 import android.view.View
 import com.sys1yagi.mastodon4j.api.entity.Status
 import com.sys1yagi.mastodon4j.rx.RxStatuses
@@ -12,8 +13,10 @@ import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.model.AttachmentHolder
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
+import jp.gr.java_conf.miwax.troutoss.view.adapter.AttachmentThumbnailAdapter
 import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
@@ -31,16 +34,25 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
         BaseObservable() {
 
     val messenger = Messenger()
+
     private val statuses: RxStatuses?
     private var nowPosting = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.postable)
         }
+    private val attachmentHolder = AttachmentHolder()
+
+    @get:Bindable
+    val thumbnailAdapter = AttachmentThumbnailAdapter(attachmentHolder)
 
     @get:Bindable
     val hasAttachments: Boolean
-        get() = false
+        get() = attachmentHolder.isNotEmpty()
+
+    @get:Bindable
+    val canAddAttachment: Boolean
+        get() = attachmentHolder.addable()
 
     @Bindable
     var spoiler: Boolean = false
@@ -138,5 +150,13 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
         notifyPropertyChanged(BR.statusCount)
         notifyPropertyChanged(BR.statusCountColor)
         notifyPropertyChanged(BR.postable)
+    }
+
+    fun onPickMedia(uri: Uri) {
+        if (attachmentHolder.add(uri)) {
+            thumbnailAdapter.notifyItemInserted(attachmentHolder.size - 1)
+            notifyPropertyChanged(BR.hasAttachments)
+            notifyPropertyChanged(BR.canAddAttachment)
+        }
     }
 }

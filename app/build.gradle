@@ -156,6 +156,10 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
     compile 'com.google.android:flexbox:0.2.6'
     compile 'io.realm:android-adapters:2.0.0'
+    compile('com.github.hotchemi:permissionsdispatcher:2.4.0') {
+        exclude module: "support-v13"
+    }
+    kapt 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 
     // Mastodon
     compile 'com.github.sys1yagi.mastodon4j:mastodon4j:1.0.0'

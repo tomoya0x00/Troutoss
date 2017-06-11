@@ -365,3 +365,8 @@
   license: Fabric Software and Services Agreement
   licenseUrl: https://fabric.io/terms
   skip: true
+- artifact: com.github.hotchemi:permissionsdispatcher:+
+  name: permissionsdispatcher
+  copyrightHolder: Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai
+  license: apache2
+  url: https://github.com/hotchemi/PermissionsDispatcher

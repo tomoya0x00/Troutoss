@@ -1,11 +1,15 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
+import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -23,8 +27,11 @@ import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
 
+@RuntimePermissions
 class PostStatusActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityPostStatusBinding
@@ -71,16 +78,51 @@ class PostStatusActivity : AppCompatActivity() {
                 }.subscribe()
         )
 
+        binding.attach.setOnClickListener {
+            PostStatusActivityPermissionsDispatcher.showMediaPickerWithCheck(this)
+        }
 
         val account = MastodonHelper().loadAccountOf(accountUuid)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             account?.let { subtitle = it.userNameWithInstance }
         }
+
+        binding.statusMedia.apply {
+            layoutManager = LinearLayoutManager(this@PostStatusActivity).apply {
+                orientation = LinearLayoutManager.HORIZONTAL
+            }
+            adapter = viewModel.thumbnailAdapter
+        }
     }
 
-    override fun onResume() {
-        super.onResume()
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    fun showMediaPicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                type = "image/* video/*"
+            } else {
+                type = "*/*"
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+            }
+        }
+
+        startActivityForResult(intent, REQUEST_PICK_MEDIA)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when {
+            requestCode == REQUEST_PICK_MEDIA && resultCode == Activity.RESULT_OK && data?.data != null -> {
+                Timber.d("pick media uri:${data.data}")
+                viewModel.onPickMedia(data.data)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        PostStatusActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
     }
 
     override fun onDestroy() {
@@ -102,6 +144,8 @@ class PostStatusActivity : AppCompatActivity() {
         private val EXTRA_REPLY_TO_ID = "reply_to_id"
         private val EXTRA_REPLY_TO_USERS = "reply_to_users"
         private val EXTRA_VISIBILITY = "visibility"
+
+        private val REQUEST_PICK_MEDIA = 100
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
