@@ -22,3 +22,9 @@ fun Uri.getBitmap(): Deferred<Bitmap?> = async(CommonPool) {
         return@async BitmapFactory.decodeFileDescriptor(fileDescriptor)
     }
 }
+
+fun Uri.readBytes(): Deferred<ByteArray> = async(CommonPool) {
+    appContext.contentResolver.openInputStream(this@readBytes).use {
+        return@async it.readBytes()
+    }
+}

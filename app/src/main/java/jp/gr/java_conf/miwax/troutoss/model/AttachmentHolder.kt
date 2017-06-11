@@ -3,6 +3,7 @@ package jp.gr.java_conf.miwax.troutoss.model
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import jp.gr.java_conf.miwax.troutoss.App.Companion.appContext
+import jp.gr.java_conf.miwax.troutoss.R.id.attachments
 import jp.gr.java_conf.miwax.troutoss.extension.AttachmentType
 
 
@@ -14,23 +15,29 @@ import jp.gr.java_conf.miwax.troutoss.extension.AttachmentType
 class AttachmentHolder(private val attachments: MutableList<Attachment> = mutableListOf()) :
         MutableList<AttachmentHolder.Attachment> by attachments {
 
-    data class Attachment(val uri: Uri, val type: AttachmentType)
+    data class Attachment(val uri: Uri, val mimeType: String, val type: AttachmentType)
 
     private val resolver = appContext.contentResolver
 
-    private fun typeOf(uri: Uri): AttachmentType {
-        val mimeType = resolver.getType(uri) ?:
+    private fun mimeTypeOf(uri: Uri): String {
+        return resolver.getType(uri) ?:
                 MimeTypeMap.getFileExtensionFromUrl(uri.toString())?.let {
                     MimeTypeMap.getSingleton().getMimeTypeFromExtension(it)
-                }
+                } ?: "unknown/unknown"
+    }
 
-        return mimeType?.let {
+    private fun typeOf(uri: Uri) : AttachmentType {
+        return typeOf(mimeTypeOf(uri))
+    }
+
+    private fun typeOf(mimeType: String): AttachmentType {
+        return mimeType.let {
             when {
                 it.startsWith("image", true) -> AttachmentType.IMAGE
                 it.startsWith("video", true) -> AttachmentType.VIDEO
                 else -> AttachmentType.UNKNOWN
             }
-        } ?: AttachmentType.UNKNOWN
+        }
     }
 
     fun add(uri: Uri): Boolean {
@@ -38,7 +45,8 @@ class AttachmentHolder(private val attachments: MutableList<Attachment> = mutabl
             return false
         }
 
-        attachments.add(Attachment(uri, typeOf(uri)))
+        val mimeType = mimeTypeOf(uri)
+        attachments.add(Attachment(uri, mimeType, typeOf(mimeType)))
         return true
     }
 
@@ -62,8 +70,7 @@ class AttachmentHolder(private val attachments: MutableList<Attachment> = mutabl
         }
 
         // すでに動画を含んでいるか
-        if (attachments.map { val (_, type) = it; type }
-                .filter { it == AttachmentType.VIDEO }.isNotEmpty()) {
+        if (attachments.filter { it.type == AttachmentType.VIDEO }.isNotEmpty()) {
             return false
         }
 

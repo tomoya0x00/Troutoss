@@ -5,10 +5,13 @@ import android.databinding.Bindable
 import android.graphics.Color
 import android.net.Uri
 import android.view.View
+import com.sys1yagi.mastodon4j.api.entity.Attachment
 import com.sys1yagi.mastodon4j.api.entity.Status
+import com.sys1yagi.mastodon4j.rx.RxMedia
 import com.sys1yagi.mastodon4j.rx.RxStatuses
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.extension.readBytes
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
@@ -19,8 +22,13 @@ import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.adapter.AttachmentThumbnailAdapter
 import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.rx2.await
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import timber.log.Timber
 
 /**
@@ -36,6 +44,7 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     val messenger = Messenger()
 
     private val statuses: RxStatuses?
+    private val media: RxMedia?
     private var nowPosting = false
         set(value) {
             field = value
@@ -60,6 +69,9 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
             field = value
             notifyPropertyChanged(BR.spoiler)
         }
+
+    @Bindable
+    var sensitive: Boolean = false
 
     @set:Bindable
     var spoilerText: String = ""
@@ -100,6 +112,7 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
         val helper = MastodonHelper()
         val client = helper.createAuthedClientOf(accountUuid)
         statuses = client?.let { RxStatuses(it) }
+        media = client?.let { RxMedia(it) }
 
         replyToUsers?.let {
             status = it.joinToString(separator = " ", prefix = "@", postfix = " ")
@@ -111,11 +124,12 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
         nowPosting = true
         launch(CommonPool) {
             try {
+                val mediaIds = postMediasIfNeed().await()?.map { it.id }
                 statuses?.postStatus(
                         status = status,
                         inReplyToId = replyToId,
-                        mediaIds = null,
-                        sensitive = false,
+                        mediaIds = mediaIds,
+                        sensitive = hasAttachments && sensitive,
                         spoilerText = if (spoiler) spoilerText else null,
                         visibility = visibility
                 )?.await()
@@ -128,6 +142,30 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
             messenger.send(ShowToastMessage(R.string.post_success))
             messenger.send(CloseThisActivityMessage())
         }
+    }
+
+    private fun postMediasIfNeed(): Deferred<List<Attachment>?> = async(CommonPool) {
+        if (attachmentHolder.isEmpty()) {
+            return@async null
+        }
+
+        val attachments: MutableList<Attachment> = mutableListOf()
+        for (attachment in attachmentHolder) {
+            val bytes = attachment.uri.readBytes().await()
+            val requestFile = RequestBody.create(MediaType.parse(attachment.mimeType), bytes)
+            val part = MultipartBody.Part.createFormData("file", "test", requestFile)
+            try {
+                // TODO: アップロード開始したことを表示
+                media?.postMedia(part)?.let { attachments.add(it.await()) }
+                // TODO: 成功したことを表示
+            } catch (e: Exception) {
+                // TODO: 失敗したことを表示
+                // TODO: Exceptionを吐いて失敗したことを伝える
+                throw e
+            }
+        }
+
+        return@async attachments
     }
 
     fun onClickVisibility(view: View) {
