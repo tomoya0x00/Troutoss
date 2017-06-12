@@ -7,6 +7,7 @@ import com.android.databinding.library.baseAdapters.BR
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.extension.AttachmentType
 import jp.gr.java_conf.miwax.troutoss.extension.getImageThumbnail
+import jp.gr.java_conf.miwax.troutoss.extension.getVideoThumbnail
 import jp.gr.java_conf.miwax.troutoss.model.AttachmentHolder
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -45,7 +46,7 @@ class AttachmentThumbnailViewModel(private val attachment: AttachmentHolder.Atta
         launch(CommonPool) {
             thumbnail = when (attachment.type) {
                 AttachmentType.IMAGE -> attachment.uri.getImageThumbnail()
-                AttachmentType.VIDEO -> attachment.uri.getImageThumbnail()
+                AttachmentType.VIDEO -> attachment.uri.getVideoThumbnail()
                 else -> async(CommonPool) { null }
             }.await()
             launch(UI) { notifyPropertyChanged(BR.thumbnail) }
