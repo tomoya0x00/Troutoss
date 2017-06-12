@@ -1,10 +1,8 @@
 package jp.gr.java_conf.miwax.troutoss.model
 
 import android.net.Uri
-import android.webkit.MimeTypeMap
-import jp.gr.java_conf.miwax.troutoss.App.Companion.appContext
-import jp.gr.java_conf.miwax.troutoss.R.id.attachments
 import jp.gr.java_conf.miwax.troutoss.extension.AttachmentType
+import jp.gr.java_conf.miwax.troutoss.extension.getMimeType
 
 
 /**
@@ -17,17 +15,8 @@ class AttachmentHolder(private val attachments: MutableList<Attachment> = mutabl
 
     data class Attachment(val uri: Uri, val mimeType: String, val type: AttachmentType)
 
-    private val resolver = appContext.contentResolver
-
-    private fun mimeTypeOf(uri: Uri): String {
-        return resolver.getType(uri) ?:
-                MimeTypeMap.getFileExtensionFromUrl(uri.toString())?.let {
-                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(it)
-                } ?: "unknown/unknown"
-    }
-
     private fun typeOf(uri: Uri) : AttachmentType {
-        return typeOf(mimeTypeOf(uri))
+        return typeOf(uri.getMimeType())
     }
 
     private fun typeOf(mimeType: String): AttachmentType {
@@ -45,7 +34,7 @@ class AttachmentHolder(private val attachments: MutableList<Attachment> = mutabl
             return false
         }
 
-        val mimeType = mimeTypeOf(uri)
+        val mimeType = uri.getMimeType()
         attachments.add(Attachment(uri, mimeType, typeOf(mimeType)))
         return true
     }

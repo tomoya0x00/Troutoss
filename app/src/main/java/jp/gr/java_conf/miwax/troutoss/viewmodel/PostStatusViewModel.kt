@@ -11,6 +11,7 @@ import com.sys1yagi.mastodon4j.rx.RxMedia
 import com.sys1yagi.mastodon4j.rx.RxStatuses
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.extension.generateFileName
 import jp.gr.java_conf.miwax.troutoss.extension.readBytes
 import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
@@ -53,7 +54,12 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     private val attachmentHolder = AttachmentHolder()
 
     @get:Bindable
-    val thumbnailAdapter = AttachmentThumbnailAdapter(attachmentHolder)
+    val thumbnailAdapter = object: AttachmentThumbnailAdapter(attachmentHolder) {
+        override fun onEmpty() {
+            notifyPropertyChanged(BR.hasAttachments)
+            notifyPropertyChanged(BR.canAddAttachment)
+        }
+    }
 
     @get:Bindable
     val hasAttachments: Boolean
@@ -150,18 +156,19 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
         }
 
         val attachments: MutableList<Attachment> = mutableListOf()
-        for (attachment in attachmentHolder) {
-            val bytes = attachment.uri.readBytes().await()
-            val requestFile = RequestBody.create(MediaType.parse(attachment.mimeType), bytes)
-            val part = MultipartBody.Part.createFormData("file", "test", requestFile)
+        for ((index, media) in attachmentHolder.withIndex()) {
+            val bytes = media.uri.readBytes().await()
+            val requestFile = RequestBody.create(MediaType.parse(media.mimeType), bytes)
+            val part = MultipartBody.Part.createFormData("file", media.uri.generateFileName(), requestFile)
             try {
-                // TODO: アップロード開始したことを表示
-                media?.postMedia(part)?.let { attachments.add(it.await()) }
-                // TODO: 成功したことを表示
+                thumbnailAdapter.enableProgressAt(index, true)
+                this@PostStatusViewModel.media?.postMedia(part)?.let { attachments.add(it.await()) }
+                thumbnailAdapter.setResult(index, true)
             } catch (e: Exception) {
-                // TODO: 失敗したことを表示
-                // TODO: Exceptionを吐いて失敗したことを伝える
+                thumbnailAdapter.setResult(index, false)
                 throw e
+            } finally {
+                thumbnailAdapter.enableProgressAt(index, false)
             }
         }
 
@@ -191,10 +198,8 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     }
 
     fun onPickMedia(uri: Uri) {
-        if (attachmentHolder.add(uri)) {
-            thumbnailAdapter.notifyItemInserted(attachmentHolder.size - 1)
-            notifyPropertyChanged(BR.hasAttachments)
-            notifyPropertyChanged(BR.canAddAttachment)
-        }
+        thumbnailAdapter.add(uri)
+        notifyPropertyChanged(BR.hasAttachments)
+        notifyPropertyChanged(BR.canAddAttachment)
     }
 }

@@ -4,11 +4,62 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_margin="2dp">
 
-    <ImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:scaleType="centerCrop"
-        tools:src="@mipmap/ic_launcher"/>
+    <data>
 
+        <variable
+            name="viewModel"
+            type="jp.gr.java_conf.miwax.troutoss.viewmodel.AttachmentThumbnailViewModel"/>
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            app:imageBitmap="@{viewModel.thumbnail}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="@drawable/oval_dark"
+            android:clickable="true"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/close"/>
+
+        <ImageView
+            android:id="@+id/result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@{viewModel.resultImage}"
+            tools:src="@drawable/check"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:background="#33000000"
+            android:visibility="@{viewModel.progress ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/thumbnail"
+            app:layout_constraintLeft_toLeftOf="@id/thumbnail"
+            app:layout_constraintRight_toRightOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="@id/thumbnail"/>
+
+    </android.support.constraint.ConstraintLayout>
 </layout>
