@@ -25,11 +25,14 @@ open class AttachmentThumbnailAdapter(private val attachments: AttachmentHolder)
 
     open fun onEmpty() {}
 
-    fun add(uri: Uri) {
-        if (attachments.add(uri)) {
-            viewModels.add(AttachmentThumbnailViewModel(attachments.last()))
-            notifyItemInserted(attachments.size - 1)
+    fun add(uri: Uri): Boolean {
+        if (!attachments.add(uri)) {
+            return false
         }
+
+        viewModels.add(AttachmentThumbnailViewModel(attachments.last()))
+        notifyItemInserted(attachments.size - 1)
+        return true
     }
 
     private fun removeAt(position: Int) {

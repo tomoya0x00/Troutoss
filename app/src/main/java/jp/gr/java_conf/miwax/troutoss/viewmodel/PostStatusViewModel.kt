@@ -198,8 +198,11 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
     }
 
     fun onPickMedia(uri: Uri) {
-        thumbnailAdapter.add(uri)
-        notifyPropertyChanged(BR.hasAttachments)
-        notifyPropertyChanged(BR.canAddAttachment)
+        if (thumbnailAdapter.add(uri)) {
+            notifyPropertyChanged(BR.hasAttachments)
+            notifyPropertyChanged(BR.canAddAttachment)
+        } else {
+            messenger.send(ShowToastMessage(R.string.attach_both_video_image_error))
+        }
     }
 }

@@ -53,6 +53,7 @@
     <string name="logout_and_delete_tabs">ログアウトしました。\nアカウントのタブを削除しました。</string>
     <string name="logged_in_account_error">ログイン済みのアカウントです。\n同一インスタンスの別アカウントを追加する場合、Webブラウザでログアウトしてから再度試して下さい。</string>
     <string name="login_and_add_tabs">ログインしました。\nアカウントのタブを追加しました。</string>
+    <string name="attach_both_video_image_error">ビデオと画像を一緒に添付することはできません。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
