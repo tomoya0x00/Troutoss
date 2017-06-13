@@ -101,10 +101,10 @@ class PostStatusActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                type = "image/* video/*"
+                type = "image/* video/mp4"
             } else {
                 type = "*/*"
-                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/mp4"))
             }
         }
 
