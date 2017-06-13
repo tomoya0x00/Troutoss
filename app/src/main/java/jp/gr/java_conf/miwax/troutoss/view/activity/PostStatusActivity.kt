@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -24,12 +25,14 @@ import jp.gr.java_conf.miwax.troutoss.messenger.CloseThisActivityMessage
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowMastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.TakePhotoHelper
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
+import java.io.IOException
 
 @RuntimePermissions
 class PostStatusActivity : AppCompatActivity() {
@@ -39,6 +42,10 @@ class PostStatusActivity : AppCompatActivity() {
 
     private val disposables = CompositeDisposable()
     private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
+
+    private val REQUEST_TAKE_PHOTO = 100
+    private val SAVE_PHOTO_URI = "save_photo_uri"
+    private var photoUri: Uri? = null
 
     private val accountType: AccountType by lazy {
         intent.extras.getString(EXTRA_ACCOUNT_TYPE)?.let { AccountType.valueOf(it) } ?: AccountType.UNKNOWN
@@ -55,6 +62,11 @@ class PostStatusActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        savedInstanceState?.apply {
+            photoUri = getParcelable(SAVE_PHOTO_URI)
+        }
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_status)
         viewModel = PostStatusViewModel(accountType, accountUuid, replyToId, replyToUsers, visibility)
         binding.viewModel = viewModel
@@ -80,6 +92,10 @@ class PostStatusActivity : AppCompatActivity() {
 
         binding.attach.setOnClickListener {
             PostStatusActivityPermissionsDispatcher.showMediaPickerWithCheck(this)
+        }
+
+        binding.camera.setOnClickListener {
+            PostStatusActivityPermissionsDispatcher.takePhotoWithCheck(this)
         }
 
         val account = MastodonHelper().loadAccountOf(accountUuid)
@@ -111,11 +127,31 @@ class PostStatusActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_PICK_MEDIA)
     }
 
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun takePhoto() {
+        try {
+            photoUri = TakePhotoHelper.createImageFile(this)
+        } catch (e: IOException) {
+            Timber.e("createImageFile failed: $e")
+        }
+
+        photoUri?.let { uri ->
+            TakePhotoHelper.getTakePictureIntent(uri, this)?.let {
+                startActivityForResult(it, REQUEST_TAKE_PHOTO)
+            }
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when {
             requestCode == REQUEST_PICK_MEDIA && resultCode == Activity.RESULT_OK && data?.data != null -> {
                 Timber.d("pick media uri:${data.data}")
                 viewModel.onPickMedia(data.data)
+            }
+            requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK -> {
+                photoUri?.let {
+                    viewModel.onPickMedia(it)
+                }
             }
         }
     }
@@ -123,6 +159,13 @@ class PostStatusActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         PostStatusActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.apply {
+            putParcelable(SAVE_PHOTO_URI, photoUri)
+        }
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
