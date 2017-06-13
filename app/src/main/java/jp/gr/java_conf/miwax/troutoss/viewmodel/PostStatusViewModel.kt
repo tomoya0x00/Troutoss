@@ -30,6 +30,8 @@ import kotlinx.coroutines.experimental.rx2.await
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 import timber.log.Timber
 
 /**
@@ -37,24 +39,25 @@ import timber.log.Timber
  * ステータス投稿用のViewModel
  */
 
-class PostStatusViewModel(private val accountType: AccountType, accountUuid: String,
-                          private val replyToId: Long? = null, replyToUsers: Array<String>? = null,
-                          private var visibility: Status.Visibility) :
-        BaseObservable() {
+@PaperParcel
+class PostStatusViewModel(var accountType: AccountType, var accountUuid: String,
+                          var replyToId: Long? = null, var replyToUsers: Array<String>? = null,
+                          var visibility: Status.Visibility = Status.Visibility.Public,
+                          var attachmentHolder:AttachmentHolder = AttachmentHolder()) :
+        BaseObservable(), PaperParcelable {
 
-    val messenger = Messenger()
+    @Transient val messenger = Messenger()
 
-    private val statuses: RxStatuses?
-    private val media: RxMedia?
-    private var nowPosting = false
+    @Transient private val statuses: RxStatuses?
+    @Transient private val media: RxMedia?
+    @Transient private var nowPosting = false
         set(value) {
             field = value
             notifyPropertyChanged(BR.postable)
         }
-    private val attachmentHolder = AttachmentHolder()
 
     @get:Bindable
-    val thumbnailAdapter = object: AttachmentThumbnailAdapter(attachmentHolder) {
+    @Transient val thumbnailAdapter = object : AttachmentThumbnailAdapter(attachmentHolder) {
         override fun onEmpty() {
             notifyPropertyChanged(BR.hasAttachments)
             notifyPropertyChanged(BR.canAddAttachment)
@@ -204,5 +207,9 @@ class PostStatusViewModel(private val accountType: AccountType, accountUuid: Str
         } else {
             messenger.send(ShowToastMessage(R.string.attach_both_video_image_error))
         }
+    }
+
+    companion object {
+        @JvmField val CREATOR = PaperParcelPostStatusViewModel.CREATOR
     }
 }

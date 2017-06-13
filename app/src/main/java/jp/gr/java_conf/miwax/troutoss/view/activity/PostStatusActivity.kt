@@ -39,6 +39,7 @@ class PostStatusActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityPostStatusBinding
     lateinit private var viewModel: PostStatusViewModel
+    private val SAVE_VIEWMODEL = "save_viewmodel"
 
     private val disposables = CompositeDisposable()
     private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
@@ -63,12 +64,13 @@ class PostStatusActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        savedInstanceState?.apply {
+        savedInstanceState?.run {
             photoUri = getParcelable(SAVE_PHOTO_URI)
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_status)
-        viewModel = PostStatusViewModel(accountType, accountUuid, replyToId, replyToUsers, visibility)
+        viewModel = savedInstanceState?.getParcelable(SAVE_VIEWMODEL) ?:
+                PostStatusViewModel(accountType, accountUuid, replyToId, replyToUsers, visibility)
         binding.viewModel = viewModel
 
         disposables.addAll(
@@ -164,6 +166,7 @@ class PostStatusActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.apply {
             putParcelable(SAVE_PHOTO_URI, photoUri)
+            putParcelable(SAVE_VIEWMODEL, viewModel)
         }
         super.onSaveInstanceState(outState)
     }

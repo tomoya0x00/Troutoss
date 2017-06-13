@@ -182,6 +182,9 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.uphyca:stetho_realm:2.0.0'
+    compile 'nz.bradcampbell:paperparcel:2.0.1'
+    compile 'nz.bradcampbell:paperparcel-kotlin:2.0.1'
+    kapt 'nz.bradcampbell:paperparcel-compiler:2.0.1'
 
     // Debug
     compile 'com.jakewharton.timber:timber:4.5.1'

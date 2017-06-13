@@ -3,6 +3,8 @@ package jp.gr.java_conf.miwax.troutoss.model
 import android.net.Uri
 import jp.gr.java_conf.miwax.troutoss.extension.AttachmentType
 import jp.gr.java_conf.miwax.troutoss.extension.getMimeType
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 
 
 /**
@@ -10,12 +12,18 @@ import jp.gr.java_conf.miwax.troutoss.extension.getMimeType
  * Attachment保持用のクラス
  */
 
-class AttachmentHolder(private val attachments: MutableList<Attachment> = mutableListOf()) :
-        MutableList<AttachmentHolder.Attachment> by attachments {
+@PaperParcel
+class AttachmentHolder(val attachments: MutableList<Attachment> = mutableListOf()) :
+        PaperParcelable, MutableList<AttachmentHolder.Attachment> by attachments {
 
-    data class Attachment(val uri: Uri, val mimeType: String, val type: AttachmentType)
+    @PaperParcel
+    data class Attachment(val uri: Uri, val mimeType: String, val type: AttachmentType) : PaperParcelable {
+        companion object {
+            @JvmField val CREATOR = PaperParcelAttachmentHolder_Attachment.CREATOR
+        }
+    }
 
-    private fun typeOf(uri: Uri) : AttachmentType {
+    private fun typeOf(uri: Uri): AttachmentType {
         return typeOf(uri.getMimeType())
     }
 
@@ -68,5 +76,6 @@ class AttachmentHolder(private val attachments: MutableList<Attachment> = mutabl
 
     companion object {
         private val MAX_ATTACHMENT_COUNT = 4
+        @JvmField val CREATOR = PaperParcelAttachmentHolder.CREATOR
     }
 }

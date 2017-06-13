@@ -370,3 +370,21 @@
   copyrightHolder: Shintaro Katafuchi, Marcel Schnelle, Yoshinori Isogai
   license: apache2
   url: https://github.com/hotchemi/PermissionsDispatcher
+- artifact: nz.bradcampbell:paperparcel-api:+
+  name: PaperParcel API
+  copyrightHolder: Bradley Campbell
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/grandstaish/paperparcel
+- artifact: nz.bradcampbell:paperparcel-kotlin:+
+  name: PaperParcel Kotlin
+  copyrightHolder: Bradley Campbell
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/grandstaish/paperparcel
+- artifact: nz.bradcampbell:paperparcel:+
+  name: PaperParcel
+  copyrightHolder: Bradley Campbell
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/grandstaish/paperparcel
