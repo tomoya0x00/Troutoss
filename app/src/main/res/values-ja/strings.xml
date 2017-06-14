@@ -54,6 +54,9 @@
     <string name="logged_in_account_error">ログイン済みのアカウントです。\n同一インスタンスの別アカウントを追加する場合、Webブラウザでログアウトしてから再度試して下さい。</string>
     <string name="login_and_add_tabs">ログインしました。\nアカウントのタブを追加しました。</string>
     <string name="attach_both_video_image_error">ビデオと画像を一緒に添付することはできません。</string>
+    <string name="attach_permission_denied_error">添付に失敗しました。</string>
+    <string name="permission_required">権限がありません</string>
+    <string name="storage_permission_required">添付するには、設定からこのアプリにストレージ権限の許可が必要です。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

@@ -65,11 +65,14 @@
     <string name="logged_in_account_error">This account is already logged in.\nIf you want to add another account of the same instance, please log out of the instance by web browser, and try again.</string>
     <string name="login_and_add_tabs">Log in Successful.\nAdded tabs of the account.</string>
     <string name="attach_both_video_image_error">Video and images can not be attached together.</string>
+    <string name="attach_permission_denied_error">Attachment failed.</string>
 
     <string name="pref_key_mastodon_muted_users" translatable="false">pref_key_mastodon_muted_users</string>
     <string name="pref_key_mastodon_blocked_users" translatable="false">pref_key_mastodon_blocked_users</string>
     <string name="pref_key_mastodon_logout" translatable="false">pref_key_mastodon_logout</string>
     <string name="take_photo" translatable="false">Take Photo</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="storage_permission_required">Necessary to grant the storage permission to this app on the Settings.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

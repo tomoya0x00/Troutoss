@@ -8,11 +8,12 @@ import android.databinding.DataBindingUtil
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
-import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.sys1yagi.mastodon4j.api.entity.Status
 import io.reactivex.disposables.CompositeDisposable
@@ -30,6 +31,8 @@ import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.dialog.MastodonVisibilityDialog
 import jp.gr.java_conf.miwax.troutoss.viewmodel.PostStatusViewModel
 import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
+import permissions.dispatcher.OnPermissionDenied
 import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
 import java.io.IOException
@@ -76,7 +79,7 @@ class PostStatusActivity : AppCompatActivity() {
         disposables.addAll(
                 viewModel.messenger.register(ShowToastMessage::class.java).doOnNext {
                     Timber.d("received ShowToastMessage")
-                    showToast(it.resId, Toast.LENGTH_SHORT)
+                    showToast(it.resId)
                 }.subscribe(),
                 viewModel.messenger.register(CloseThisActivityMessage::class.java).doOnNext {
                     Timber.d("received CloseThisActivityMessage")
@@ -114,7 +117,7 @@ class PostStatusActivity : AppCompatActivity() {
         }
     }
 
-    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     fun showMediaPicker() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -142,6 +145,27 @@ class PostStatusActivity : AppCompatActivity() {
                 startActivityForResult(it, REQUEST_TAKE_PHOTO)
             }
         }
+    }
+
+    @OnPermissionDenied(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun onDeniedAttachPermission() {
+        showToast(R.string.attach_permission_denied_error)
+    }
+
+    @OnNeverAskAgain(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    fun onNeverAskAgainAttachPermission() {
+        MaterialDialog.Builder(this)
+                .title(getString(R.string.permission_required))
+                .content(getString(R.string.storage_permission_required))
+                .positiveText(getString(R.string.settings))
+                .negativeText(getString(R.string.cancel))
+                .onPositive({ _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    startActivity(intent)
+                })
+                .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
