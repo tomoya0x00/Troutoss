@@ -10,16 +10,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
 import jp.gr.java_conf.miwax.troutoss.extension.showToast
-import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowImagesMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowReplyActivityMessage
-import jp.gr.java_conf.miwax.troutoss.messenger.ShowToastMessage
+import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.CustomTabsHelper
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.convertDp2Pixel
@@ -67,8 +65,11 @@ class MastodonTimelineFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
         val helper = MastodonHelper()
-        val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        adapter = client?.let { MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME) }
+        val account = accountUuid?.let { helper.loadAccountOf(it) }
+        val client = account?.let { helper.createAuthedClientOf(it) }
+        adapter = client?.let {
+            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account)
+        }
 
         adapter?.let { adapter ->
             disposables.addAll(
@@ -87,6 +88,14 @@ class MastodonTimelineFragment : Fragment() {
                     adapter.messenger.register(ShowReplyActivityMessage::class.java).doOnNext { m ->
                         Timber.d("received ShowReplyActivityMessage")
                         accountUuid?.let { PostStatusActivity.startActivity(activity, AccountType.MASTODON, it, m.status) }
+                    }.subscribe(),
+                    adapter.messenger.register(ShowMastodonStatusMenuMessage::class.java).doOnNext { m ->
+                        Timber.d("received ShowMastodonStatusMenuMessage")
+                        if (m.myStatus) {
+                            showMyStatusMenu(m.statusId, m.view)
+                        } else {
+                            showOtherStatusMenu(m.statusId, m.view)
+                        }
                     }.subscribe()
             )
         }
@@ -144,6 +153,22 @@ class MastodonTimelineFragment : Fragment() {
             Timber.e("loadMoreOld failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
         }
+    }
+
+    private fun showOtherStatusMenu(statusId: Long, view: View) {
+        // TODO: Notification側にも実装
+        val popup = PopupMenu(this.activity, view)
+        popup.apply {
+            menuInflater.inflate(R.menu.mastodon_other_status, popup.menu)
+        }.show()
+    }
+
+    private fun showMyStatusMenu(statusId: Long, view: View) {
+        // TODO: Notification側にも実装
+        val popup = PopupMenu(this.activity, view)
+        popup.apply {
+            menuInflater.inflate(R.menu.mastodon_my_status, popup.menu)
+        }.show()
     }
 
     companion object {

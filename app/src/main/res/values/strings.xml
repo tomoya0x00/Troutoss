@@ -73,6 +73,10 @@
     <string name="take_photo" translatable="false">Take Photo</string>
     <string name="permission_required">Permission Required</string>
     <string name="storage_permission_required">Necessary to grant the storage permission to this app on the Settings.</string>
+    <string name="mute">Mute</string>
+    <string name="block">Block</string>
+    <string name="report">Report</string>
+    <string name="delete">Delete</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

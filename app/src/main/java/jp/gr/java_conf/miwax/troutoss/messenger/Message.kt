@@ -1,6 +1,7 @@
 package jp.gr.java_conf.miwax.troutoss.messenger
 
 import android.support.annotation.StringRes
+import android.view.View
 import com.sys1yagi.mastodon4j.api.entity.Status
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
 
@@ -83,3 +84,9 @@ class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.
  */
 
 class ShowAccountAuthActivityMessage : Message
+
+/**
+ * MastodonStatusメニュー表示用のメッセージ
+ */
+
+class ShowMastodonStatusMenuMessage(val statusId: Long, val myStatus: Boolean, val view: View) : Message

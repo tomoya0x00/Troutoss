@@ -16,6 +16,7 @@ import jp.gr.java_conf.miwax.troutoss.extension.getNonEmptyName
 import jp.gr.java_conf.miwax.troutoss.extension.isBoostable
 import jp.gr.java_conf.miwax.troutoss.extension.showableStatus
 import jp.gr.java_conf.miwax.troutoss.messenger.*
+import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAttachmentAdapter
 import kotlinx.coroutines.experimental.CommonPool
@@ -34,7 +35,9 @@ import java.net.URI
  * Mastodonのステータス用ViewModel
  */
 
-class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: MastodonClient) :
+class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
+                              client: MastodonClient,
+                              private val myAccount: MastodonAccount) :
         BaseObservable() {
 
     val messenger = Messenger()
@@ -230,7 +233,8 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder, client: 
     }
 
     fun onClickMoreActions(view: View) {
-
+        val myStatus = showableAccount?.let { it.acct == myAccount.userName } ?: false
+        messenger.send(ShowMastodonStatusMenuMessage(showableStatus.id, myStatus, view))
     }
 
     fun onClickStatus(view: View) {

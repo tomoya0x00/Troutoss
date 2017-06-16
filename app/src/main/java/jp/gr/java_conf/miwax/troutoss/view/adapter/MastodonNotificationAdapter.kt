@@ -18,6 +18,7 @@ import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentNotificationBinding
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentStatusBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
+import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonNotificationViewModel
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
@@ -32,7 +33,7 @@ import kotlinx.coroutines.experimental.rx2.await
  * Mastodonの通知用アダプタ
  */
 
-class MastodonNotificationAdapter(client: MastodonClient) :
+class MastodonNotificationAdapter(client: MastodonClient, private val account: MastodonAccount) :
         UltimateDifferentViewTypeAdapter<MastodonNotificationAdapter.ViewType>() {
 
     val messenger = Messenger()
@@ -47,7 +48,7 @@ class MastodonNotificationAdapter(client: MastodonClient) :
     }
 
     init {
-        mentionBinder = MentionBinder(this, notifications, client)
+        mentionBinder = MentionBinder(this, notifications, client, account)
         putBinder(ViewType.MENTION, mentionBinder)
         putBinder(ViewType.REBLOG, NotificationBinder(this, notifications))
         putBinder(ViewType.FAVOURITE, NotificationBinder(this, notifications))
@@ -136,7 +137,8 @@ class MastodonNotificationAdapter(client: MastodonClient) :
 
     class MentionBinder(private val adapter: MastodonNotificationAdapter,
                         private val notifications: List<Notification>,
-                        private val client: MastodonClient) :
+                        private val client: MastodonClient,
+                        private  val account: MastodonAccount) :
             DataBinder<MentionBinder.ViewHolder>(adapter) {
 
         private val viewModels: MutableMap<Long, MastodonStatusViewModel> = hashMapOf()
@@ -154,7 +156,7 @@ class MastodonNotificationAdapter(client: MastodonClient) :
             vh.disposables.clear()
             notifications[position].status?.let {
                 if (!viewModels.containsKey(it.id)) {
-                    viewModels[it.id] = MastodonStatusViewModel(MastodonStatusHolder(it), client)
+                    viewModels[it.id] = MastodonStatusViewModel(MastodonStatusHolder(it), client, account)
                 }
                 vh.binding.viewModel = viewModels[it.id]
                 // ViewModelのメッセージを購読

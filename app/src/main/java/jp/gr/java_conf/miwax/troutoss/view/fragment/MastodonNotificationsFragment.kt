@@ -63,8 +63,9 @@ class MastodonNotificationsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_notification, container, false)
 
         val helper = MastodonHelper()
-        val client = accountUuid?.let { helper.createAuthedClientOf(it) }
-        adapter = client?.let { MastodonNotificationAdapter(it) }
+        val account = accountUuid?.let { helper.loadAccountOf(it) }
+        val client = account?.let { helper.createAuthedClientOf(it) }
+        adapter = client?.let { MastodonNotificationAdapter(it, account) }
 
         adapter?.let { adapter ->
             disposables.addAll(

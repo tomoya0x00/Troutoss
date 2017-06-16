@@ -20,6 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ContentStatusBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
+import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MastodonStatusViewModel
 import kotlinx.coroutines.experimental.CommonPool
@@ -35,7 +36,9 @@ import kotlinx.coroutines.experimental.rx2.await
  * Mastodonのホーム用アダプタ
  */
 
-class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline) :
+class MastodonTimelineAdapter(private val client: MastodonClient,
+                              type: Timeline,
+                              private val account: MastodonAccount) :
         UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
     val messenger = Messenger()
@@ -61,14 +64,14 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
             val addable = if (clear) false else (viewModels.size > 0) && it.part.any { it.id == viewModels[0].statusId }
             if (addable) {
                 val addStatuses = it.part.takeWhile { it.id != viewModels[0].statusId }
-                viewModels.addAll(0, addStatuses.map { MastodonStatusViewModel(MastodonStatusHolder(it), client) })
+                viewModels.addAll(0, addStatuses.map { MastodonStatusViewModel(MastodonStatusHolder(it), client, account) })
                 launch(UI) {
                     notifyItemRangeInserted(0, addStatuses.size)
                     updateStatusElapsed(addStatuses.size, viewModels.size - addStatuses.size)
                 }.join()
             } else {
                 viewModels.clear()
-                viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client) })
+                viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client, account) })
                 launch(UI) {
                     notifyDataSetChanged()
                 }.join()
@@ -94,7 +97,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
         }
         pageable?.let {
             val pos = viewModels.size
-            viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client) })
+            viewModels.addAll(it.part.map { MastodonStatusViewModel(MastodonStatusHolder(it), client, account) })
             launch(UI) {
                 notifyItemRangeInserted(pos, it.part.size)
                 updateStatusElapsed(0, pos)
@@ -148,6 +151,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient, type: Timeline
             )
         }
     }
+
 
     override fun newFooterHolder(view: View): ViewHolder {
         return ViewHolder(view, false)
