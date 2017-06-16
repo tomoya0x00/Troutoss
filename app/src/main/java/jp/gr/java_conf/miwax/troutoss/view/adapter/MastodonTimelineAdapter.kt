@@ -107,6 +107,13 @@ class MastodonTimelineAdapter(private val client: MastodonClient,
         return@async 0
     }
 
+    fun deleteStatus(id: Long) = async(UI) {
+        viewModels.find { it.statusId == id }?.let {
+            notifyItemRemoved(viewModels.indexOf(it))
+            viewModels.remove(it)
+        }
+    }
+
     private fun updateStatusElapsed(positionStart: Int, itemCount: Int) {
         viewModels.slice(positionStart until itemCount).forEach { it.updateElapsed() }
     }

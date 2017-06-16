@@ -12,7 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
+import com.sys1yagi.mastodon4j.MastodonClient
+import com.sys1yagi.mastodon4j.rx.RxStatuses
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
@@ -22,11 +25,15 @@ import jp.gr.java_conf.miwax.troutoss.model.CustomTabsHelper
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.convertDp2Pixel
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
+import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
 import jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.rx2.await
 import timber.log.Timber
 
 /**
@@ -47,6 +54,10 @@ class MastodonTimelineFragment : Fragment() {
     private val timelineLayout: LinearLayoutManager
         get() = binding.timeline.layoutManager as LinearLayoutManager
 
+    private val helper = MastodonHelper()
+    private var account: MastodonAccount? = null
+    private var client: MastodonClient? = null
+
     private val tabsIntent: CustomTabsIntent by lazy {
         CustomTabsHelper.createTabsIntent(activity)
     }
@@ -56,6 +67,8 @@ class MastodonTimelineFragment : Fragment() {
         timeline = arguments?.getString(ARG_TIMELINE)?.let { MastodonTimelineAdapter.Timeline.valueOf(it) }
         accountUuid = arguments?.getString(ARG_ACCOUNT_UUID)
         option = arguments?.getString(ARG_OPTION)
+        account = accountUuid?.let { helper.loadAccountOf(it) }
+        client = account?.let { helper.createAuthedClientOf(it) }
         timeline?.let { clearOnRefresh = it == MastodonTimelineAdapter.Timeline.FAVOURITES }
     }
 
@@ -64,11 +77,8 @@ class MastodonTimelineFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
-        val helper = MastodonHelper()
-        val account = accountUuid?.let { helper.loadAccountOf(it) }
-        val client = account?.let { helper.createAuthedClientOf(it) }
         adapter = client?.let {
-            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account)
+            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account!!)
         }
 
         adapter?.let { adapter ->
@@ -168,7 +178,37 @@ class MastodonTimelineFragment : Fragment() {
         val popup = PopupMenu(this.activity, view)
         popup.apply {
             menuInflater.inflate(R.menu.mastodon_my_status, popup.menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.delete -> {
+                        deleteStatus(statusId)
+                        true
+                    }
+                    else -> false
+                }
+            }
         }.show()
+    }
+
+    private fun deleteStatus(id: Long) {
+        MaterialDialog.Builder(activity)
+                .content(R.string.delete_toot)
+                .positiveText(R.string.delete)
+                .negativeText(R.string.cancel)
+                .onPositive { _, _ ->
+                    launch(UI) {
+                        try {
+                            async(CommonPool) {
+                                client?.let { RxStatuses(it) }?.deleteStatus(id)?.await()
+                            }.await()
+                            adapter?.deleteStatus(id)?.await()
+                            showToast(R.string.deleted)
+                        } catch (e: Exception) {
+                            Timber.e("deleteStatus failed: $e")
+                            showToast(R.string.delete_failed)
+                        }
+                    }
+                }.show()
     }
 
     companion object {

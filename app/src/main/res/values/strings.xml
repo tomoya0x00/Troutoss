@@ -77,6 +77,9 @@
     <string name="block">Block</string>
     <string name="report">Report</string>
     <string name="delete">Delete</string>
+    <string name="delete_toot">Delete this toot.\nAre you sure？</string>
+    <string name="deleted">Deleted.</string>
+    <string name="delete_failed">Delete failed.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

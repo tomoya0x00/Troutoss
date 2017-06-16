@@ -3,6 +3,7 @@ package jp.gr.java_conf.miwax.troutoss.extension
 import android.preference.PreferenceFragment
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
+import android.widget.Toast
 import jp.gr.java_conf.miwax.troutoss.model.ToastHolder
 
 /**
@@ -10,18 +11,18 @@ import jp.gr.java_conf.miwax.troutoss.model.ToastHolder
  * Fragment用のExtension
  */
 
-fun Fragment.showToast(@StringRes resId: Int, duration: Int) {
+fun Fragment.showToast(@StringRes resId: Int, duration: Int = Toast.LENGTH_SHORT) {
     ToastHolder.showToast(this.activity, resId, duration)
 }
 
-fun Fragment.showToast(text: CharSequence, duration: Int) {
+fun Fragment.showToast(text: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
     ToastHolder.showToast(this.activity, text, duration)
 }
 
-fun PreferenceFragment.showToast(@StringRes resId: Int, duration: Int) {
+fun PreferenceFragment.showToast(@StringRes resId: Int, duration: Int = Toast.LENGTH_SHORT) {
     ToastHolder.showToast(this.activity, resId, duration)
 }
 
-fun PreferenceFragment.showToast(text: CharSequence, duration: Int) {
+fun PreferenceFragment.showToast(text: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
     ToastHolder.showToast(this.activity, text, duration)
 }
