@@ -80,8 +80,10 @@
     <string name="delete_toot">Delete this toot.\nAre you sure？</string>
     <string name="deleted">Deleted.</string>
     <string name="delete_failed">Delete failed.</string>
-    <string name="mute_failed">Mute failed.</string>
     <string name="muted">Muted.</string>
+    <string name="mute_failed">Mute failed.</string>
+    <string name="blocked">Blocked.</string>
+    <string name="block_failed">Block failed.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

@@ -177,6 +177,10 @@ class MastodonTimelineFragment : Fragment() {
                         accountId?.let { muteAccount(it) }
                         true
                     }
+                    R.id.block -> {
+                        accountId?.let { blockAccount(it) }
+                        true
+                    }
                     else -> false
                 }
             }
@@ -231,6 +235,20 @@ class MastodonTimelineFragment : Fragment() {
             } catch (e: Exception) {
                 Timber.e("postMute failed: $e")
                 showToast(R.string.mute_failed)
+            }
+        }
+    }
+
+    private fun blockAccount(id: Long) {
+        launch(UI) {
+            try {
+                async(CommonPool) {
+                    client?.let { RxAccounts(it).postBlock(id).await() }
+                }.await()
+                showToast(R.string.blocked)
+            } catch (e: Exception) {
+                Timber.e("postBlock failed: $e")
+                showToast(R.string.block_failed)
             }
         }
     }

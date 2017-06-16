@@ -62,10 +62,13 @@
     <string name="report">通報</string>
     <string name="delete">削除</string>
     <string name="delete_toot">トゥートを削除します。\nよろしいですか？</string>
-    <string name="deleted">削除しました</string>
-    <string name="delete_failed">削除に失敗しました</string>
-    <string name="mute_failed">ミュートに失敗しました</string>
-    <string name="muted">ミュートしました</string>
+    <string name="deleted">削除しました。</string>
+    <string name="delete_failed">削除に失敗しました。</string>
+    <string name="muted">ミュートしました。</string>
+    <string name="mute_failed">ミュートに失敗しました。</string>
+    <string name="blocked">ブロックしました。</string>
+    <string name="block_failed">ブロックに失敗しました。</string>
+
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>
