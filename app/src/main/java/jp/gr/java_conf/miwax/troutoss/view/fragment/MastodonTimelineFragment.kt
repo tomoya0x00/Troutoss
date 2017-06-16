@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import com.sys1yagi.mastodon4j.MastodonClient
+import com.sys1yagi.mastodon4j.rx.RxAccounts
 import com.sys1yagi.mastodon4j.rx.RxStatuses
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
@@ -102,9 +103,9 @@ class MastodonTimelineFragment : Fragment() {
                     adapter.messenger.register(ShowMastodonStatusMenuMessage::class.java).doOnNext { m ->
                         Timber.d("received ShowMastodonStatusMenuMessage")
                         if (m.myStatus) {
-                            showMyStatusMenu(m.statusId, m.view)
+                            showMyStatusMenu(m.accountId, m.statusId, m.view)
                         } else {
-                            showOtherStatusMenu(m.statusId, m.view)
+                            showOtherStatusMenu(m.accountId, m.statusId, m.view)
                         }
                     }.subscribe()
             )
@@ -165,15 +166,24 @@ class MastodonTimelineFragment : Fragment() {
         }
     }
 
-    private fun showOtherStatusMenu(statusId: Long, view: View) {
+    private fun showOtherStatusMenu(accountId: Long?, statusId: Long, view: View) {
         // TODO: Notification側にも実装
         val popup = PopupMenu(this.activity, view)
         popup.apply {
             menuInflater.inflate(R.menu.mastodon_other_status, popup.menu)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.mute -> {
+                        accountId?.let { muteAccount(it) }
+                        true
+                    }
+                    else -> false
+                }
+            }
         }.show()
     }
 
-    private fun showMyStatusMenu(statusId: Long, view: View) {
+    private fun showMyStatusMenu(accountId: Long?, statusId: Long, view: View) {
         // TODO: Notification側にも実装
         val popup = PopupMenu(this.activity, view)
         popup.apply {
@@ -199,7 +209,7 @@ class MastodonTimelineFragment : Fragment() {
                     launch(UI) {
                         try {
                             async(CommonPool) {
-                                client?.let { RxStatuses(it) }?.deleteStatus(id)?.await()
+                                client?.let { RxStatuses(it).deleteStatus(id).await() }
                             }.await()
                             adapter?.deleteStatus(id)?.await()
                             showToast(R.string.deleted)
@@ -209,6 +219,20 @@ class MastodonTimelineFragment : Fragment() {
                         }
                     }
                 }.show()
+    }
+
+    private fun muteAccount(id: Long) {
+        launch(UI) {
+            try {
+                async(CommonPool) {
+                    client?.let { RxAccounts(it).postMute(id).await() }
+                }.await()
+                showToast(R.string.muted)
+            } catch (e: Exception) {
+                Timber.e("postMute failed: $e")
+                showToast(R.string.mute_failed)
+            }
+        }
     }
 
     companion object {

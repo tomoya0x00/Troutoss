@@ -234,7 +234,7 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
 
     fun onClickMoreActions(view: View) {
         val myStatus = showableAccount?.let { it.acct == myAccount.userName } ?: false
-        messenger.send(ShowMastodonStatusMenuMessage(showableStatus.id, myStatus, view))
+        messenger.send(ShowMastodonStatusMenuMessage(showableAccount?.id, showableStatus.id, myStatus, view))
     }
 
     fun onClickStatus(view: View) {

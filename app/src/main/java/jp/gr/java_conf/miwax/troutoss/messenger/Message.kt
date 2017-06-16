@@ -53,31 +53,31 @@ class ShowMastodonVisibilityDialog : Message
  * 設定画面表示用のメッセージ
  */
 
-class ShowSettingsActivityMessage: Message
+class ShowSettingsActivityMessage : Message
 
 /**
  * Mastodonアカウント設定画面表示用のメッセージ
  */
 
-class ShowMastodonAccountSettingsActivityMessage(val accountUuid: String): Message
+class ShowMastodonAccountSettingsActivityMessage(val accountUuid: String) : Message
 
 /**
  * ドロワークローズ用のメッセージ
  */
 
-class CloseDrawerMessage: Message
+class CloseDrawerMessage : Message
 
 /**
  * Mastodon通知画面表示用のメッセージ
  */
 
-class ShowMastodonNotificationsActivityMessage(val accountUuid: String): Message
+class ShowMastodonNotificationsActivityMessage(val accountUuid: String) : Message
 
 /**
  * Mastodonタイムライン画面表示用のメッセージ
  */
 
-class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.Timeline, val accountUuid: String): Message
+class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.Timeline, val accountUuid: String) : Message
 
 /**
  * アカウント認証用のメッセージ
@@ -89,4 +89,4 @@ class ShowAccountAuthActivityMessage : Message
  * MastodonStatusメニュー表示用のメッセージ
  */
 
-class ShowMastodonStatusMenuMessage(val statusId: Long, val myStatus: Boolean, val view: View) : Message
+class ShowMastodonStatusMenuMessage(val accountId: Long?, val statusId: Long, val myStatus: Boolean, val view: View) : Message
