@@ -7,18 +7,12 @@ import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import com.sys1yagi.mastodon4j.MastodonClient
-import com.sys1yagi.mastodon4j.rx.RxAccounts
-import com.sys1yagi.mastodon4j.rx.RxReports
-import com.sys1yagi.mastodon4j.rx.RxStatuses
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.FragmentMastodonHomeBinding
@@ -32,11 +26,9 @@ import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.view.activity.ImagesViewActivity
 import jp.gr.java_conf.miwax.troutoss.view.activity.PostStatusActivity
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonTimelineAdapter
-import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.rx2.await
 import timber.log.Timber
 
 /**
@@ -44,7 +36,7 @@ import timber.log.Timber
  * Use the [MastodonTimelineFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MastodonTimelineFragment : Fragment() {
+class MastodonTimelineFragment : MastodonBaseFragment() {
 
     private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
@@ -52,14 +44,15 @@ class MastodonTimelineFragment : Fragment() {
     private var clearOnRefresh = false
 
     lateinit private var binding: FragmentMastodonHomeBinding
-    private var adapter: MastodonTimelineAdapter? = null
+    var adapter: MastodonTimelineAdapter? = null
+
     private val disposables = CompositeDisposable()
     private val timelineLayout: LinearLayoutManager
         get() = binding.timeline.layoutManager as LinearLayoutManager
 
     private val helper = MastodonHelper()
     private var account: MastodonAccount? = null
-    private var client: MastodonClient? = null
+    override var client: MastodonClient? = null
 
     private val tabsIntent: CustomTabsIntent by lazy {
         CustomTabsHelper.createTabsIntent(activity)
@@ -84,7 +77,7 @@ class MastodonTimelineFragment : Fragment() {
             MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account!!)
         }
 
-        adapter?.let { adapter ->
+        this.adapter?.let { adapter ->
             disposables.addAll(
                     adapter.messenger.register(ShowToastMessage::class.java).doOnNext {
                         Timber.d("received ShowToastMessage")
@@ -105,7 +98,7 @@ class MastodonTimelineFragment : Fragment() {
                     adapter.messenger.register(ShowMastodonStatusMenuMessage::class.java).doOnNext { m ->
                         Timber.d("received ShowMastodonStatusMenuMessage")
                         if (m.myStatus) {
-                            showMyStatusMenu(m.accountId, m.statusId, m.view)
+                            showOwnStatusMenu(m.accountId, m.statusId, m.view)
                         } else {
                             showOtherStatusMenu(m.accountId, m.statusId, m.view)
                         }
@@ -136,7 +129,7 @@ class MastodonTimelineFragment : Fragment() {
     private fun onRefresh() = launch(UI) {
         binding.timeline.setRefreshing(true)
         try {
-            adapter?.let { adapter ->
+            this@MastodonTimelineFragment.adapter?.let { adapter ->
                 val (added, loadedSize) = adapter.refresh(clearOnRefresh).await()
                 if (loadedSize > 0) {
                     if (added) {
@@ -159,7 +152,7 @@ class MastodonTimelineFragment : Fragment() {
 
     private fun onLoadMoreOld(itemsCount: Int, lastPos: Int) = launch(UI) {
         try {
-            val loadedSize = adapter?.loadMoreOld(itemsCount, lastPos)?.await()
+            val loadedSize = this@MastodonTimelineFragment.adapter?.loadMoreOld(itemsCount, lastPos)?.await()
             binding.timeline.disableLoadmore()
             loadedSize?.let { if (it > 0) binding.timeline.reenableLoadmore() }
         } catch (e: Exception) {
@@ -168,116 +161,8 @@ class MastodonTimelineFragment : Fragment() {
         }
     }
 
-    private fun showOtherStatusMenu(accountId: Long?, statusId: Long, view: View) {
-        // TODO: Notification側にも実装
-        val popup = PopupMenu(this.activity, view)
-        popup.apply {
-            menuInflater.inflate(R.menu.mastodon_other_status, popup.menu)
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.mute -> {
-                        accountId?.let { muteAccount(it) }
-                        true
-                    }
-                    R.id.block -> {
-                        accountId?.let { blockAccount(it) }
-                        true
-                    }
-                    R.id.report -> {
-                        accountId?.let { reportAccount(it, statusId) }
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }.show()
-    }
-
-    private fun showMyStatusMenu(accountId: Long?, statusId: Long, view: View) {
-        // TODO: Notification側にも実装
-        val popup = PopupMenu(this.activity, view)
-        popup.apply {
-            menuInflater.inflate(R.menu.mastodon_my_status, popup.menu)
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.delete -> {
-                        deleteStatus(statusId)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }.show()
-    }
-
-    private fun deleteStatus(id: Long) {
-        MaterialDialog.Builder(activity)
-                .content(R.string.delete_toot)
-                .positiveText(R.string.delete)
-                .negativeText(R.string.cancel)
-                .onPositive { _, _ ->
-                    launch(UI) {
-                        try {
-                            async(CommonPool) {
-                                client?.let { RxStatuses(it).deleteStatus(id).await() }
-                            }.await()
-                            adapter?.deleteStatus(id)?.await()
-                            showToast(R.string.deleted)
-                        } catch (e: Exception) {
-                            Timber.e("deleteStatus failed: $e")
-                            showToast(R.string.delete_failed)
-                        }
-                    }
-                }.show()
-    }
-
-    private fun muteAccount(id: Long) {
-        launch(UI) {
-            try {
-                async(CommonPool) {
-                    client?.let { RxAccounts(it).postMute(id).await() }
-                }.await()
-                showToast(R.string.muted)
-            } catch (e: Exception) {
-                Timber.e("postMute failed: $e")
-                showToast(R.string.mute_failed)
-            }
-        }
-    }
-
-    private fun blockAccount(id: Long) {
-        launch(UI) {
-            try {
-                async(CommonPool) {
-                    client?.let { RxAccounts(it).postBlock(id).await() }
-                }.await()
-                showToast(R.string.blocked)
-            } catch (e: Exception) {
-                Timber.e("postBlock failed: $e")
-                showToast(R.string.block_failed)
-            }
-        }
-    }
-
-    private fun reportAccount(accountId: Long, statusId: Long) {
-        MaterialDialog.Builder(activity)
-                .positiveText(R.string.report)
-                .negativeText(R.string.cancel)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getString(R.string.report_hint), "", { _, input ->
-                    val comment = input?.let { toString() } ?: ""
-                    launch(UI) {
-                        try {
-                            async(CommonPool) {
-                                client?.let { RxReports(it).postReport(accountId, statusId, comment).await() }
-                            }.await()
-                            showToast(R.string.reported)
-                        } catch (e: Exception) {
-                            Timber.e("postReport failed: $e")
-                            showToast(R.string.report_failed)
-                        }
-                    }
-                }).show()
+    override fun onDeleteStatus(id: Long): Deferred<Boolean>? {
+        return adapter?.deleteStatus(id)
     }
 
     companion object {
