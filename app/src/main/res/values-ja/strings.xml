@@ -68,7 +68,9 @@
     <string name="mute_failed">ミュートに失敗しました。</string>
     <string name="blocked">ブロックしました。</string>
     <string name="block_failed">ブロックに失敗しました。</string>
-
+    <string name="report_hint">コメントを入力して下さい</string>
+    <string name="reported">通報しました。</string>
+    <string name="report_failed">通報に失敗しました。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

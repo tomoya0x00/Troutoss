@@ -84,6 +84,9 @@
     <string name="mute_failed">Mute failed.</string>
     <string name="blocked">Blocked.</string>
     <string name="block_failed">Block failed.</string>
+    <string name="report_hint">Additional comments</string>
+    <string name="reported">Reported.</string>
+    <string name="report_failed">Report failed.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

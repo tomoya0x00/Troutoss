@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import com.sys1yagi.mastodon4j.MastodonClient
 import com.sys1yagi.mastodon4j.rx.RxAccounts
+import com.sys1yagi.mastodon4j.rx.RxReports
 import com.sys1yagi.mastodon4j.rx.RxStatuses
 import io.reactivex.disposables.CompositeDisposable
 import jp.gr.java_conf.miwax.troutoss.R
@@ -181,6 +183,10 @@ class MastodonTimelineFragment : Fragment() {
                         accountId?.let { blockAccount(it) }
                         true
                     }
+                    R.id.report -> {
+                        accountId?.let { reportAccount(it, statusId) }
+                        true
+                    }
                     else -> false
                 }
             }
@@ -251,6 +257,27 @@ class MastodonTimelineFragment : Fragment() {
                 showToast(R.string.block_failed)
             }
         }
+    }
+
+    private fun reportAccount(accountId: Long, statusId: Long) {
+        MaterialDialog.Builder(activity)
+                .positiveText(R.string.report)
+                .negativeText(R.string.cancel)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(getString(R.string.report_hint), "", { _, input ->
+                    val comment = input?.let { toString() } ?: ""
+                    launch(UI) {
+                        try {
+                            async(CommonPool) {
+                                client?.let { RxReports(it).postReport(accountId, statusId, comment).await() }
+                            }.await()
+                            showToast(R.string.reported)
+                        } catch (e: Exception) {
+                            Timber.e("postReport failed: $e")
+                            showToast(R.string.report_failed)
+                        }
+                    }
+                }).show()
     }
 
     companion object {
