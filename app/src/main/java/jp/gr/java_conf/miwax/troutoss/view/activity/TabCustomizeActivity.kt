@@ -1,5 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -18,12 +19,18 @@ class TabCustomizeActivity : AppCompatActivity() {
     lateinit private var binding: ActivityTabCusomizeBinding
     lateinit private var viewModel: TabCustomizeViewModel
 
+    private val REQUEST_SELECT_TAB_TYPE = 100
+
+
+    private var adapter: TabDragAdapter? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tab_cusomize)
-        val adapter = TabDragAdapter(binding.tabs)
-        viewModel = TabCustomizeViewModel(adapter)
+        adapter = TabDragAdapter(binding.tabs)
+        viewModel = TabCustomizeViewModel(adapter!!)
         binding.viewModel = viewModel
 
         supportActionBar?.apply {
@@ -31,12 +38,21 @@ class TabCustomizeActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener {
-            startActivity(Intent(this, SelectTabTypeActivity::class.java))
+            startActivityForResult(Intent(this, SelectTabTypeActivity::class.java), REQUEST_SELECT_TAB_TYPE)
         }
 
         binding.tabs.apply {
             layoutManager = LinearLayoutManager(this@TabCustomizeActivity)
-            setAdapter(adapter)
+            adapter = this@TabCustomizeActivity.adapter
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when {
+            requestCode == REQUEST_SELECT_TAB_TYPE && resultCode == Activity.RESULT_OK && data != null  -> {
+                val tab = data.let { SelectTabTypeActivity.extractSnsTab(it)}
+                tab?.let { adapter?.add(it) }
+            }
         }
     }
 

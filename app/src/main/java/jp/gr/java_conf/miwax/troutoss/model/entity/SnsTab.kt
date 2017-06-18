@@ -2,6 +2,8 @@ package jp.gr.java_conf.miwax.troutoss.model.entity
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import paperparcel.PaperParcel
+import paperparcel.PaperParcelable
 import java.util.*
 
 /**
@@ -9,6 +11,7 @@ import java.util.*
  * SNSタブ
  */
 
+@PaperParcel
 open class SnsTab(
         @PrimaryKey open var uuid: String = UUID.randomUUID().toString(),
 
@@ -17,7 +20,7 @@ open class SnsTab(
         open var accountUuid: String = "",
         open var option: String = "",
         open var title: String = ""
-) : RealmObject() {
+) : RealmObject(), PaperParcelable {
 
     protected open var typeStr: String = type.toString()
 
@@ -83,5 +86,9 @@ open class SnsTab(
         if (typeStr != other.typeStr) return false
 
         return true
+    }
+
+    companion object {
+        @JvmField val CREATOR = PaperParcelSnsTab.CREATOR
     }
 }

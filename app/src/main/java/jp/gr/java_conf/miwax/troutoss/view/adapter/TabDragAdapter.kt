@@ -40,6 +40,11 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
         }
     }
 
+    fun add(tab: SnsTab) {
+        tabs.add(tab)
+        notifyItemInserted(tabs.lastIndex)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.row_tab, parent, false)
         return ViewHolder(this, v)
