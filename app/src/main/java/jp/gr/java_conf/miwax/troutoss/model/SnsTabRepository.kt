@@ -104,6 +104,14 @@ class SnsTabRepository(val helper: MastodonHelper) {
             }
         }
     }
+
+    fun insertOrUpdate(tabs: List<SnsTab>) {
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction {
+                it.insertOrUpdate(tabs)
+            }
+        }
+    }
 }
 
 

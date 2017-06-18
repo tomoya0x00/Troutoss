@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.marshalchen.ultimaterecyclerview.dragsortadapter.DragSortAdapter
@@ -31,6 +32,12 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
 
     init {
         this.tabs = tabs ?: tabRepository.findAllSorted().toMutableList()
+    }
+
+    fun getReIndexedTabs(): List<SnsTab> {
+        return tabs.toMutableList().apply {
+            forEachIndexed { index, snsTab -> snsTab.position = index }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -85,42 +92,26 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
         val binding: RowTabBinding = DataBindingUtil.bind(itemView)
 
         init {
-            binding.tabName.setOnLongClickListener {
-                startDrag()
-                true
+            binding.tabName.apply {
+                setOnLongClickListener {
+                    startDrag()
+                    true
+                }
+                setOnTouchListener { _, event ->
+                    val DRAWABLE_RIGHT = 2
+                    if (event.action == MotionEvent.ACTION_DOWN &&
+                            event.rawX >= (this.right - this.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
+                        startDrag()
+                        true
+                    } else {
+                        false
+                    }
+                }
             }
         }
 
         override fun getShadowBuilder(itemView: View, touchPoint: Point): View.DragShadowBuilder {
             return NoForegroundShadowBuilder(itemView, touchPoint)
-        }
-    }
-
-    companion object {
-
-        protected fun convertToOriginalPosition(position: Int, dragInitial: Int, dragCurrent: Int): Int {
-            if (dragInitial < 0 || dragCurrent < 0) {
-                // not dragging
-                return position
-            } else {
-                if (dragInitial == dragCurrent ||
-                        position < dragInitial && position < dragCurrent ||
-                        position > dragInitial && position > dragCurrent) {
-                    return position
-                } else if (dragCurrent < dragInitial) {
-                    if (position == dragCurrent) {
-                        return dragInitial
-                    } else {
-                        return position - 1
-                    }
-                } else { // if (dragCurrent > dragInitial)
-                    if (position == dragCurrent) {
-                        return dragInitial
-                    } else {
-                        return position + 1
-                    }
-                }
-            }
         }
     }
 }
