@@ -104,7 +104,10 @@ class MainActivity : AppCompatActivity() {
                     Timber.d("received ShowAccountAuthActivityMessage")
                     startActivityForResult(Intent(this, MastodonAuthActivity::class.java), REQUEST_MASTODON_AUTH)
                 }.subscribe(),
-                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
+                viewModel.messenger.register(ShowTabCustomizeActivityMessage::class.java).doOnNext {
+                    Timber.d("received ShowTabCustomizeActivityMessage")
+                    startActivity(Intent(this, TabCustomizeActivity::class.java))
+                }.subscribe(),                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
                     Timber.d("received CloseDrawerMessage")
                     binding.drawer.closeDrawer(binding.navigation)
                 }.subscribe()
