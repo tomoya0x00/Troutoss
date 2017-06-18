@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/mastodon"/>
+
+    <Preference
+        android:icon="@drawable/home"
+        android:key="@string/pref_key_add_mastodon_home"
+        android:title="@string/home"/>
+
+    <Preference
+        android:icon="@drawable/group"
+        android:key="@string/pref_key_add_mastodon_local"
+        android:title="@string/local"/>
+
+    <Preference
+        android:icon="@drawable/public_earth"
+        android:key="@string/pref_key_add_mastodon_federated"
+        android:title="@string/federated"/>
+
+    <Preference
+        android:icon="@drawable/notifications"
+        android:key="@string/pref_key_add_mastodon_notifications"
+        android:title="@string/notifications"/>
+
+    <Preference
+        android:icon="@drawable/favourite_white"
+        android:key="@string/pref_key_add_mastodon_favourite"
+        android:title="@string/favourite"/>
+
+</PreferenceScreen>

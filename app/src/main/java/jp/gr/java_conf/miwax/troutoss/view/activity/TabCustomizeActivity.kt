@@ -1,5 +1,6 @@
 package jp.gr.java_conf.miwax.troutoss.view.activity
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -27,6 +28,10 @@ class TabCustomizeActivity : AppCompatActivity() {
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
+        }
+
+        binding.fab.setOnClickListener {
+            startActivity(Intent(this, SelectTabTypeActivity::class.java))
         }
 
         binding.tabs.apply {

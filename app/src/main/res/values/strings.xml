@@ -88,6 +88,13 @@
     <string name="reported">Reported.</string>
     <string name="report_failed">Report failed.</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="mastodon" translatable="false">Mastodon</string>
+    <string name="pref_key_add_mastodon_home" translatable="false">pref_key_add_mastodon_home</string>
+    <string name="pref_key_add_mastodon_local" translatable="false">pref_key_add_mastodon_local</string>
+    <string name="pref_key_add_mastodon_federated" translatable="false">pref_key_add_mastodon_federated</string>
+    <string name="pref_key_add_mastodon_notifications" translatable="false">pref_key_add_mastodon_notifications</string>
+    <string name="pref_key_add_mastodon_favourite" translatable="false">pref_key_add_mastodon_favourite</string>
+    <string name="select_add_tab_type">Select add tab</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
