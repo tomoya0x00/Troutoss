@@ -51,7 +51,7 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
         val client = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson()).build()
         val apps = RxApps(client)
         try {
-            val appRegistration = async(context + CommonPool) { helper.registerAppIfNeededTo(instance).await() }
+            val appRegistration = async(context + CommonPool) { helper.registerAppIfNeededTo(instance, client).await() }
             val url = async(context + CommonPool) { apps.apps.getOAuthUrl(appRegistration.await()!!.clientId, Scope(Scope.Name.ALL), helper.authCbUrl) }
             startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url.await())))
         } catch (e: Exception) {
@@ -70,50 +70,55 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
 
     private fun onAuthCallBack(uri: Uri) = launch(UI) {
         // TODO: 通信中のプログレス表示をおこなう
-        // TODO: 失敗時のエラー処理
         if (uri.toString().startsWith(helper.authCbUrl)) {
             val code = uri.getQueryParameter("code")
             if (code != null) {
                 val instance = binding.instanceEdit.text.toString()
                 val client = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson()).build()
                 val apps = RxApps(client)
-                val appRegistration = helper.loadAppRegistrationOf(instance)
-                if (appRegistration != null) {
-                    val mastodonAccount = async(context + CommonPool) {
-                        val accessToken = apps.getAccessToken(
-                                appRegistration.clientId,
-                                appRegistration.clientSecret,
-                                helper.authCbUrl,
-                                code
-                        ).await()
-                        val authClient = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson())
-                                .accessToken(accessToken.accessToken).build()
-                        val accounts = RxAccounts(authClient)
-                        val account = accounts.getVerifyCredentials().await()
-                        return@async MastodonAccount(
-                                instanceName = instance,
-                                userName = account.userName,
-                                accessToken = accessToken.accessToken
-                        )
-                    }.await()
+                try {
+                    val appRegistration = helper.loadAppRegistrationOf(instance)
+                    if (appRegistration != null) {
+                        val mastodonAccount = async(context + CommonPool) {
+                            val accessToken = apps.getAccessToken(
+                                    appRegistration.clientId,
+                                    appRegistration.clientSecret,
+                                    helper.authCbUrl,
+                                    code
+                            ).await()
+                            val authClient = MastodonClient.Builder(instance, OkHttpClientBuilderWithTimeout(), Gson())
+                                    .accessToken(accessToken.accessToken).build()
+                            val accounts = RxAccounts(authClient)
+                            val account = accounts.getVerifyCredentials().await()
+                            return@async MastodonAccount(
+                                    instanceName = instance,
+                                    userName = account.userName,
+                                    accessToken = accessToken.accessToken
+                            )
+                        }.await()
 
-                    // ログイン済みのアカウントか確認
-                    if (helper.loadAccountOf(
-                            instanceName = mastodonAccount.instanceName,
-                            userName = mastodonAccount.userName) == null) {
-                        helper.storeAccount(mastodonAccount)
-                        SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
-                        showToast(R.string.login_and_add_tabs, Toast.LENGTH_SHORT)
-                        analytics.logAuthMastodonEvent(mastodonAccount.instanceName)
-                        val intent = Intent().apply {
-                            putExtra(EXTRA_ACCOUNT_UUID, mastodonAccount.uuid)
+                        // ログイン済みのアカウントか確認
+                        if (helper.loadAccountOf(
+                                instanceName = mastodonAccount.instanceName,
+                                userName = mastodonAccount.userName) == null) {
+                            helper.storeAccount(mastodonAccount)
+                            SnsTabRepository(helper).addDefaultTabsOf(mastodonAccount)
+                            showToast(R.string.login_and_add_tabs, Toast.LENGTH_SHORT)
+                            analytics.logAuthMastodonEvent(mastodonAccount.instanceName)
+                            val intent = Intent().apply {
+                                putExtra(EXTRA_ACCOUNT_UUID, mastodonAccount.uuid)
+                            }
+                            setResult(Activity.RESULT_OK, intent)
+                            finish()
+                        } else {
+                            showToast(R.string.logged_in_account_error, Toast.LENGTH_LONG)
+                            binding.loginButton.isEnabled = true
                         }
-                        setResult(Activity.RESULT_OK, intent)
-                        finish()
-                    } else {
-                        showToast(R.string.logged_in_account_error, Toast.LENGTH_LONG)
-                        binding.loginButton.isEnabled = true
                     }
+                } catch (e: Exception) {
+                    Timber.e("Login failed: %s", e)
+                    showToast(R.string.login_failed)
+                    binding.loginButton.isEnabled = true
                 }
             } else {
                 // User canceled!

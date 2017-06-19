@@ -48,14 +48,16 @@ class MastodonHelper {
                         .accessToken(it.accessToken).build()
             }
 
-    fun registerAppIfNeededTo(instanceName: String): Single<MastodonAppRegistration?> {
+    fun registerAppIfNeededTo(instanceName: String,
+                              client: MastodonClient = MastodonClient.Builder(instanceName, OkHttpClientBuilderWithTimeout(), Gson()).build()):
+            Single<MastodonAppRegistration?> {
         require(instanceName.isNotEmpty()) { "instanceName is empty!" }
 
         if (hasAppRegistrationOf(instanceName)) {
             return Single.just(loadAppRegistrationOf(instanceName))
         }
 
-        val client: MastodonClient = MastodonClient.Builder(instanceName, OkHttpClientBuilderWithTimeout(), Gson()).build()
+    //    val client: MastodonClient = MastodonClient.Builder(instanceName, OkHttpClientBuilderWithTimeout(), Gson()).build()
         val apps = RxApps(client)
 
         return apps.createApp(
