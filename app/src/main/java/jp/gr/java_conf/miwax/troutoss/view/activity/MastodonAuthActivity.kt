@@ -55,8 +55,13 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
             val url = async(context + CommonPool) { apps.apps.getOAuthUrl(appRegistration.await()!!.clientId, Scope(Scope.Name.ALL), helper.authCbUrl) }
             startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url.await())))
         } catch (e: Exception) {
-            Timber.e("Login failed: %s", e)
-            showToast(R.string.login_failed, Toast.LENGTH_SHORT)
+            if (e.message != null && e.message!!.contains("SSLHandshakeException")) {
+                Timber.e("SSLHandshakeException failed: %s", e)
+                showToast(R.string.ssl_handshake_error, Toast.LENGTH_LONG)
+            } else {
+                Timber.e("Login failed: %s", e)
+                showToast(R.string.login_failed, Toast.LENGTH_SHORT)
+            }
             binding.loginButton.isEnabled = true
         }
     }
@@ -116,8 +121,13 @@ class MastodonAuthActivity : android.support.v7.app.AppCompatActivity() {
                         }
                     }
                 } catch (e: Exception) {
-                    Timber.e("Login failed: %s", e)
-                    showToast(R.string.login_failed)
+                    if (e.message != null && e.message!!.contains("SSLHandshakeException")) {
+                        Timber.e("SSLHandshakeException failed: %s", e)
+                        showToast(R.string.ssl_handshake_error, Toast.LENGTH_LONG)
+                    } else {
+                        Timber.e("Login failed: %s", e)
+                        showToast(R.string.login_failed, Toast.LENGTH_SHORT)
+                    }
                     binding.loginButton.isEnabled = true
                 }
             } else {

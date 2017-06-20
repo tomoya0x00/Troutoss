@@ -87,6 +87,7 @@
     <string name="report_hint">Additional comments</string>
     <string name="reported">Reported.</string>
     <string name="report_failed">Report failed.</string>
+    <string name="ssl_handshake_error">SSL communication failure.\nYour device may not support this instance.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
