@@ -105,9 +105,10 @@ class SnsTabRepository(val helper: MastodonHelper) {
         }
     }
 
-    fun insertOrUpdate(tabs: List<SnsTab>) {
+    fun replace(tabs: List<SnsTab>) {
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransaction {
+                it.delete(SnsTab::class.java)
                 it.insertOrUpdate(tabs)
             }
         }

@@ -20,6 +20,6 @@ class TabCustomizeViewModel(val adapter: TabDragAdapter) : BaseObservable() {
     private val repository = SnsTabRepository(helper)
 
     fun onClickOk() {
-        repository.insertOrUpdate(adapter.getReIndexedTabs())
+        repository.replace(adapter.getReIndexedTabs())
     }
 }

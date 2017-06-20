@@ -30,6 +30,8 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
     private val context = recyclerView.context
     val tabs: MutableList<SnsTab>
 
+    open fun onClickTab(position: Int, tab: SnsTab, name: CharSequence) {}
+
     init {
         this.tabs = tabs ?: tabRepository.findAllSorted().toMutableList()
     }
@@ -45,6 +47,11 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
         notifyItemInserted(tabs.lastIndex)
     }
 
+    fun removeAt(position: Int) {
+        tabs.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.row_tab, parent, false)
         return ViewHolder(this, v)
@@ -58,6 +65,8 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
             setCompoundDrawablesWithIntrinsicBounds(
                     getTabIconOf(tab), drawables[1], drawables[2], drawables[3]
             )
+
+            setOnClickListener { onClickTab(position, tab, this.text) }
         }
     }
 

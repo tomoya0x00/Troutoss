@@ -10,7 +10,9 @@ import android.view.Menu
 import android.view.MenuItem
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityTabCusomizeBinding
+import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 import jp.gr.java_conf.miwax.troutoss.view.adapter.TabDragAdapter
+import jp.gr.java_conf.miwax.troutoss.view.dialog.TabMenuDialog
 import jp.gr.java_conf.miwax.troutoss.viewmodel.TabCustomizeViewModel
 
 
@@ -24,12 +26,24 @@ class TabCustomizeActivity : AppCompatActivity() {
 
     private var adapter: TabDragAdapter? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tab_cusomize)
-        adapter = TabDragAdapter(binding.tabs)
+        adapter = object : TabDragAdapter(binding.tabs) {
+            override fun onClickTab(position: Int, tab: SnsTab, name: CharSequence) {
+                TabMenuDialog(this@TabCustomizeActivity, name).show()
+                        .doOnNext {
+                            when (it) {
+                                TabMenuDialog.Action.DELETE -> this.removeAt(position)
+
+                                else -> {
+                                }
+                            }
+                        }
+                        .subscribe()
+            }
+        }
         viewModel = TabCustomizeViewModel(adapter!!)
         binding.viewModel = viewModel
 
@@ -49,8 +63,8 @@ class TabCustomizeActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when {
-            requestCode == REQUEST_SELECT_TAB_TYPE && resultCode == Activity.RESULT_OK && data != null  -> {
-                val tab = data.let { SelectTabTypeActivity.extractSnsTab(it)}
+            requestCode == REQUEST_SELECT_TAB_TYPE && resultCode == Activity.RESULT_OK && data != null -> {
+                val tab = data.let { SelectTabTypeActivity.extractSnsTab(it) }
                 tab?.let { adapter?.add(it) }
             }
         }
