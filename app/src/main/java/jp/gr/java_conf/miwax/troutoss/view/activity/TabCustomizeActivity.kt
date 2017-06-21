@@ -66,7 +66,7 @@ class TabCustomizeActivity : AppCompatActivity() {
     }
 
     private fun hasChanged(): Boolean {
-        return before.contentDeepEquals(adapter.getReIndexedTabs().toTypedArray())
+        return !before.contentEquals(adapter.getReIndexedTabs().toTypedArray())
     }
 
     private fun confirmIfChanged(block: () -> Unit) {
