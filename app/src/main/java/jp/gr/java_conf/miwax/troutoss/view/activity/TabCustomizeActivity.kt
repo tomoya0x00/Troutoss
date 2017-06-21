@@ -22,8 +22,6 @@ class TabCustomizeActivity : AppCompatActivity() {
     lateinit private var viewModel: TabCustomizeViewModel
 
     private val REQUEST_SELECT_TAB_TYPE = 100
-
-
     private var adapter: TabDragAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,14 +31,7 @@ class TabCustomizeActivity : AppCompatActivity() {
         adapter = object : TabDragAdapter(binding.tabs) {
             override fun onClickTab(position: Int, tab: SnsTab, name: CharSequence) {
                 TabMenuDialog(this@TabCustomizeActivity, name).show()
-                        .doOnNext {
-                            when (it) {
-                                TabMenuDialog.Action.DELETE -> this.removeAt(position)
-
-                                else -> {
-                                }
-                            }
-                        }
+                        .doOnNext { viewModel.onSelectAction(it, position, tab) }
                         .subscribe()
             }
         }

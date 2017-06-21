@@ -1,19 +1,23 @@
 package jp.gr.java_conf.miwax.troutoss.view.dialog
 
 import android.content.Context
+import android.text.InputType
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.FlowableEmitter
 import io.reactivex.processors.BehaviorProcessor
 import jp.gr.java_conf.miwax.troutoss.R
+
 
 /**
  * Created by Tomoya Miwa on 2017/06/20.
  * タブカスタマイズのメニューダイアログ
  */
 
-class TabMenuDialog(context: Context, tabName: CharSequence) {
+class TabMenuDialog(private val context: Context, private val tabName: CharSequence) {
 
     enum class Action {
         DELETE,
@@ -23,7 +27,7 @@ class TabMenuDialog(context: Context, tabName: CharSequence) {
         var arg: String? = null
     }
 
-    private val processor =  BehaviorProcessor.create<Action>()
+    private val processor = BehaviorProcessor.create<Action>()
     private val builder: MaterialDialog
 
     init {
@@ -63,8 +67,29 @@ class TabMenuDialog(context: Context, tabName: CharSequence) {
                 .build()
     }
 
+    private fun editTabName(): Flowable<CharSequence> {
+        return Flowable.create({ emitter: FlowableEmitter<CharSequence> ->
+            MaterialDialog.Builder(context)
+                    .positiveText(R.string.ok)
+                    .negativeText(R.string.cancel)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .onNegative { _, _ -> emitter.onComplete() }
+                    .input("", tabName, { _, input ->
+                        val newName = input ?: ""
+                        emitter.onNext(newName)
+                        emitter.onComplete()
+                    }).show()
+
+        }, BackpressureStrategy.LATEST)
+    }
+
     fun show(): Flowable<Action> {
         builder.show()
-        return processor
+        return processor.flatMap { action ->
+            when(action) {
+                Action.RENAME -> editTabName().map { action.apply { arg = it.toString() } }
+                else -> Flowable.just(action)
+            }
+        }
     }
 }
