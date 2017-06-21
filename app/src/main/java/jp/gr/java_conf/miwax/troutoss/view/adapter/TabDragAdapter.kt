@@ -96,6 +96,10 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
     }
 
     override fun move(fromPosition: Int, toPosition: Int): Boolean {
+        if (fromPosition < 0 || toPosition < 0) {
+            return false
+        }
+
         tabs.add(toPosition, tabs.removeAt(fromPosition))
         return true
     }
