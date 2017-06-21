@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -86,6 +85,13 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d3c905d06c149e2e86425e958d4cb483ff81f36b"/>
+
+        <activity
+            android:name=".view.activity.TabCustomizeActivity"
+            android:label="@string/tab_customize">
+        </activity>
+        <activity android:name=".view.activity.SelectTabTypeActivity">
+        </activity>
     </application>
 
 </manifest>

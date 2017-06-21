@@ -4,10 +4,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import io.realm.Realm
-import io.realm.Sort
-import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
-import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 import jp.gr.java_conf.miwax.troutoss.view.fragment.DummyFragment
@@ -25,7 +23,8 @@ import timber.log.Timber
 class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapter(fm) {
 
     private val helper = MastodonHelper()
-    private val tabs = realm.where(SnsTab::class.java).findAllSorted(SnsTab::position.name, Sort.ASCENDING)
+    private val repository = SnsTabRepository(helper)
+    private val tabs = repository.findAllSorted(realm)
     private var tabMap = mutableMapOf<Int, TabPosHolder>()
 
     init {
@@ -77,47 +76,7 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapt
             return ""
         }
 
-        val tab = tabs[position]
-        val account = helper.loadAccountOf(tab.accountUuid)
-        val countAccount = account?.let { helper.countAccountOf(it.instanceName) }
-
-        if (tab.title.isNotEmpty()) {
-            return tab.title
-        } else {
-            return when (tab.type) {
-                SnsTab.TabType.MASTODON_HOME -> {
-                    if (countAccount?.toInt() == 1) {
-                        appResources.getString(R.string.mastodon_home_title_short, account.instanceName)
-                    } else {
-                        appResources.getString(R.string.mastodon_home_title_long, account?.userNameWithInstance ?: "")
-                    }
-                }
-                SnsTab.TabType.MASTODON_FAVOURITES -> {
-                    if (countAccount?.toInt() == 1) {
-                        appResources.getString(R.string.mastodon_favourites_title_short, account.instanceName)
-                    } else {
-                        appResources.getString(R.string.mastodon_favourites_title_long, account?.userNameWithInstance ?: "")
-                    }
-
-                }
-                SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
-                    if (countAccount?.toInt() == 1) {
-                        appResources.getString(R.string.mastodon_notifications_title_short, account.instanceName)
-                    } else {
-                        appResources.getString(R.string.mastodon_notifications_title_long, account?.userNameWithInstance ?: "")
-                    }
-                }
-                SnsTab.TabType.MASTODON_LOCAL -> {
-                    appResources.getString(R.string.mastodon_local_title, account?.instanceName ?: "")
-                }
-                SnsTab.TabType.MASTODON_FEDERATED -> {
-                    appResources.getString(R.string.mastodon_federated_title, account?.instanceName ?: "")
-                }
-                else -> {
-                    tabs[position].type.toString()
-                }
-            }
-        }
+        return repository.getTitleOf(tabs[position])
     }
 
     override fun getCount(): Int {

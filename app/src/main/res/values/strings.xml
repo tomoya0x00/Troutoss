@@ -88,6 +88,19 @@
     <string name="reported">Reported.</string>
     <string name="report_failed">Report failed.</string>
     <string name="ssl_handshake_error">SSL communication failure.\nYour device may not support this instance.</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="mastodon" translatable="false">Mastodon</string>
+    <string name="pref_key_add_mastodon_home" translatable="false">pref_key_add_mastodon_home</string>
+    <string name="pref_key_add_mastodon_local" translatable="false">pref_key_add_mastodon_local</string>
+    <string name="pref_key_add_mastodon_federated" translatable="false">pref_key_add_mastodon_federated</string>
+    <string name="pref_key_add_mastodon_notifications" translatable="false">pref_key_add_mastodon_notifications</string>
+    <string name="pref_key_add_mastodon_favourite" translatable="false">pref_key_add_mastodon_favourite</string>
+    <string name="select_add_tab_type">Select add tab</string>
+    <string name="select_account">Select account</string>
+    <string name="rename">Rename</string>
+    <string name="reset_name">Reset name</string>
+    <string name="close">Close</string>
+    <string name="confirm_close_tab_customize">Do you want to close without saving changes?\nYou can save changes to press check mark at the top.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>
@@ -105,4 +118,5 @@
         <item quantity="one">%1$d day ago</item>
         <item quantity="other">%1$d days ago</item>
     </plurals>
+
 </resources>

@@ -72,6 +72,12 @@
     <string name="reported">通報しました。</string>
     <string name="report_failed">通報に失敗しました。</string>
     <string name="ssl_handshake_error">SSL通信が失敗しました。\nあなたのデバイスはこのインスタンスをサポートしていない可能性があります。</string>
+    <string name="select_add_tab_type">追加するタブ</string>
+    <string name="select_account">アカウントの選択</string>
+    <string name="rename">名前の変更</string>
+    <string name="reset_name">名前を初期値に戻す</string>
+    <string name="close">閉じる</string>
+    <string name="confirm_close_tab_customize">保存せずに閉じてよろしいですか？\n上部のチェックマークで保存できます。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

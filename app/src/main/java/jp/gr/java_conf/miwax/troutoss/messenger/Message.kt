@@ -90,3 +90,9 @@ class ShowAccountAuthActivityMessage : Message
  */
 
 class ShowMastodonStatusMenuMessage(val accountId: Long?, val statusId: Long, val myStatus: Boolean, val view: View) : Message
+
+/**
+ * タブカスタマイズ画面表示用のメッセージ
+ */
+
+class ShowTabCustomizeActivityMessage : Message

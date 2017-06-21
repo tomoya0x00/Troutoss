@@ -1,6 +1,10 @@
 package jp.gr.java_conf.miwax.troutoss.model
 
 import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.Sort
+import jp.gr.java_conf.miwax.troutoss.App
+import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
 
@@ -44,6 +48,69 @@ class SnsTabRepository(val helper: MastodonHelper) {
                     .findFirst()
 
             return tab?.let { tabs?.indexOf(it) }
+        }
+    }
+
+    fun findAllSorted(): List<SnsTab> {
+        Realm.getDefaultInstance().use { realm ->
+            return findAllSorted(realm).let { realm.copyFromRealm(it) }
+        }
+    }
+
+    fun findAllSorted(realm: Realm): RealmResults<SnsTab> {
+        return realm.where(SnsTab::class.java)
+                .findAllSorted(SnsTab::position.name, Sort.ASCENDING)
+    }
+
+    fun getTitleOf(tab: SnsTab): String {
+        val account = helper.loadAccountOf(tab.accountUuid)
+        val countAccount = account?.let { helper.countAccountOf(it.instanceName) }
+
+        if (tab.title.isNotEmpty()) {
+            return tab.title
+        } else {
+            return when (tab.type) {
+                SnsTab.TabType.MASTODON_HOME -> {
+                    if (countAccount?.toInt() == 1) {
+                        App.appResources.getString(R.string.mastodon_home_title_short, account.instanceName)
+                    } else {
+                        App.appResources.getString(R.string.mastodon_home_title_long, account?.userNameWithInstance ?: "")
+                    }
+                }
+                SnsTab.TabType.MASTODON_FAVOURITES -> {
+                    if (countAccount?.toInt() == 1) {
+                        App.appResources.getString(R.string.mastodon_favourites_title_short, account.instanceName)
+                    } else {
+                        App.appResources.getString(R.string.mastodon_favourites_title_long, account?.userNameWithInstance ?: "")
+                    }
+
+                }
+                SnsTab.TabType.MASTODON_NOTIFICATIONS -> {
+                    if (countAccount?.toInt() == 1) {
+                        App.appResources.getString(R.string.mastodon_notifications_title_short, account.instanceName)
+                    } else {
+                        App.appResources.getString(R.string.mastodon_notifications_title_long, account?.userNameWithInstance ?: "")
+                    }
+                }
+                SnsTab.TabType.MASTODON_LOCAL -> {
+                    App.appResources.getString(R.string.mastodon_local_title, account?.instanceName ?: "")
+                }
+                SnsTab.TabType.MASTODON_FEDERATED -> {
+                    App.appResources.getString(R.string.mastodon_federated_title, account?.instanceName ?: "")
+                }
+                else -> {
+                    tab.type.toString()
+                }
+            }
+        }
+    }
+
+    fun replace(tabs: List<SnsTab>) {
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction {
+                it.delete(SnsTab::class.java)
+                it.insertOrUpdate(tabs)
+            }
         }
     }
 }

@@ -79,6 +79,7 @@
         <jp.gr.java_conf.miwax.troutoss.view.widget.DrawableCompatTextView
             android:id="@+id/tab_customize"
             style="@style/DrawerButton"
+            android:onClick="@{viewModel::onClickCustomizeTab}"
             android:text="@string/tab_customize"
             app:drawableLeftCompat="@drawable/tab"
             app:layout_constraintBottom_toBottomOf="parent"

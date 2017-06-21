@@ -42,13 +42,11 @@ class PostStatusActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityPostStatusBinding
     lateinit private var viewModel: PostStatusViewModel
-    private val SAVE_VIEWMODEL = "save_viewmodel"
 
     private val disposables = CompositeDisposable()
     private val analytics: FirebaseAnalytics by lazy { FirebaseAnalytics.getInstance(this) }
 
     private val REQUEST_TAKE_PHOTO = 100
-    private val SAVE_PHOTO_URI = "save_photo_uri"
     private var photoUri: Uri? = null
 
     private val accountType: AccountType by lazy {
@@ -187,8 +185,8 @@ class PostStatusActivity : AppCompatActivity() {
         PostStatusActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.apply {
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.apply {
             putParcelable(SAVE_PHOTO_URI, photoUri)
             putParcelable(SAVE_VIEWMODEL, viewModel)
         }
@@ -216,6 +214,9 @@ class PostStatusActivity : AppCompatActivity() {
         private val EXTRA_VISIBILITY = "visibility"
 
         private val REQUEST_PICK_MEDIA = 100
+
+        private val SAVE_VIEWMODEL = "save_viewmodel"
+        private val SAVE_PHOTO_URI = "save_photo_uri"
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
