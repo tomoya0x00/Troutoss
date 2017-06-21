@@ -71,6 +71,7 @@
     <string name="report_hint">コメントを入力して下さい</string>
     <string name="reported">通報しました。</string>
     <string name="report_failed">通報に失敗しました。</string>
+    <string name="ssl_handshake_error">SSL通信が失敗しました。\nあなたのデバイスはこのインスタンスをサポートしていない可能性があります。</string>
     <string name="select_add_tab_type">追加するタブ</string>
     <string name="select_account">アカウントの選択</string>
     <string name="rename">名前の変更</string>

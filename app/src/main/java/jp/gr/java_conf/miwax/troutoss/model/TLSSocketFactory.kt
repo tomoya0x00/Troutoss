@@ -1,16 +1,16 @@
 package jp.gr.java_conf.miwax.troutoss.model
 
 
+import okhttp3.TlsVersion
 import java.io.IOException
 import java.net.InetAddress
 import java.net.Socket
 import java.net.UnknownHostException
+import java.security.GeneralSecurityException
 import java.security.KeyManagementException
+import java.security.KeyStore
 import java.security.NoSuchAlgorithmException
-
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSocket
-import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.*
 
 /**
  * @author fkrauthan
@@ -21,6 +21,7 @@ constructor() : SSLSocketFactory() {
     private val internalSSLSocketFactory: SSLSocketFactory
 
     init {
+        //val context = SSLContext.getInstance(TlsVersion.TLS_1_2.javaName())
         val context = SSLContext.getInstance("TLS")
         context.init(null, null, null)
         internalSSLSocketFactory = context.socketFactory
@@ -66,8 +67,25 @@ constructor() : SSLSocketFactory() {
 
     private fun enableTLSOnSocket(socket: Socket?): Socket {
         if (socket != null && socket is SSLSocket) {
-            socket.enabledProtocols = arrayOf("TLSv1.1", "TLSv1.2")
+            socket.enabledProtocols = arrayOf(TlsVersion.TLS_1_2.javaName())
         }
         return socket!!
+    }
+
+    companion object {
+        fun systemDefaultTrustManager(): X509TrustManager? {
+            try {
+                val trustManagerFactory = TrustManagerFactory.getInstance(
+                        TrustManagerFactory.getDefaultAlgorithm())
+                trustManagerFactory.init(null as KeyStore?)
+                val trustManagers = trustManagerFactory.trustManagers
+                if (trustManagers.size != 1 || trustManagers[0] !is X509TrustManager) {
+                    return null
+                }
+                return trustManagers[0] as X509TrustManager
+            } catch (e: GeneralSecurityException) {
+                return null
+            }
+        }
     }
 }

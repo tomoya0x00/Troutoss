@@ -87,6 +87,7 @@
     <string name="report_hint">Additional comments</string>
     <string name="reported">Reported.</string>
     <string name="report_failed">Report failed.</string>
+    <string name="ssl_handshake_error">SSL communication failure.\nYour device may not support this instance.</string>
     <string name="ok" translatable="false">OK</string>
     <string name="mastodon" translatable="false">Mastodon</string>
     <string name="pref_key_add_mastodon_home" translatable="false">pref_key_add_mastodon_home</string>
