@@ -21,24 +21,25 @@ class TabCustomizeActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityTabCusomizeBinding
     lateinit private var viewModel: TabCustomizeViewModel
+    lateinit private var adapter: TabDragAdapter
+    lateinit var before: Array<SnsTab>
 
     private val REQUEST_SELECT_TAB_TYPE = 100
-    private var adapter: TabDragAdapter? = null
-    private var before: Array<SnsTab>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val tabs = savedInstanceState?.let { it.getParcelableArray(SAVE_TAB_LIST)?.toMutableList() }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tab_cusomize)
-        adapter = object : TabDragAdapter(binding.tabs) {
+        adapter = object : TabDragAdapter(binding.tabs, tabs?.let { it as? MutableList<SnsTab> }) {
             override fun onClickTab(position: Int, tab: SnsTab, name: CharSequence) {
                 TabMenuDialog(this@TabCustomizeActivity, name).show()
                         .doOnNext { viewModel.onSelectAction(it, position, tab) }
                         .subscribe()
             }
         }
-        adapter?.run { before = getReIndexedTabs().map { it.clone() }.toTypedArray() }
-        viewModel = TabCustomizeViewModel(adapter!!)
+        before = adapter.getReIndexedTabs().map { it.clone() }.toTypedArray()
+        viewModel = TabCustomizeViewModel(adapter)
         binding.viewModel = viewModel
 
         supportActionBar?.apply {
@@ -59,13 +60,13 @@ class TabCustomizeActivity : AppCompatActivity() {
         when {
             requestCode == REQUEST_SELECT_TAB_TYPE && resultCode == Activity.RESULT_OK && data != null -> {
                 val tab = data.let { SelectTabTypeActivity.extractSnsTab(it) }
-                tab?.let { adapter?.add(it) }
+                tab?.let { adapter.add(it) }
             }
         }
     }
 
     private fun hasChanged(): Boolean {
-        return before?.let { !it.contentDeepEquals(adapter!!.getReIndexedTabs().toTypedArray())  } ?: true
+        return before.contentDeepEquals(adapter.getReIndexedTabs().toTypedArray())
     }
 
     private fun confirmIfChanged(block: () -> Unit) {
@@ -104,5 +105,16 @@ class TabCustomizeActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         confirmIfChanged(this::finish)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.apply {
+            putParcelableArray(SAVE_TAB_LIST, adapter.tabs.toTypedArray())
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        private val SAVE_TAB_LIST = "save_tab_list"
     }
 }

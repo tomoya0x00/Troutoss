@@ -185,8 +185,8 @@ class PostStatusActivity : AppCompatActivity() {
         PostStatusActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.apply {
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.apply {
             putParcelable(SAVE_PHOTO_URI, photoUri)
             putParcelable(SAVE_VIEWMODEL, viewModel)
         }

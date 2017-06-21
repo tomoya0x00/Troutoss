@@ -37,7 +37,7 @@ open class TabDragAdapter(recyclerView: RecyclerView, tabs: MutableList<SnsTab>?
     }
 
     fun getReIndexedTabs(): List<SnsTab> {
-        return tabs.toMutableList().apply {
+        return tabs.map { it.clone() }.apply {
             forEachIndexed { index, snsTab -> snsTab.position = index }
         }
     }
