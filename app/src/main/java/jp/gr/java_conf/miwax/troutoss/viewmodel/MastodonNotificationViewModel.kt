@@ -50,7 +50,7 @@ class MastodonNotificationViewModel(private val notification: Notification) : Ba
 
     @get:Bindable
     val status: String
-        get() = notification.status?.content ?: ""
+        get() = (notification.status?.spoilerText ?: "") + (notification.status?.content ?: "")
 
     @get:Bindable
     val avatarUrl: String?

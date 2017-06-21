@@ -51,7 +51,7 @@
             app:html="@{viewModel.status}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/type_icon"
+            app:layout_constraintTop_toBottomOf="@id/type_detail"
             tools:text="hoge hoge"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
