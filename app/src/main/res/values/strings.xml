@@ -98,6 +98,8 @@
     <string name="select_account">Select account</string>
     <string name="rename">Rename</string>
     <string name="reset_name">Reset name</string>
+    <string name="close">Close</string>
+    <string name="confirm_close_tab_customize">Do you want to close without saving changes?\nYou can save changes to press check mark at the top.</string>
 
     <plurals name="status_second">
         <item quantity="one">%1$d second ago</item>

@@ -75,6 +75,8 @@
     <string name="select_account">アカウントの選択</string>
     <string name="rename">名前の変更</string>
     <string name="reset_name">名前を初期値に戻す</string>
+    <string name="close">閉じる</string>
+    <string name="confirm_close_tab_customize">保存せずに閉じてよろしいですか？\n上部のチェックマークで保存できます。</string>
 
     <plurals name="status_second">
         <item quantity="other">%1$d秒前</item>

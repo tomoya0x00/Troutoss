@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.afollestad.materialdialogs.MaterialDialog
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityTabCusomizeBinding
 import jp.gr.java_conf.miwax.troutoss.model.entity.SnsTab
@@ -23,6 +24,7 @@ class TabCustomizeActivity : AppCompatActivity() {
 
     private val REQUEST_SELECT_TAB_TYPE = 100
     private var adapter: TabDragAdapter? = null
+    private var before: Array<SnsTab>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,7 @@ class TabCustomizeActivity : AppCompatActivity() {
                         .subscribe()
             }
         }
+        adapter?.run { before = getReIndexedTabs().map { it.clone() }.toTypedArray() }
         viewModel = TabCustomizeViewModel(adapter!!)
         binding.viewModel = viewModel
 
@@ -61,6 +64,24 @@ class TabCustomizeActivity : AppCompatActivity() {
         }
     }
 
+    private fun hasChanged(): Boolean {
+        return before?.let { !it.contentDeepEquals(adapter!!.getReIndexedTabs().toTypedArray())  } ?: true
+    }
+
+    private fun confirmIfChanged(block: () -> Unit) {
+        if (!hasChanged()) {
+            block()
+            return
+        }
+
+        MaterialDialog.Builder(this)
+                .content(R.string.confirm_close_tab_customize)
+                .positiveText(R.string.close)
+                .negativeText(R.string.cancel)
+                .onPositive { _, _ -> block() }
+                .show()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.tab_customize_appbar, menu)
         return true
@@ -69,7 +90,7 @@ class TabCustomizeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                confirmIfChanged(this::finish)
                 true
             }
             R.id.ok -> {
@@ -79,5 +100,9 @@ class TabCustomizeActivity : AppCompatActivity() {
             }
             else -> false
         }
+    }
+
+    override fun onBackPressed() {
+        confirmIfChanged(this::finish)
     }
 }
