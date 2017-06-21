@@ -161,6 +161,10 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
         }
     }
 
+    override fun onReselected() {
+        timelineLayout.scrollToPositionWithOffset(0, 0)
+    }
+
     override fun onDeleteStatus(id: Long): Deferred<Boolean>? {
         return adapter?.deleteStatus(id)
     }

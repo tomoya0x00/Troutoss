@@ -3,6 +3,7 @@ package jp.gr.java_conf.miwax.troutoss.view.adapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import io.realm.Realm
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
 import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
@@ -113,6 +114,12 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapt
 
         val tab = tabs[position]
         return Pair(tab.type.accountType, tab.accountUuid)
+    }
+
+    fun findFragmentAt(viewPager: ViewPager, position: Int): Fragment {
+        val f = instantiateItem(viewPager, position) as Fragment
+        finishUpdate(viewPager)
+        return f
     }
 
     private fun updateTabMap() {

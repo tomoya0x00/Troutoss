@@ -154,6 +154,10 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
         return null
     }
 
+    override fun onReselected() {
+        notificationsLayout.scrollToPositionWithOffset(0, 0)
+    }
+
     companion object {
         private val ARG_ACCOUNT_UUID = "account_uuid"
         private val ARG_OPTION = "option"

@@ -140,4 +140,6 @@ abstract class MastodonBaseFragment : Fragment() {
                     }
                 }).show()
     }
+
+    open fun onReselected() {}
 }

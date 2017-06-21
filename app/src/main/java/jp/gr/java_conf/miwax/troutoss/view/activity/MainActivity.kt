@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
@@ -23,6 +24,7 @@ import jp.gr.java_conf.miwax.troutoss.model.SnsTabRepository
 import jp.gr.java_conf.miwax.troutoss.model.entity.AccountType
 import jp.gr.java_conf.miwax.troutoss.view.adapter.DrawerAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.SnsTabAdapter
+import jp.gr.java_conf.miwax.troutoss.view.fragment.MastodonBaseFragment
 import jp.gr.java_conf.miwax.troutoss.viewmodel.MainViewModel
 import timber.log.Timber
 
@@ -48,6 +50,17 @@ class MainActivity : AppCompatActivity() {
         val adapter = SnsTabAdapter(supportFragmentManager, realm)
         binding.container.adapter = adapter
         binding.tabs.setupWithViewPager(binding.container)
+        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                val fragment = adapter.findFragmentAt(binding.container, tab.position)
+                if (fragment is MastodonBaseFragment) {
+                    fragment.onReselected()
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabSelected(tab: TabLayout.Tab) {}
+        })
 
         binding.fab.setOnClickListener { _ ->
             val (accountType, accountUuid) = (adapter.getAccount(binding.container.currentItem))
@@ -107,10 +120,10 @@ class MainActivity : AppCompatActivity() {
                 viewModel.messenger.register(ShowTabCustomizeActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowTabCustomizeActivityMessage")
                     startActivity(Intent(this, TabCustomizeActivity::class.java))
-                }.subscribe(),                viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
-                    Timber.d("received CloseDrawerMessage")
-                    binding.drawer.closeDrawer(binding.navigation)
-                }.subscribe()
+                }.subscribe(), viewModel.messenger.register(CloseDrawerMessage::class.java).doOnNext {
+            Timber.d("received CloseDrawerMessage")
+            binding.drawer.closeDrawer(binding.navigation)
+        }.subscribe()
         )
         drawerAccountView.layoutManager = LinearLayoutManager(this)
         drawerAccountView.adapter = adapter
