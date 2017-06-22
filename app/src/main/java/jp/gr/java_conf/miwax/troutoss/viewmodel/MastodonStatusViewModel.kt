@@ -12,6 +12,7 @@ import com.sys1yagi.mastodon4j.rx.RxStatuses
 import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.extension.formatElapsed
 import jp.gr.java_conf.miwax.troutoss.extension.getNonEmptyName
 import jp.gr.java_conf.miwax.troutoss.extension.isBoostable
 import jp.gr.java_conf.miwax.troutoss.extension.showableStatus
@@ -24,8 +25,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.rx2.await
-import org.threeten.bp.Duration
-import org.threeten.bp.ZonedDateTime
 import timber.log.Timber
 import java.net.URI
 
@@ -54,8 +53,9 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
 
     @get:Bindable
     val boostBy: String
-        get() = String.format(appResources.getString(R.string.mastodon_boost_by),
-                status.account?.let { getNonEmptyName(it) } ?: "")
+        get() = String.format(appResources.getString(R.string.mastodon_boost_by_with_time),
+                status.account?.let { getNonEmptyName(it) } ?: "",
+                status.formatElapsed())
 
     @get:Bindable
     val isBoosted: Boolean
@@ -90,19 +90,7 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
 
     @get:Bindable
     val elapsed: String
-        get() {
-            val now = ZonedDateTime.now()
-            val createdAt = ZonedDateTime.parse(showableStatus.createdAt)
-            val elapsed = Duration.between(createdAt, now)
-            val elapsedSec = elapsed.toMillis() / 1000
-            return when {
-                elapsedSec < 1 -> appResources.getString(R.string.status_now)
-                elapsedSec < 60 -> appResources.getQuantityString(R.plurals.status_second, elapsedSec.toInt(), elapsedSec)
-                elapsedSec < 3600 -> appResources.getQuantityString(R.plurals.status_minute, elapsed.toMinutes().toInt(), elapsed.toMinutes())
-                elapsedSec < 3600 * 24 -> appResources.getQuantityString(R.plurals.status_hour, elapsed.toHours().toInt(), elapsed.toHours())
-                else -> appResources.getQuantityString(R.plurals.status_day, elapsed.toDays().toInt(), elapsed.toDays())
-            }
-        }
+        get() = showableStatus.formatElapsed()
 
     @get:Bindable
     val content: String

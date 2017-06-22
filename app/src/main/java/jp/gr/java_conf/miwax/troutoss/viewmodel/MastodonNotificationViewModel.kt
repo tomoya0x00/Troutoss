@@ -6,6 +6,7 @@ import android.view.View
 import com.sys1yagi.mastodon4j.api.entity.Notification
 import jp.gr.java_conf.miwax.troutoss.App
 import jp.gr.java_conf.miwax.troutoss.R
+import jp.gr.java_conf.miwax.troutoss.extension.formatElapsed
 import jp.gr.java_conf.miwax.troutoss.extension.getNonEmptyName
 import jp.gr.java_conf.miwax.troutoss.messenger.Messenger
 import jp.gr.java_conf.miwax.troutoss.messenger.OpenUrlMessage
@@ -79,6 +80,10 @@ class MastodonNotificationViewModel(private val notification: Notification) : Ba
     @get:Bindable
     val userNote: String
         get() = notification.account?.note ?: ""
+
+    @get:Bindable
+    val elapsed: String
+        get() = notification.formatElapsed()
 
     fun onClickUser(view: View) {
         notification.account?.let { messenger.send(OpenUrlMessage(it.url)) }
