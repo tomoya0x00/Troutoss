@@ -92,6 +92,8 @@
         </activity>
         <activity android:name=".view.activity.SelectTabTypeActivity">
         </activity>
+        <activity android:name=".view.activity.MastodonSearchActivity">
+        </activity>
     </application>
 
 </manifest>

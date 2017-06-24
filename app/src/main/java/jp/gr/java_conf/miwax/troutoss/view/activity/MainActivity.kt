@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityMainBinding
     lateinit private var viewModel: MainViewModel
+    lateinit private var adapter: SnsTabAdapter
 
     private val helper: MastodonHelper by lazy { MastodonHelper() }
     private val tabRepository: SnsTabRepository by lazy { SnsTabRepository(helper) }
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         setSupportActionBar(binding.toolbar)
-        val adapter = SnsTabAdapter(supportFragmentManager, realm)
+        adapter = SnsTabAdapter(supportFragmentManager, realm)
         binding.container.adapter = adapter
         binding.tabs.setupWithViewPager(binding.container)
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -158,6 +159,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.search -> {
+                // TODO: SnsTabを渡すようにする
+                MastodonSearchActivity.startActivity(this, null)
                 true
             }
             else -> super.onOptionsItemSelected(item)
