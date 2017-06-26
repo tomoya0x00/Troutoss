@@ -157,10 +157,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.search -> {
                 // TODO: SnsTabを渡すようにする
-                MastodonSearchActivity.startActivity(this, null)
+                val currentTab = adapter.getSnsTabAt(binding.tabs.selectedTabPosition)
+                MastodonSearchActivity.startActivity(this, currentTab)
                 true
             }
             else -> super.onOptionsItemSelected(item)
