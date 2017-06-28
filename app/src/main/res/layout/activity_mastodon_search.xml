@@ -28,6 +28,12 @@
                 app:layoutManager="GridLayoutManager"
                 app:spanCount="2"/>
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/accounts_recycler"
                 android:layout_width="match_parent"
