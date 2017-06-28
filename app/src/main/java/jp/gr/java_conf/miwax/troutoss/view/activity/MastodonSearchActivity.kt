@@ -29,6 +29,8 @@ class MastodonSearchActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMastodonSearchBinding
     lateinit var viewModel: MastodonSearchViewModel
+    lateinit var searchView: SearchView
+    private var query: CharSequence = ""
 
     private val helper = MastodonHelper()
 
@@ -45,8 +47,13 @@ class MastodonSearchActivity : AppCompatActivity() {
         CustomTabsHelper.createTabsIntent(this)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        savedInstanceState?.run {
+            query = getCharSequence(SAVE_QUERY) ?: ""
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_mastodon_search)
         viewModel = MastodonSearchViewModel(accountUuid)
@@ -88,8 +95,10 @@ class MastodonSearchActivity : AppCompatActivity() {
                 return false
             }
         })
-        val searchView = searchMenu.actionView as SearchView
+        searchView = searchMenu.actionView as SearchView
+        searchView.onActionViewExpanded()
         searchView.apply {
+            searchView.setQuery(query, true)
             queryHint = account?.let {
                 getString(R.string.mastodon_search_hint, it.instanceName)
             } ?: getString(R.string.search)
@@ -124,10 +133,17 @@ class MastodonSearchActivity : AppCompatActivity() {
         return false
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putCharSequence(SAVE_QUERY, searchView.query)
+    }
+
     companion object {
 
         private val EXTRA_ACCOUNT_TYPE = "account_type"
         private val EXTRA_ACCOUNT_UUID = "account_uuid"
+
+        private val SAVE_QUERY = "save_query"
 
         fun startActivity(context: Context, tab: SnsTab) {
             val intent = Intent(context, MastodonSearchActivity::class.java)
