@@ -38,7 +38,8 @@ import kotlinx.coroutines.experimental.rx2.await
 
 class MastodonTimelineAdapter(private val client: MastodonClient,
                               type: Timeline,
-                              private val account: MastodonAccount) :
+                              private val account: MastodonAccount,
+                              private val option: String) :
         UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
     val messenger = Messenger()
@@ -51,11 +52,13 @@ class MastodonTimelineAdapter(private val client: MastodonClient,
                 Timeline.LOCAL -> RxPublic(client)::getLocalPublic
                 Timeline.FEDERATED -> RxPublic(client)::getFederatedPublic
                 Timeline.FAVOURITES -> RxFavourites(client)::getFavourites
+                Timeline.LOCAL_TAG -> { range -> RxPublic(client).getLocalTag(option, range) }
+                Timeline.FEDERATED_TAG -> { range -> RxPublic(client).getFederatedTag(option, range) }
                 else -> RxTimelines(client)::getHome
             }
 
     enum class Timeline {
-        HOME, LOCAL, FEDERATED, FAVOURITES
+        HOME, LOCAL, FEDERATED, FAVOURITES, LOCAL_TAG, FEDERATED_TAG
     }
 
     fun refresh(clear: Boolean = false): Deferred<Pair<Boolean, Int>> = async(CommonPool) {
@@ -84,7 +87,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient,
     fun loadMoreOld(itemsCount: Int, lastPos: Int) = async(CommonPool) {
         if (pageable?.link == null) {
             // プログレス表示を消去
-            launch(UI) { notifyItemChanged(lastPos) }.join()
+            launch(UI) { notifyDataSetChanged() }.join()
             return@async 0
         }
 
@@ -92,7 +95,7 @@ class MastodonTimelineAdapter(private val client: MastodonClient,
             pageable = pageable?.let { getTimeline(it.nextRange(limit = 20)).await() }
         } catch (e: Exception) {
             // プログレス表示を消去
-            launch(UI) { notifyItemChanged(lastPos) }.join()
+            launch(UI) { notifyDataSetChanged() }.join()
             throw e
         }
         pageable?.let {

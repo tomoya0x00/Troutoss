@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import io.reactivex.disposables.CompositeDisposable
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit private var binding: ActivityMainBinding
     lateinit private var viewModel: MainViewModel
+    lateinit private var adapter: SnsTabAdapter
 
     private val helper: MastodonHelper by lazy { MastodonHelper() }
     private val tabRepository: SnsTabRepository by lazy { SnsTabRepository(helper) }
@@ -47,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         setSupportActionBar(binding.toolbar)
-        val adapter = SnsTabAdapter(supportFragmentManager, realm)
+        adapter = SnsTabAdapter(supportFragmentManager, realm)
         binding.container.adapter = adapter
         binding.tabs.setupWithViewPager(binding.container)
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 }.subscribe(),
                 adapter.messenger.register(ShowMastodonTimelineActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowMastodonTimelineActivityMessage")
-                    MastodonTimelineActivity.startActivity(this, it.timeline, it.accountUuid)
+                    MastodonTimelineActivity.startActivity(this, it.timeline, it.accountUuid, it.option)
                 }.subscribe(),
                 adapter.messenger.register(CloseDrawerMessage::class.java).doOnNext {
                     Timber.d("received CloseDrawerMessage")
@@ -145,6 +148,22 @@ class MainActivity : AppCompatActivity() {
                     index?.let { binding.tabs.getTabAt(it)?.select() }
                 }
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search -> {
+                val currentTab = adapter.getSnsTabAt(binding.tabs.selectedTabPosition)
+                MastodonSearchActivity.startActivity(this, currentTab)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

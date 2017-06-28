@@ -70,7 +70,7 @@ class MastodonNotificationAdapter(client: MastodonClient, private val account: M
     fun loadMoreOld(itemsCount: Int, lastPos: Int) = async(CommonPool) {
         if (pageable?.link == null) {
             // プログレス表示を消去
-            launch(UI) { notifyItemChanged(lastPos) }.join()
+            launch(UI) { notifyDataSetChanged() }.join()
             return@async 0
         }
 
@@ -78,7 +78,7 @@ class MastodonNotificationAdapter(client: MastodonClient, private val account: M
             pageable = pageable?.let { rxNotifications.getNotifications(it.nextRange(limit = 20)).await() }
         } catch (e: Exception) {
             // プログレス表示を消去
-            launch(UI) { notifyItemChanged(lastPos) }.join()
+            launch(UI) { notifyDataSetChanged() }.join()
             throw e
         }
         pageable?.let {

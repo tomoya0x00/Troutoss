@@ -94,12 +94,12 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapt
 
     override fun getItemPosition(fragment: Any): Int {
         val pos = tabMap[fragment.hashCode()]?.let {
-                if (it.gotPos == it.pos) {
-                    POSITION_UNCHANGED
-                } else {
-                    it.gotPos = it.pos
-                    it.pos
-                }
+            if (it.gotPos == it.pos) {
+                POSITION_UNCHANGED
+            } else {
+                it.gotPos = it.pos
+                it.pos
+            }
         } ?: POSITION_NONE
 
         Timber.d("getItemPosition fragmentHash: ${fragment.hashCode()}, pos: $pos")
@@ -121,6 +121,8 @@ class SnsTabAdapter(fm: FragmentManager?, val realm: Realm) : FragmentPagerAdapt
         finishUpdate(viewPager)
         return f
     }
+
+    fun getSnsTabAt(position: Int): SnsTab = tabs[position]
 
     private fun updateTabMap() {
         val existTabIds = tabs.map { it.hashCode() }

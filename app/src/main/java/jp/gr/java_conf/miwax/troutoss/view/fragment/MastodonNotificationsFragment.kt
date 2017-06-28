@@ -106,10 +106,10 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
             setDefaultOnRefreshListener { onRefresh() }
             setOnLoadMoreListener { itemsCount, lastPos -> onLoadMoreOld(itemsCount, lastPos) }
             setLoadMoreView(R.layout.center_progressbar)
-            disableLoadmore()
             this@MastodonNotificationsFragment.adapter?.let { setAdapter(it) }
         }
 
+        disableLoadMore()
         onRefresh()
 
         return binding.root
@@ -120,6 +120,16 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
         super.onDestroyView()
     }
 
+    private fun disableLoadMore() {
+        binding.notifications.disableLoadmore()
+        adapter?.customLoadMoreView?.visibility = View.GONE
+    }
+
+    private fun enableLoadMore() {
+        binding.notifications.reenableLoadmore()
+        adapter?.customLoadMoreView?.visibility = View.VISIBLE
+    }
+
     private fun onRefresh() = launch(UI) {
         binding.notifications.setRefreshing(true)
         try {
@@ -127,7 +137,7 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
                 val loadedSize = adapter.refresh().await()
                 if (loadedSize > 0) {
                     notificationsLayout.scrollToPositionWithOffset(0, 0)
-                    binding.notifications.reenableLoadmore()
+                    enableLoadMore()
                 }
             }
         } catch (e: Exception) {
@@ -142,7 +152,13 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
         try {
             val loadedSize = adapter?.loadMoreOld(itemsCount, lastPos)?.await()
             binding.notifications.disableLoadmore()
-            loadedSize?.let { if (it > 0) binding.notifications.reenableLoadmore() }
+            loadedSize?.let {
+                if (it > 0) {
+                    enableLoadMore()
+                } else {
+                    disableLoadMore()
+                }
+            }
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)

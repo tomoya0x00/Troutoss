@@ -40,7 +40,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
 
     private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
-    private var option: String? = null
+    private var option: String = ""
     private var clearOnRefresh = false
 
     lateinit private var binding: FragmentMastodonHomeBinding
@@ -62,7 +62,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
         super.onCreate(savedInstanceState)
         timeline = arguments?.getString(ARG_TIMELINE)?.let { MastodonTimelineAdapter.Timeline.valueOf(it) }
         accountUuid = arguments?.getString(ARG_ACCOUNT_UUID)
-        option = arguments?.getString(ARG_OPTION)
+        option = arguments?.getString(ARG_OPTION) ?: ""
         account = accountUuid?.let { helper.loadAccountOf(it) }
         client = account?.let { helper.createAuthedClientOf(it) }
         timeline?.let { clearOnRefresh = it == MastodonTimelineAdapter.Timeline.FAVOURITES }
@@ -74,7 +74,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
         adapter = client?.let {
-            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account!!)
+            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account!!, option)
         }
 
         this.adapter?.let { adapter ->
@@ -112,10 +112,10 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
             setDefaultOnRefreshListener { onRefresh() }
             setOnLoadMoreListener { itemsCount, lastPos -> onLoadMoreOld(itemsCount, lastPos) }
             setLoadMoreView(R.layout.center_progressbar)
-            disableLoadmore()
             this@MastodonTimelineFragment.adapter?.let { setAdapter(it) }
         }
 
+        disableLoadMore()
         onRefresh()
 
         return binding.root
@@ -124,6 +124,16 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
     override fun onDestroyView() {
         disposables.clear()
         super.onDestroyView()
+    }
+
+    private fun disableLoadMore() {
+        binding.timeline.disableLoadmore()
+        adapter?.customLoadMoreView?.visibility = View.GONE
+    }
+
+    private fun enableLoadMore() {
+        binding.timeline.reenableLoadmore()
+        adapter?.customLoadMoreView?.visibility = View.VISIBLE
     }
 
     private fun onRefresh() = launch(UI) {
@@ -139,7 +149,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
                     } else {
                         timelineLayout.scrollToPositionWithOffset(0, 0)
                     }
-                    binding.timeline.reenableLoadmore()
+                    enableLoadMore()
                 }
             }
         } catch (e: Exception) {
@@ -153,8 +163,13 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
     private fun onLoadMoreOld(itemsCount: Int, lastPos: Int) = launch(UI) {
         try {
             val loadedSize = this@MastodonTimelineFragment.adapter?.loadMoreOld(itemsCount, lastPos)?.await()
-            binding.timeline.disableLoadmore()
-            loadedSize?.let { if (it > 0) binding.timeline.reenableLoadmore() }
+            loadedSize?.let {
+                if (it > 0) {
+                    enableLoadMore()
+                } else {
+                    disableLoadMore()
+                }
+            }
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
