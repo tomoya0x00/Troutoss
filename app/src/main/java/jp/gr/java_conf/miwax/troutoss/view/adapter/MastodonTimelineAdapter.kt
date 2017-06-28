@@ -38,7 +38,8 @@ import kotlinx.coroutines.experimental.rx2.await
 
 class MastodonTimelineAdapter(private val client: MastodonClient,
                               type: Timeline,
-                              private val account: MastodonAccount) :
+                              private val account: MastodonAccount,
+                              private val option: String) :
         UltimateViewAdapter<MastodonTimelineAdapter.ViewHolder>() {
 
     val messenger = Messenger()
@@ -51,11 +52,13 @@ class MastodonTimelineAdapter(private val client: MastodonClient,
                 Timeline.LOCAL -> RxPublic(client)::getLocalPublic
                 Timeline.FEDERATED -> RxPublic(client)::getFederatedPublic
                 Timeline.FAVOURITES -> RxFavourites(client)::getFavourites
+                Timeline.LOCAL_TAG -> { range -> RxPublic(client).getLocalTag(option, range) }
+                Timeline.FEDERATED_TAG -> { range -> RxPublic(client).getFederatedTag(option, range) }
                 else -> RxTimelines(client)::getHome
             }
 
     enum class Timeline {
-        HOME, LOCAL, FEDERATED, FAVOURITES
+        HOME, LOCAL, FEDERATED, FAVOURITES, LOCAL_TAG, FEDERATED_TAG
     }
 
     fun refresh(clear: Boolean = false): Deferred<Pair<Boolean, Int>> = async(CommonPool) {

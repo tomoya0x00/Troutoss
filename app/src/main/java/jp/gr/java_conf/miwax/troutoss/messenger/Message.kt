@@ -77,7 +77,10 @@ class ShowMastodonNotificationsActivityMessage(val accountUuid: String) : Messag
  * Mastodonタイムライン画面表示用のメッセージ
  */
 
-class ShowMastodonTimelineActivityMessage(val timeline: MastodonTimelineAdapter.Timeline, val accountUuid: String) : Message
+class ShowMastodonTimelineActivityMessage(
+        val timeline: MastodonTimelineAdapter.Timeline,
+        val accountUuid: String,
+        val option: String? = null) : Message
 
 /**
  * アカウント認証用のメッセージ
@@ -96,3 +99,4 @@ class ShowMastodonStatusMenuMessage(val accountId: Long?, val statusId: Long, va
  */
 
 class ShowTabCustomizeActivityMessage : Message
+

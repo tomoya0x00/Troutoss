@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 }.subscribe(),
                 adapter.messenger.register(ShowMastodonTimelineActivityMessage::class.java).doOnNext {
                     Timber.d("received ShowMastodonTimelineActivityMessage")
-                    MastodonTimelineActivity.startActivity(this, it.timeline, it.accountUuid)
+                    MastodonTimelineActivity.startActivity(this, it.timeline, it.accountUuid, it.option)
                 }.subscribe(),
                 adapter.messenger.register(CloseDrawerMessage::class.java).doOnNext {
                     Timber.d("received CloseDrawerMessage")
@@ -159,7 +159,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
-                // TODO: SnsTabを渡すようにする
                 val currentTab = adapter.getSnsTabAt(binding.tabs.selectedTabPosition)
                 MastodonSearchActivity.startActivity(this, currentTab)
                 true

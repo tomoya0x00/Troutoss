@@ -40,7 +40,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
 
     private var timeline: MastodonTimelineAdapter.Timeline? = null
     private var accountUuid: String? = null
-    private var option: String? = null
+    private var option: String = ""
     private var clearOnRefresh = false
 
     lateinit private var binding: FragmentMastodonHomeBinding
@@ -62,7 +62,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
         super.onCreate(savedInstanceState)
         timeline = arguments?.getString(ARG_TIMELINE)?.let { MastodonTimelineAdapter.Timeline.valueOf(it) }
         accountUuid = arguments?.getString(ARG_ACCOUNT_UUID)
-        option = arguments?.getString(ARG_OPTION)
+        option = arguments?.getString(ARG_OPTION) ?: ""
         account = accountUuid?.let { helper.loadAccountOf(it) }
         client = account?.let { helper.createAuthedClientOf(it) }
         timeline?.let { clearOnRefresh = it == MastodonTimelineAdapter.Timeline.FAVOURITES }
@@ -74,7 +74,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mastodon_home, container, false)
 
         adapter = client?.let {
-            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account!!)
+            MastodonTimelineAdapter(it, timeline ?: MastodonTimelineAdapter.Timeline.HOME, account!!, option)
         }
 
         this.adapter?.let { adapter ->

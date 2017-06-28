@@ -19,7 +19,7 @@ class DrawerAccountViewModel(private val account: MastodonAccount) : BaseObserva
     @get:Bindable
     val accountName = account.userNameWithInstance
 
-    fun onClicAccountSettings(view: View) {
+    fun onClickAccountSettings(view: View) {
         messenger.send(CloseDrawerMessage())
         messenger.send(ShowMastodonAccountSettingsActivityMessage(account.uuid))
     }

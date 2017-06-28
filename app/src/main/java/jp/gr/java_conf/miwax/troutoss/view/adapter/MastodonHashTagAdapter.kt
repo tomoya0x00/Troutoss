@@ -16,11 +16,13 @@ import jp.gr.java_conf.miwax.troutoss.databinding.RowHashtagBinding
  * Mastodonのハッシュ用アダプター
  */
 
-class MastodonHashTagAdapter(private val hashtagsFlow: Flowable<List<String>>) :
+open class MastodonHashTagAdapter(private val hashtagsFlow: Flowable<List<String>>) :
         RecyclerView.Adapter<MastodonHashTagAdapter.ViewHolder>() {
 
     var hashtags: List<String> = arrayListOf()
     val disposable = CompositeDisposable()
+
+    open fun onClickHashTag(hashtag: String) {}
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -45,7 +47,11 @@ class MastodonHashTagAdapter(private val hashtagsFlow: Flowable<List<String>>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.hashtag.text = "#${hashtags[position]}"
+        val tag = hashtags[position]
+        holder.binding.apply {
+            hashtag.text = "#$tag"
+            root.setOnClickListener { onClickHashTag(tag) }
+        }
     }
 
     override fun getItemCount(): Int = hashtags.size

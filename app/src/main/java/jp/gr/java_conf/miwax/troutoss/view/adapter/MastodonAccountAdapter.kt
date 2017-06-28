@@ -21,11 +21,13 @@ import jp.gr.java_conf.miwax.troutoss.extension.setHtml
  * Mastodonのハッシュ用アダプター
  */
 
-class MastodonAccountAdapter(private val accountsFlow: Flowable<List<Account>>) :
+open class MastodonAccountAdapter(private val accountsFlow: Flowable<List<Account>>) :
         RecyclerView.Adapter<MastodonAccountAdapter.ViewHolder>() {
 
     var accounts: List<Account> = arrayListOf()
     val disposable = CompositeDisposable()
+
+    open fun onClickAccount(account: Account) {}
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -56,6 +58,7 @@ class MastodonAccountAdapter(private val accountsFlow: Flowable<List<Account>>) 
             displayName.text = account.getNonEmptyName()
             userName.text = "@${account.acct}"
             userNote.setHtml(account.note)
+            root.setOnClickListener { onClickAccount(account) }
         }
     }
 
