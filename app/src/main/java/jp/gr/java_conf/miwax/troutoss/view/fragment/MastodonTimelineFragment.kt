@@ -112,10 +112,10 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
             setDefaultOnRefreshListener { onRefresh() }
             setOnLoadMoreListener { itemsCount, lastPos -> onLoadMoreOld(itemsCount, lastPos) }
             setLoadMoreView(R.layout.center_progressbar)
-            disableLoadmore()
             this@MastodonTimelineFragment.adapter?.let { setAdapter(it) }
         }
 
+        disableLoadMore()
         onRefresh()
 
         return binding.root
@@ -124,6 +124,16 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
     override fun onDestroyView() {
         disposables.clear()
         super.onDestroyView()
+    }
+
+    private fun disableLoadMore() {
+        binding.timeline.disableLoadmore()
+        adapter?.customLoadMoreView?.visibility = View.GONE
+    }
+
+    private fun enableLoadMore() {
+        binding.timeline.reenableLoadmore()
+        adapter?.customLoadMoreView?.visibility = View.VISIBLE
     }
 
     private fun onRefresh() = launch(UI) {
@@ -139,7 +149,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
                     } else {
                         timelineLayout.scrollToPositionWithOffset(0, 0)
                     }
-                    binding.timeline.reenableLoadmore()
+                    enableLoadMore()
                 }
             }
         } catch (e: Exception) {
@@ -153,8 +163,13 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
     private fun onLoadMoreOld(itemsCount: Int, lastPos: Int) = launch(UI) {
         try {
             val loadedSize = this@MastodonTimelineFragment.adapter?.loadMoreOld(itemsCount, lastPos)?.await()
-            binding.timeline.disableLoadmore()
-            loadedSize?.let { if (it > 0) binding.timeline.reenableLoadmore() }
+            loadedSize?.let {
+                if (it > 0) {
+                    enableLoadMore()
+                } else {
+                    disableLoadMore()
+                }
+            }
         } catch (e: Exception) {
             Timber.e("loadMoreOld failed: %s", e)
             showToast(R.string.comm_error, Toast.LENGTH_SHORT)
