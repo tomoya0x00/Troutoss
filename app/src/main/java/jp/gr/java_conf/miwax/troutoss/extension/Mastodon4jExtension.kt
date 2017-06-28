@@ -90,6 +90,20 @@ private fun formatElapsed(time: String): String {
 fun Account.getNonEmptyName(): String =
         if (this.displayName.isNotEmpty()) this.displayName else this.userName
 
+fun Account.actualAvatarUrl(): String {
+    val uri = URI(this.avatar)
+
+    if (uri.isAbsolute) {
+        return this.avatar
+    } else {
+        // ユーザーURLから絶対パス生成
+        val userUrl = URI(this.url)
+        val avatarUri = URI(userUrl.scheme, userUrl.host, this.avatar, null)
+        return avatarUri.toString()
+    }
+}
+
+
 enum class AttachmentType {
     IMAGE,
     VIDEO,

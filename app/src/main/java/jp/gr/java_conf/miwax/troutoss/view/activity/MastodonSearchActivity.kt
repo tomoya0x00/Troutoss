@@ -6,10 +6,10 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
+import com.marshalchen.ultimaterecyclerview.ui.divideritemdecoration.HorizontalDividerItemDecoration
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMastodonSearchBinding
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
@@ -40,6 +40,15 @@ class MastodonSearchActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_mastodon_search)
         viewModel = MastodonSearchViewModel(accountUuid)
         binding.viewModel = viewModel
+
+        binding.hashtagsRecycler.apply {
+            isNestedScrollingEnabled = false
+        }
+
+        binding.accountsRecycler.apply {
+            addItemDecoration((HorizontalDividerItemDecoration.Builder(context).build()))
+            isNestedScrollingEnabled = false
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -6,6 +6,7 @@ import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
 import io.reactivex.schedulers.Schedulers
 import jp.gr.java_conf.miwax.troutoss.model.MastodonHelper
+import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonAccountAdapter
 import jp.gr.java_conf.miwax.troutoss.view.adapter.MastodonHashTagAdapter
 import java.util.concurrent.TimeUnit
 
@@ -21,6 +22,7 @@ class MastodonSearchViewModel(accountUuid: String) {
     val rxPublic = client?.let { RxPublic(it) }
     val results: Flowable<Results>?
     val hashtagAdapter: MastodonHashTagAdapter
+    val accountAdapter: MastodonAccountAdapter
 
     init {
         results = rxPublic?.let { public ->
@@ -33,6 +35,10 @@ class MastodonSearchViewModel(accountUuid: String) {
 
         hashtagAdapter = MastodonHashTagAdapter(
                 results?.let { it.map { it.hashtags } } ?: Flowable.just(arrayListOf()))
+
+        accountAdapter = MastodonAccountAdapter(
+                results?.let { it.map { it.accounts } } ?: Flowable.just(arrayListOf())
+        )
     }
 
     fun onQueryTextSubmit(query: String) {

@@ -12,10 +12,7 @@ import com.sys1yagi.mastodon4j.rx.RxStatuses
 import jp.gr.java_conf.miwax.troutoss.App.Companion.appResources
 import jp.gr.java_conf.miwax.troutoss.BR
 import jp.gr.java_conf.miwax.troutoss.R
-import jp.gr.java_conf.miwax.troutoss.extension.formatElapsed
-import jp.gr.java_conf.miwax.troutoss.extension.getNonEmptyName
-import jp.gr.java_conf.miwax.troutoss.extension.isBoostable
-import jp.gr.java_conf.miwax.troutoss.extension.showableStatus
+import jp.gr.java_conf.miwax.troutoss.extension.*
 import jp.gr.java_conf.miwax.troutoss.messenger.*
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonAccount
 import jp.gr.java_conf.miwax.troutoss.model.entity.MastodonStatusHolder
@@ -26,7 +23,6 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.rx2.await
 import timber.log.Timber
-import java.net.URI
 
 
 /**
@@ -67,18 +63,7 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
 
     @get:Bindable
     val avatarUrl: String?
-        get() {
-            val uri = URI(showableAccount?.avatar)
-
-            if (uri.isAbsolute) {
-                return showableAccount?.avatar
-            } else {
-                // ユーザーURLから絶対パス生成
-                val userUrl = URI(showableAccount?.url)
-                val avatarUri = URI(userUrl.scheme, userUrl.host, showableAccount?.avatar, null)
-                return avatarUri.toString()
-            }
-        }
+        get() = showableAccount?.actualAvatarUrl()
 
     @get:Bindable
     val displayName: String

@@ -28,6 +28,13 @@
                 app:layoutManager="GridLayoutManager"
                 app:spanCount="2"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/accounts_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:adapter="@{viewModel.accountAdapter}"
+                app:layoutManager="LinearLayoutManager"/>
+
         </LinearLayout>
     </ScrollView>
 </layout>
