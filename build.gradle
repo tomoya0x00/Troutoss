@@ -19,6 +19,7 @@ buildscript {
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'com.cookpad.android.licensetools:license-tools-plugin:0.21.1'
         classpath 'io.fabric.tools:gradle:1.22.1'
+        classpath 'com.google.firebase:firebase-plugins:1.0.4'
     }
 }
 

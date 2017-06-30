@@ -5,6 +5,8 @@ apply plugin: 'realm-android'
 apply plugin: 'deploygate'
 apply plugin: 'com.cookpad.android.licensetools'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.firebase-crash'
+
 
 // Manifest version
 def versionMajor = 0
