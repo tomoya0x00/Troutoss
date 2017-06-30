@@ -35,11 +35,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:onClick="@{viewModel::onClickUser}"
             android:text='@{viewModel.typeDetail}'
-            app:layout_constraintBaseline_toBaselineOf="@id/type_icon"
             app:layout_constraintLeft_toRightOf="@id/type_icon"
             app:layout_constraintRight_toLeftOf="@+id/elapsed"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="hoge さんがお気に入りに登録"/>
 
         <TextView
@@ -49,9 +51,9 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{viewModel.elapsed}"
-            app:layout_constraintBaseline_toBaselineOf="@id/type_detail"
             app:layout_constraintLeft_toRightOf="@id/type_detail"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="createdAt"/>
 
         <TextView
@@ -81,7 +83,7 @@
 
         <TextView
             android:id="@+id/display_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
@@ -92,7 +94,7 @@
             android:textColor="@android:color/white"
             android:visibility="@{viewModel.follow ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toRightOf="@id/avatar"
-            app:layout_constraintRight_toLeftOf="@+id/user_name"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/avatar"
             tools:text="display"/>
 
@@ -107,9 +109,9 @@
             android:onClick="@{viewModel::onClickUser}"
             android:text="@{viewModel.userName}"
             android:visibility="@{viewModel.follow ? View.VISIBLE : View.GONE}"
-            app:layout_constraintLeft_toRightOf="@id/display_name"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/display_name"
             tools:text="user"/>
 
         <TextView
@@ -125,7 +127,7 @@
             app:html="@{viewModel.userNote}"
             app:layout_constraintLeft_toRightOf="@id/avatar"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/display_name"
+            app:layout_constraintTop_toBottomOf="@id/user_name"
             tools:text="note"/>
 
     </android.support.constraint.ConstraintLayout>
