@@ -10,7 +10,7 @@ apply plugin: 'com.google.firebase.firebase-crash'
 
 // Manifest version
 def versionMajor = 0
-def versionMinor = 4
+def versionMinor = 5
 def versionPatch = 0
 
 // CI
