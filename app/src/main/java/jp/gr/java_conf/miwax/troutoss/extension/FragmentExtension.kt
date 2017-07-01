@@ -12,11 +12,11 @@ import jp.gr.java_conf.miwax.troutoss.model.ToastHolder
  */
 
 fun Fragment.showToast(@StringRes resId: Int, duration: Int = Toast.LENGTH_SHORT) {
-    ToastHolder.showToast(this.activity, resId, duration)
+    this.context?.let { ToastHolder.showToast(it, resId, duration) }
 }
 
 fun Fragment.showToast(text: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
-    ToastHolder.showToast(this.activity, text, duration)
+    this.context?.let { ToastHolder.showToast(it, text, duration) }
 }
 
 fun PreferenceFragment.showToast(@StringRes resId: Int, duration: Int = Toast.LENGTH_SHORT) {
