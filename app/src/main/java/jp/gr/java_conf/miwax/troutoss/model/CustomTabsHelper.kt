@@ -65,7 +65,7 @@ class CustomTabsHelper {
             return source
         }
 
-        override fun onFocusChanged(view: View, sourceText: CharSequence, focused: Boolean, direction: Int, previouslyFocusedRect: Rect) {
+        override fun onFocusChanged(view: View, sourceText: CharSequence, focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
 
         }
     }
