@@ -217,6 +217,17 @@
             app:layout_constraintTop_toBottomOf="@id/attachments"
             app:onCheckedChangeListener="@{viewModel.boostChangeListener}"/>
 
+        <TextView
+            android:id="@+id/boosts_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.boostsCount}"
+            android:textColor="@{viewModel.boosted ? @color/reblogged : @color/button_enable}"
+            android:visibility="@{viewModel.boostable ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBaseline_toBaselineOf="@id/boost"
+            app:layout_constraintLeft_toRightOf="@id/boost"
+            tools:text="5"/>
+
         <ToggleButton
             android:id="@+id/favourite"
             android:layout_width="@dimen/status_button"
@@ -229,6 +240,16 @@
             app:layout_constraintRight_toLeftOf="@+id/more_action"
             app:layout_constraintTop_toBottomOf="@id/attachments"
             app:onCheckedChangeListener="@{viewModel.favouriteChangeListener}"/>
+
+        <TextView
+            android:id="@+id/favourites_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.favouritesCount}"
+            android:textColor="@{viewModel.favourited ? @color/favourited : @color/button_enable}"
+            app:layout_constraintBaseline_toBaselineOf="@id/favourite"
+            app:layout_constraintLeft_toRightOf="@id/favourite"
+            tools:text="5"/>
 
         <ImageButton
             android:id="@+id/more_action"

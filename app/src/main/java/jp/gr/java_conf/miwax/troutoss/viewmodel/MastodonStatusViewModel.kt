@@ -128,6 +128,20 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
     val boostable: Boolean
         get() = showableStatus.isBoostable()
 
+    @get:Bindable
+    val boostsCount: String
+        get() {
+            val count = showableStatus.reblogsCount + if (isBoosted) 1 else 0
+            return count.takeIf { it > 0 }?.toString() ?: ""
+        }
+
+    @get:Bindable
+    val favouritesCount: String
+        get() {
+            val count = showableStatus.favouritesCount + if (isFavourited) 1 else 0
+            return count.takeIf { it > 0 }?.toString() ?: ""
+        }
+
     fun onClickShowContent(view: View) {
         holder.isShowContent = true
         notifyPropertyChanged(BR.showContent)
@@ -161,7 +175,9 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
 
             post?.let {
                 try {
-                    async(CommonPool) { it(status.id).await() }.await()
+                    val id = showableStatus.id
+                    Timber.i("(un)reblog id:$id")
+                    async(CommonPool) { it(id).await() }.await()
                     holder.isReblogged = !holder.isReblogged
                 } catch (e: Mastodon4jRequestException) {
                     // レスポンスが422の場合は他のクライアントで操作されたと判断して無視
@@ -172,7 +188,7 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
                         holder.isReblogged = !holder.isReblogged
                     }
                 } finally {
-                    notifyPropertyChanged(BR.boosted)
+                    notifyChange()
                 }
             }
         }
@@ -188,7 +204,9 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
 
             post?.let {
                 try {
-                    holder.status = async(CommonPool) { it(status.id).await() }.await()
+                    val id = showableStatus.id
+                    Timber.i("(un)favourite id:$id")
+                    async(CommonPool) { it(id).await() }.await()
                     holder.isFavourited = !holder.isFavourited
                 } catch (e: Mastodon4jRequestException) {
                     // レスポンスが422の場合は他のクライアントで操作されたと判断して無視
@@ -199,7 +217,7 @@ class MastodonStatusViewModel(private val holder: MastodonStatusHolder,
                         holder.isFavourited = !holder.isFavourited
                     }
                 } finally {
-                    notifyPropertyChanged(BR.favourited)
+                    notifyChange()
                 }
             }
         }
