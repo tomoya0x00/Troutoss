@@ -107,19 +107,21 @@ kotlin {
     }
 }
 
-deploygate {
-    userName = System.getenv("DEPLOYGATE_USERNAME")
-    token = System.getenv("DEPLOYGATE_TOKEN")
+if(isCi) {
+    deploygate {
+        userName = System.getenv("DEPLOYGATE_USERNAME")
+        token = System.getenv("DEPLOYGATE_TOKEN")
 
-    apks {
-        debug {
-            // set as build message
-            message = "debug build ${gitSha} at ${buildTime}"
-        }
+        apks {
+            debug {
+                // set as build message
+                message = "debug build ${gitSha} at ${buildTime}"
+            }
 
-        release {
-            // set as build message
-            message = "release build ${gitSha} at ${buildTime}"
+            release {
+                // set as build message
+                message = "release build ${gitSha} at ${buildTime}"
+            }
         }
     }
 }
