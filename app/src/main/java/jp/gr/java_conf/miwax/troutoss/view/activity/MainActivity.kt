@@ -13,11 +13,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
 import io.reactivex.disposables.CompositeDisposable
 import io.realm.Realm
-import jp.gr.java_conf.miwax.troutoss.BuildConfig
 import jp.gr.java_conf.miwax.troutoss.R
 import jp.gr.java_conf.miwax.troutoss.databinding.ActivityMainBinding
 import jp.gr.java_conf.miwax.troutoss.messenger.*
@@ -73,14 +70,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupDrawer()
-
-        MobileAds.initialize(applicationContext, getString(R.string.addAppId))
-        val adBuilder = AdRequest.Builder()
-        if (BuildConfig.DEBUG) {
-            adBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("3FB68A2D733507E23491D9D48E953313")
-        }
-        binding.adBanner.loadAd(adBuilder.build())
 
         // アカウントを持っていない場合、Mastodon認証画面を出す
         if (!helper.hasAccount()) {

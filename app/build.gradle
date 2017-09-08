@@ -86,7 +86,6 @@ android {
             minifyEnabled false
             multiDexEnabled true
             resValue "string", "applicationName", packageName + applicationIdSuffix
-            resValue "string", "bannerAdUnitId", "ca-app-pub-3940256099942544/6300978111"
             ext.alwaysUpdateBuildId = false
         }
         release {
@@ -95,7 +94,6 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             multiDexEnabled false
-            resValue "string", "bannerAdUnitId", "ca-app-pub-3940256099942544/6300978111"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -201,7 +199,6 @@ dependencies {
     // Firebase
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-crash:$firebaseVersion"
-    compile "com.google.firebase:firebase-ads:$firebaseVersion"
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
