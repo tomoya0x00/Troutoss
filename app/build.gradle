@@ -162,8 +162,8 @@ dependencies {
     kapt 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 
     // Mastodon
-    compile 'com.github.sys1yagi.mastodon4j:mastodon4j:1.0.0'
-    compile 'com.github.sys1yagi.mastodon4j:mastodon4j-rx:1.0.0'
+    compile 'com.github.sys1yagi.mastodon4j:mastodon4j:1.2.0'
+    compile 'com.github.sys1yagi.mastodon4j:mastodon4j-rx:1.2.0'
 
     // Rx
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
