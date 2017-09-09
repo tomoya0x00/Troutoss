@@ -54,9 +54,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
     private var account: MastodonAccount? = null
     override var client: MastodonClient? = null
 
-    private val tabsIntent: CustomTabsIntent by lazy {
-        CustomTabsHelper.createTabsIntent(activity)
-    }
+    lateinit private var tabsIntent: CustomTabsIntent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +64,7 @@ class MastodonTimelineFragment : MastodonBaseFragment() {
         account = accountUuid?.let { helper.loadAccountOf(it) }
         client = account?.let { helper.createAuthedClientOf(it) }
         timeline?.let { clearOnRefresh = it == MastodonTimelineAdapter.Timeline.FAVOURITES }
+        tabsIntent = CustomTabsHelper.createTabsIntent(activity)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

@@ -52,9 +52,7 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
     private var account: MastodonAccount? = null
     override var client: MastodonClient? = null
 
-    private val tabsIntent: CustomTabsIntent by lazy {
-        CustomTabsHelper.createTabsIntent(activity)
-    }
+    lateinit private var tabsIntent: CustomTabsIntent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +60,7 @@ class MastodonNotificationsFragment : MastodonBaseFragment() {
         option = arguments?.getString(ARG_OPTION)
         account = accountUuid?.let { helper.loadAccountOf(it) }
         client = account?.let { helper.createAuthedClientOf(it) }
+        tabsIntent = CustomTabsHelper.createTabsIntent(activity)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
